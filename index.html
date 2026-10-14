@@ -1,0 +1,1989 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<title>PMBridge</title>
+<meta name="description" content="PMBridge: project cards with tasks, schedules, quick-add dates and a month calendar.">
+<meta name="theme-color" content="#000000">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="PMBridge">
+<link rel="manifest" href="manifest.webmanifest?v=3">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png?v=3">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png?v=3">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png?v=3">
+<style>
+html, body { margin: 0; }
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+/* PMBridge: same look as Canvas and MYCAL. Black page, charcoal rounded cards, colored underlined titles. */
+:root {
+  --bg: #000000;
+  --card: #2a2a2c;
+  --card-edge: #38383b;
+  --ink: #ececee;
+  --dim: #8e8e93;
+  --faint: #56565a;
+  --pop: #1c1c1e;
+  --danger: #ff6b6b;
+  --accent: #3CB371;
+  --font: "Aptos Display", "Aptos", "Segoe UI Variable Display", "Segoe UI", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  color-scheme: dark;
+}
+html, body { background: var(--bg); color: var(--ink); }
+body { font-family: var(--font); font-size: 15px; min-height: 100vh; -webkit-font-smoothing: antialiased; }
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+button { -webkit-tap-highlight-color: transparent; font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+button:focus-visible, [contenteditable]:focus-visible, input:focus-visible { outline: 2px solid #5aa9ff; outline-offset: 2px; border-radius: 4px; }
+input, textarea, select { font: inherit; color: inherit; }
+
+/* ---------- header (same as Canvas / MYCAL) ---------- */
+.topbar {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 1000;
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  padding: 14px 20px; background: rgba(0,0,0,.86); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+}
+.brand { display: flex; align-items: center; gap: 14px; min-width: 0; flex: none; cursor: pointer; }
+.brand-icon { height: 60px; width: auto; flex: none; display: block; }
+.brand-text { display: flex; flex-direction: column; line-height: 1.1; }
+.brand-name { font-weight: 700; font-size: 24px; letter-spacing: .08em; }
+.brand-sub { font-style: italic; font-size: 16px; letter-spacing: .03em; color: var(--dim); margin-top: 3px; }
+.tabs { display: flex; gap: 4px; padding: 4px; background: #141415; border: 1px solid var(--card-edge); border-radius: 12px; margin-right: auto; }
+.tab { display: flex; align-items: center; gap: 8px; padding: 7px 14px; border-radius: 8px; color: var(--dim); font-size: 14px; font-weight: 600; letter-spacing: .02em; transition: background .15s, color .15s; }
+.tab svg { width: 17px; height: 17px; flex: none; }
+.tab:hover { color: var(--ink); }
+.tab[aria-selected="true"] { background: var(--card); color: var(--ink); box-shadow: 0 1px 0 rgba(255,255,255,.04) inset; }
+.top-right { display: flex; align-items: center; gap: 12px; margin-left: auto; min-width: 0; }
+.brand-tag { color: var(--dim); font-size: 13.5px; letter-spacing: .02em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; margin-right: 6px; }
+.round-btn { width: 40px; height: 40px; border-radius: 50%; background: var(--card); border: 1px solid var(--card-edge); display: grid; place-items: center; flex: none; transition: background .15s, transform .15s; }
+.round-btn:hover, .round-btn.open { background: #3a3a3d; }
+.round-btn:active { transform: scale(.94); }
+.round-btn svg { width: 20px; height: 20px; }
+@media (max-width: 1199px) { .brand-tag { display: none; } }
+
+/* add menu (Canvas) */
+.add-menu { position: fixed; z-index: 30000; width: 270px; padding: 6px; background: var(--pop); border: 1px solid var(--card-edge); border-radius: 12px; box-shadow: 0 16px 36px rgba(0,0,0,.65); display: flex; flex-direction: column; gap: 2px; }
+.add-menu button { display: flex; align-items: center; gap: 12px; padding: 10px; border-radius: 8px; text-align: left; }
+.add-menu button:hover, .add-menu button:focus-visible { background: rgba(255,255,255,.07); outline: none; }
+.add-menu strong { display: block; font-size: 15px; }
+.add-menu small { display: block; font-size: 12px; color: var(--dim); margin-top: 1px; }
+.am-icon { width: 34px; height: 34px; flex: none; border-radius: 9px; background: var(--card); border: 1px solid var(--card-edge); display: grid; place-items: center; }
+.am-icon svg { width: 19px; height: 19px; }
+.am-sep { border: 0; border-top: 1px solid var(--card-edge); margin: 4px 6px; }
+
+/* ---------- cards ---------- */
+.card { position: relative; background: var(--card); border: 1px solid var(--card-edge); border-radius: 10px; padding: 14px 16px 12px 20px; box-shadow: 0 6px 20px rgba(0,0,0,.5); min-width: 0; }
+.card-head { display: flex; align-items: center; gap: 8px; padding-bottom: 8px; border-bottom: 3px solid currentColor; }
+.title { flex: 1; min-width: 0; font-weight: 700; font-size: 17px; letter-spacing: .05em; text-transform: uppercase; line-height: 1.3; overflow-wrap: anywhere; padding-top: 2px; }
+.title[contenteditable="true"] { cursor: text; outline: none; }
+.head-btn { width: 26px; height: 26px; border-radius: 6px; display: grid; place-items: center; flex: none; color: var(--dim); }
+.head-btn:hover { background: rgba(255,255,255,.08); color: var(--ink); }
+.head-btn svg { width: 18px; height: 18px; transition: transform .2s; }
+.edit-btn { width: auto; height: 24px; padding: 0 7px; border: 1.5px solid currentColor; border-radius: 6px; font-size: 10.5px; font-weight: 800; letter-spacing: .12em; color: inherit; }
+.edit-btn:hover { color: inherit; background: color-mix(in srgb, currentColor 14%, transparent); }
+.card.collapsed .card-head { border-bottom-color: transparent; padding-bottom: 0; }
+.card.collapsed .toggle svg { transform: rotate(-90deg); }
+.card.collapsed .card-body { display: none; }
+.sched-meta { margin-top: 8px; font-size: 12px; color: var(--faint); font-variant-numeric: tabular-nums; }
+.add-task { display: flex; align-items: center; gap: 10px; margin-top: 8px; padding: 4px 0; color: var(--dim); font-size: 14px; }
+.add-task:hover { color: var(--ink); }
+.add-task svg { width: 18px; height: 18px; }
+
+/* ---------- home: project squares ---------- */
+.home { padding: 6px 20px 60px; }
+.home-head { display: flex; align-items: baseline; gap: 10px; margin: 6px 2px 14px; }
+.home-head h1 { margin: 0; font-size: 24px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+.home-head span { color: var(--dim); font-size: 13px; font-weight: 600; }
+.pgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; }
+.ptile { aspect-ratio: 1; display: flex; flex-direction: column; border-radius: 14px; cursor: pointer; transition: transform .15s, border-color .15s; overflow: hidden; }
+.ptile:hover { border-color: #4a4a4e; }
+.ptile:active { transform: scale(.985); }
+.ptile .card-head { align-items: flex-start; }
+.ptile .title { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden; }
+.p-subs { flex: 1; min-height: 0; list-style: none; margin: 12px 0 0; padding: 0; display: flex; flex-direction: column; gap: 6px; overflow: hidden; }
+.p-subs li { display: flex; align-items: center; gap: 9px; font-size: 13.5px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: var(--ink); min-width: 0; }
+.p-subs li::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--c); flex: none; }
+.p-subs li:not(.more-subs) { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: block; padding-left: 16px; position: relative; }
+.p-subs li:not(.more-subs)::before { position: absolute; left: 0; top: 50%; transform: translateY(-50%); }
+.p-subs li { flex: none; }
+.p-subs .more-subs { color: var(--dim); font-weight: 600; text-transform: none; letter-spacing: 0; }
+.p-subs .more-subs::before { display: none; }
+.p-prog { display: flex; align-items: center; gap: 10px; }
+.p-prog .bar { flex: 1; }
+.p-prog span { font-size: 12px; color: var(--dim); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.p-prog b { color: var(--ink); font-weight: 600; }
+.p-desc { flex: 1; min-height: 0; margin-top: 10px; font-size: 14px; line-height: 1.45; color: var(--ink); opacity: .88; overflow: hidden; white-space: pre-wrap; overflow-wrap: anywhere; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 7; }
+.p-desc.empty { color: var(--faint); font-style: italic; opacity: 1; }
+.p-foot { margin-top: 10px; display: flex; flex-direction: column; gap: 6px; }
+.p-meta { font-size: 12px; color: var(--dim); font-variant-numeric: tabular-nums; display: flex; gap: 6px; flex-wrap: wrap; }
+.p-meta b { color: var(--ink); font-weight: 600; }
+.p-next { font-size: 12.5px; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.p-next .np { display: inline-block; padding: 1px 6px; margin-right: 6px; border-radius: 6px; border: 2px solid var(--c); color: var(--c); font-weight: 700; font-size: 11px; letter-spacing: .05em; }
+.bar { height: 6px; border-radius: 3px; background: #1c1c1e; overflow: hidden; }
+.bar i { display: block; height: 100%; background: var(--c); border-radius: 3px; transition: width .3s; }
+.new-tile { aspect-ratio: 1; border: 2px dashed var(--card-edge); border-radius: 14px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; color: var(--dim); font-weight: 700; letter-spacing: .06em; text-transform: uppercase; font-size: 14px; transition: border-color .15s, color .15s; }
+.new-tile:hover { border-color: var(--accent); color: var(--ink); }
+.new-tile .ni { width: 48px; height: 48px; border-radius: 50%; background: var(--card); border: 1px solid var(--card-edge); display: grid; place-items: center; color: var(--accent); }
+.new-tile .ni svg { width: 24px; height: 24px; }
+.home-empty { color: var(--dim); max-width: 46ch; line-height: 1.5; margin: 0 2px 18px; }
+
+/* ---------- project view ---------- */
+.crumb { display: flex; align-items: center; gap: 6px; padding: 2px 20px 10px; }
+.crumb button { display: inline-flex; align-items: center; gap: 4px; color: var(--dim); font-size: 12.5px; font-weight: 700; letter-spacing: .1em; padding: 6px 8px 6px 2px; border-radius: 7px; }
+.crumb button:hover { color: var(--ink); }
+.crumb svg { width: 16px; height: 16px; }
+.pv { display: grid; gap: 20px 24px; align-items: start; padding: 0 20px 60px; grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); grid-template-areas: "main cal"; }
+/* campus page: one card-width column per project */
+.pcols { display: grid; grid-template-columns: repeat(auto-fill, 450px); gap: 24px; align-items: start; justify-content: start; padding: 0 20px 60px; }
+.pcols .psec { min-width: 0; }
+.pcols .psec > .col { gap: 16px; }
+.add-col { margin-top: 38px; min-height: 180px; border: 2px dashed var(--card-edge); border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; color: var(--dim); font-weight: 700; letter-spacing: .06em; text-transform: uppercase; font-size: 13px; transition: border-color .15s, color .15s; }
+.add-col:hover { border-color: var(--c, var(--accent)); color: var(--ink); }
+.add-col .ni { width: 44px; height: 44px; border-radius: 50%; background: var(--card); border: 1px solid var(--card-edge); display: grid; place-items: center; color: var(--c, var(--accent)); }
+.add-col .ni svg { width: 22px; height: 22px; }
+.xcard .sched-empty { margin: 10px 0 2px; }
+/* main page overview cards */
+.ov-sec { margin-top: 40px; }
+.ov-tile { cursor: pointer; }
+.tile-stats { flex: 1; display: flex; gap: 22px; margin-top: 16px; align-items: flex-start; flex-wrap: wrap; }
+.tile-stats > div { display: flex; flex-direction: column; min-width: 0; }
+.tile-stats b { font-size: 42px; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; color: var(--ink); }
+.tile-stats span { font-size: 11.5px; color: var(--dim); margin-top: 7px; letter-spacing: .06em; text-transform: uppercase; font-weight: 700; }
+.tile-stats .red b { color: #FF5A5A; }
+.tile-sub { font-size: 12.5px; color: var(--dim); }
+.tile-go { font-size: 12.5px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--c); }
+.page-body { padding: 0 20px 60px; }
+.page-body .st-sec { margin-top: 0; }
+.pv-main { grid-area: main; display: flex; flex-direction: column; gap: 32px; min-width: 0; }
+.col { display: flex; flex-direction: column; gap: 20px; min-width: 0; }
+.col-cal { grid-area: cal; position: sticky; top: 96px; }
+/* each project in a campus: task card(s) | critical path + blockers */
+.psec-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 20px 24px; align-items: start; }
+.psec-head { display: flex; align-items: center; gap: 10px; margin: 0 0 12px; padding: 1px 0 1px 12px; border-left: 4px solid var(--c); }
+.psec-title { flex: 1; min-width: 0; font-weight: 800; font-size: 16px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink); outline: none; overflow-wrap: anywhere; }
+.psec-title[contenteditable="true"] { cursor: text; }
+.psec-head .edit-btn { color: var(--c); }
+.add-proj { display: flex; align-items: center; justify-content: center; gap: 10px; min-height: 56px; border: 2px dashed var(--card-edge); border-radius: 12px; color: var(--dim); font-weight: 700; letter-spacing: .06em; text-transform: uppercase; font-size: 13px; transition: border-color .15s, color .15s; }
+.add-proj:hover { border-color: var(--c, var(--accent)); color: var(--ink); }
+.add-proj svg { width: 18px; height: 18px; }
+@media (max-width: 1279px) { .pv { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } .psec-grid { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 999px) { .pv { grid-template-columns: minmax(0, 1fr); grid-template-areas: "main" "cal"; } .col-cal { position: static; } }
+/* status table on the main screen */
+.st-sec { margin-top: 40px; }
+.st-sec .home-head { flex-wrap: wrap; row-gap: 8px; align-items: center; }
+.st-card { padding: 0; overflow: hidden; }
+/* star: sends a task to the Status table */
+.star-btn { width: 22px; height: 22px; display: none; place-items: center; color: var(--faint); flex: none; border-radius: 6px; }
+.star-btn svg { width: 15px; height: 15px; }
+.item.starred .star-btn, .item:hover .star-btn, .item:focus-within .star-btn, .item.editing .star-btn { display: grid; }
+.item.starred .star-btn { color: #FFD84D; }
+.star-btn:hover { color: #FFD84D; background: rgba(255,255,255,.07); }
+.st-star { display: inline-grid; place-items: center; width: 20px; height: 20px; margin: 0 4px 0 -2px; vertical-align: -4px; color: var(--faint); border-radius: 5px; }
+.st-star svg { width: 14px; height: 14px; }
+.st-star.on { color: #FFD84D; }
+.st-star:hover { color: #FFD84D; background: rgba(255,255,255,.07); }
+.st-seg { margin-left: auto; }
+.st-sec .home-head .st-seg button { padding: 5px 11px; font-size: 12.5px; color: var(--dim); }
+.st-sec .home-head .st-seg button[aria-pressed="true"] { background: #3a3a3d; color: var(--ink); }
+.st-card .st-seg button { padding: 4px 10px; font-size: 12px; color: var(--dim); }
+.st-card .st-seg button[aria-pressed="true"] { background: #3a3a3d; color: var(--ink); }
+.st-wrap { overflow-x: auto; }
+table.st { width: 100%; border-collapse: collapse; min-width: 860px; font-size: 14px; table-layout: fixed; }
+.st th { text-align: left; font-size: 11.5px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--dim); padding: 10px 12px; border-bottom: 1px solid var(--card-edge); white-space: nowrap; }
+.st th:nth-child(1) { width: 15%; } .st th:nth-child(2) { width: 14%; } .st th:nth-child(3) { width: 24%; } .st th:nth-child(4) { width: 22%; } .st th:nth-child(5) { width: 15%; } .st th:nth-child(6) { width: 10%; }
+.st th:first-child, .st td:first-child { padding-left: 20px; }
+.st td { padding: 10px 12px; border-bottom: 1px solid rgba(255,255,255,.05); vertical-align: top; line-height: 1.4; overflow-wrap: anywhere; }
+.st tbody tr:last-child td { border-bottom: 0; }
+.st tbody tr:hover td { background: rgba(255,255,255,.025); }
+.st-camp { display: inline-flex; align-items: center; gap: 8px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; font-size: 12.5px; color: var(--ink); }
+.st-camp i { width: 10px; height: 10px; border-radius: 50%; background: var(--c); flex: none; }
+.st-proj { font-weight: 600; font-size: 12.5px; text-transform: uppercase; letter-spacing: .04em; color: var(--dim); }
+.st-item { text-align: left; font-weight: 600; color: var(--ink); line-height: 1.4; }
+.st-item:hover { text-decoration: underline; text-underline-offset: 3px; }
+.st-item .np { display: inline-block; padding: 0 5px; margin-right: 6px; border-radius: 5px; border: 1.5px solid var(--c); color: var(--c); font-size: 10.5px; font-weight: 800; letter-spacing: .05em; vertical-align: 1px; }
+.st-edit { min-height: 22px; outline: none; border-radius: 6px; padding: 2px 6px; margin: -2px -6px; cursor: text; }
+.st-edit:hover { background: rgba(255,255,255,.04); }
+.st-edit:focus { background: #232325; box-shadow: 0 0 0 1px var(--card-edge); }
+.st-edit:empty::before { content: attr(data-ph); color: var(--faint); }
+.st-blk { display: flex; gap: 8px; align-items: flex-start; }
+.st-blk i { width: 10px; height: 10px; border-radius: 50%; background: #FF5A5A; flex: none; margin-top: 6px; }
+.st-blk .st-edit { flex: 1; min-width: 0; color: #ffb3b3; }
+.st-none { color: var(--faint); }
+.st .st-empty { color: var(--dim); padding: 16px 20px; }
+@media (max-width: 699px) { .st-edit { font-size: 16px; } .st-sec { margin-top: 30px; } }
+/* project header (title only; the description lives on the Projects tab) */
+.proj-head { display: flex; align-items: center; gap: 14px; padding: 2px 20px 16px; }
+.ph-main { flex: 1; min-width: 0; }
+.ph-crumb { display: inline-block; font-size: 11.5px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--dim); cursor: pointer; }
+.ph-crumb:hover { color: var(--ink); }
+.ph-title { margin: 2px 0 0; font-size: 22px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; line-height: 1.2; overflow-wrap: anywhere; }
+.ph-stats { width: 220px; flex: none; display: flex; flex-direction: column; gap: 6px; font-size: 12px; color: var(--dim); text-align: right; font-variant-numeric: tabular-nums; }
+/* dates on task lines */
+.item .date-pill { min-width: 50px; padding: 1px 5px; font-size: 11px; margin-top: 0; }
+.item .date-pill.no-date { opacity: .45; }
+.item:hover .date-pill.no-date, .item:focus-within .date-pill.no-date { opacity: 1; }
+.card.no-dates .item .date-pill { display: none; }
+.item .row-open { width: 22px; height: 22px; opacity: .35; transition: opacity .12s; }
+.item:hover .row-open, .item:focus-within .row-open, .item .row-open.has { opacity: 1; }
+@media (hover: none) { .item .row-open { opacity: .7; } }
+.text[contenteditable="false"], .ms-text[contenteditable="false"] { cursor: pointer; -webkit-user-select: none; user-select: none; }
+/* bigger tap targets on touch screens */
+@media (pointer: coarse) {
+  .check { position: relative; z-index: 2; }
+  .check::after { content: ""; position: absolute; inset: -11px -7px -11px -5px; }
+  .item .row-open, .srow .row-open { position: relative; }
+  .item .row-open::after, .srow .row-open::after { content: ""; position: absolute; inset: -9px -6px; }
+  .grip { z-index: 1; }
+}
+.item.fresh { animation: freshRow 1.6s ease; }
+.sched-card .items.srows { margin-left: 0; }
+/* computers: the quarter-width cards put owner (and status) on a second line so names stay readable */
+.task-card, .sched-card, .blk-card { container-type: inline-size; container-name: card; }
+/* blockers */
+.blk-card .items.srows { margin-left: 0; }
+.blk-card .brow .ms-text { color: var(--ink); }
+.item .blk-btn { margin-top: -1px; }
+.blk-btn { width: 24px; height: 24px; }
+.blk-btn .s-dot { width: 10px; height: 10px; }
+.blk-btn.s-ns { background: transparent; border-color: var(--card-edge); }
+.blk-btn.s-ns .s-dot { background: transparent; box-shadow: inset 0 0 0 1.5px var(--faint); }
+.blk-btn.s-blk { background: color-mix(in srgb, #FF5A5A 28%, transparent); border-color: #FF5A5A; }
+.item.blocked .text { color: color-mix(in srgb, #FF5A5A 30%, var(--ink)); }
+.ev-blk { margin-top: 8px; }
+@media (min-width: 1000px) {
+  @container card (max-width: 400px) {
+    .item:not(.phase) { flex-wrap: wrap; row-gap: 0; }
+    .item .text, .srow .ms-text { overflow-wrap: break-word; word-break: normal; hyphens: auto; }
+    .item:not(.phase) .bic { order: 6; flex: 0 0 100%; width: auto; margin: 0; padding-left: 48px; font-size: 12px; }
+    .item.editing:not(.sub) .bic { padding-left: 108px; }
+    .item.sub .bic { padding-left: 40px; }
+    .card.no-dates .item:not(.sub) .bic { padding-left: 48px; }
+    .item:not(.phase):not(:focus-within):not(.editing) .bic:has(.bic-text:empty) { display: none; }
+    .item:not(:focus-within):hover .indent { display: none; }
+    .sched-card .srow { flex-wrap: wrap; row-gap: 1px; }
+    .sched-card .srow .ms-text { flex: 1 1 0; min-width: 0; }
+    .sched-card .srow .ms-end { flex: 0 0 100%; padding-left: 84px; margin-left: 0; }
+    .sched-card .srow .bic { flex: 1; width: auto; }
+    .sched-card .srow .status-pill { width: 20px; height: 20px; }
+    .blk-card .brow { flex-wrap: wrap; row-gap: 0; }
+    .blk-card .brow .ms-text { flex: 1 1 0; min-width: 0; }
+    .blk-card .brow .bic { order: 6; flex: 0 0 100%; width: auto; padding-left: 24px; font-size: 12px; }
+    .blk-card .brow:not(:focus-within) .bic:has(.bic-text:empty) { display: none; }
+  }
+}
+/* owner on task lines */
+.item .bic { width: 74px; margin-top: 1px; }
+.card.no-owners .item .bic { display: none; }
+.day-item .ow { font-size: 12px; color: var(--dim); flex: none; max-width: 90px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sched-empty { color: var(--dim); font-size: 13.5px; line-height: 1.45; margin: 12px 0 4px; }
+.qa-card .card-head { color: var(--c); }
+.proj-desc { margin-top: 12px; min-height: 64px; line-height: 1.45; white-space: pre-wrap; overflow-wrap: anywhere; outline: none; cursor: text; padding: 10px 12px; margin-left: -4px; margin-right: -4px; border-radius: 8px; background: #232325; border: 1px solid transparent; transition: border-color .15s; }
+.proj-desc:focus { border-color: var(--card-edge); }
+.proj-desc:empty::before { content: attr(data-ph); color: var(--faint); }
+.proj-stats { display: flex; align-items: center; gap: 10px; margin-top: 10px; font-size: 12px; color: var(--dim); font-variant-numeric: tabular-nums; }
+.proj-stats .bar { flex: 1; }
+.empty-cards { color: var(--dim); font-size: 14px; line-height: 1.5; padding: 4px 2px; }
+
+/* quick add (MYCAL) */
+.qa-entry { display: flex; align-items: center; gap: 8px; margin-top: 12px; padding: 6px 6px 6px 8px; border-radius: 10px; background: #232325; border: 1px solid var(--card-edge); color: var(--ink); transition: border-color .15s; }
+.qa-entry:focus-within { border-color: var(--c); }
+.qa-input { flex: 1; min-width: 0; height: 34px; background: transparent; border: 0; outline: none; color: var(--ink); font-size: 15px; }
+.qa-input::placeholder { color: var(--faint); }
+.qa-go { width: 34px; height: 34px; border-radius: 8px; background: var(--c); color: #000; display: grid; place-items: center; flex: none; }
+.qa-go svg { width: 18px; height: 18px; }
+.qa-color { width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; flex: none; }
+.qa-color span { width: 14px; height: 14px; border-radius: 50%; background: var(--c); box-shadow: 0 0 0 2px rgba(255,255,255,.14); }
+.qa-color:hover { background: rgba(255,255,255,.08); }
+.qa-to { display: flex; align-items: center; gap: 8px; margin-top: 10px; font-size: 13px; color: var(--dim); }
+.qa-to .sel { flex: 1; min-width: 0; }
+.qa-hint { margin: 10px 0 2px; font-size: 13px; color: var(--dim); line-height: 1.4; }
+.flash { animation: flash .5s ease; }
+@keyframes flash { 20%, 60% { transform: translateX(-4px); } 40%, 80% { transform: translateX(4px); } }
+
+/* task rows (Canvas) */
+.items { list-style: none; margin: 10px 0 0 -20px; padding: 0; display: flex; flex-direction: column; gap: 4px; position: relative; }
+.item { display: flex; align-items: flex-start; gap: 10px; padding: 3px 0; position: relative; -webkit-touch-callout: none; transition: opacity .2s; }
+.item.sub { padding-left: 44px; gap: 8px; }
+.grip { flex: none; width: 22px; height: 24px; margin-right: -12px; margin-top: -2px; display: grid; place-items: center; color: var(--dim); cursor: grab; touch-action: none; opacity: .45; transition: opacity .12s; }
+.item.sub .grip { margin-right: -10px; }
+.grip svg { width: 10px; height: 14px; }
+.item:hover .grip, .item:focus-within .grip, .srow:hover .grip, .srow:focus-within .grip { opacity: .8; }
+.grip:hover { opacity: 1 !important; color: var(--ink); }
+.lifting { z-index: 30; background: #333336; border-radius: 6px; box-shadow: 0 8px 18px rgba(0,0,0,.55); pointer-events: none; }
+.drop-line { position: absolute; left: 16px; right: 0; height: 3px; border-radius: 2px; background: var(--list-color); pointer-events: none; z-index: 2; }
+body.row-drag, body.row-drag * { cursor: grabbing !important; user-select: none; -webkit-user-select: none; }
+.check { flex: none; width: 18px; height: 18px; margin-top: 1px; border-radius: 5px; border: 2px solid var(--dim); display: grid; place-items: center; transition: background .12s, border-color .12s; }
+.item.sub .check { width: 14px; height: 14px; border-radius: 4px; margin-top: 3px; border-width: 1.75px; }
+.check svg { width: 12px; height: 12px; opacity: 0; }
+.item.sub .check svg { width: 9px; height: 9px; }
+.item.done .check, .srow.done .check { background: var(--list-color); border-color: var(--list-color); }
+.item.done .check svg, .srow.done .check svg { opacity: 1; }
+.bang { display: none; font-weight: 800; font-size: 12px; line-height: 1; color: var(--list-color); font-style: normal; }
+.item.important:not(.done) .check { border-color: var(--list-color); }
+.item.important:not(.done) .check svg { display: none; }
+.item.important:not(.done) .bang { display: block; }
+.item.sub .bang { font-size: 9.5px; }
+.item.important:not(.done) .text { font-weight: 700; color: var(--list-color); }
+.text { flex: 1; min-width: 0; line-height: 1.35; outline: none; overflow-wrap: anywhere; cursor: text; }
+.text:empty::before { content: "Task"; color: var(--faint); }
+.item.sub .text { font-size: 14px; font-style: italic; }
+.item.done { opacity: .5; }
+.item.done .text { text-decoration: line-through; text-decoration-color: var(--dim); text-decoration-thickness: 1.5px; }
+.indent { flex: none; width: 24px; height: 22px; border-radius: 5px; color: var(--dim); display: none; place-items: center; font-weight: 800; font-size: 14px; }
+.indent svg { width: 15px; height: 15px; }
+.item:focus-within .indent, .item:hover .indent { display: grid; }
+/* phases: fixed, bold headings in the card color */
+.task-card .item:not(.editing) .date-pill { display: none; }
+.item.phase { align-items: center; padding: 12px 0 5px 0; margin: 0 0 2px 20px; }
+.item.phase:first-child { padding-top: 4px; }
+.phase-text { flex: 1; min-width: 0; font-weight: 800; font-size: 15px; letter-spacing: .07em; text-transform: uppercase; color: var(--ink); line-height: 1.35; outline: none; overflow-wrap: anywhere; cursor: text; }
+.phase-text:empty::before { content: attr(data-ph); color: var(--faint); font-weight: 700; }
+.phase-x { width: 24px; height: 24px; border-radius: 6px; color: var(--faint); font-size: 18px; line-height: 1; flex: none; opacity: 0; transition: opacity .12s; }
+.item.phase:hover .phase-x, .item.phase:focus-within .phase-x { opacity: 1; }
+.phase-x:hover { color: var(--danger); background: rgba(255,255,255,.07); }
+@media (hover: none) { .phase-x { opacity: .6; } }
+.add-btns { display: flex; flex-wrap: wrap; gap: 4px 22px; }
+.item.sub .text { color: var(--ink); }
+.indent:hover { background: rgba(255,255,255,.08); color: var(--ink); }
+
+/* schedule rows (Canvas) */
+.items.srows { gap: 2px; margin-left: -16px; }
+.srow { display: flex; align-items: center; flex-wrap: nowrap; gap: 6px; padding: 5px 0; position: relative; border-bottom: 1px solid rgba(255,255,255,.05); }
+.srow:last-child { border-bottom: 0; }
+.srow .grip { margin-top: 0; }
+.srow .check { margin-top: 0; }
+.srow.done .ms-text { text-decoration: line-through; text-decoration-color: var(--dim); }
+.srow.done > :not(.ms-end):not(.grip):not(.check) { opacity: .55; }
+.srow.fresh { animation: freshRow 1.6s ease; }
+@keyframes freshRow { 0%, 40% { background: color-mix(in srgb, var(--list-color) 28%, transparent); border-radius: 6px; } }
+.date-pill { flex: none; min-width: 54px; padding: 3px 6px; border-radius: 7px; border: 2px solid var(--c, var(--list-color)); color: var(--c, var(--list-color)); font-weight: 700; font-size: 12px; letter-spacing: .05em; text-align: center; font-variant-numeric: tabular-nums; line-height: 1.2; }
+.date-pill.no-date { border-style: dashed; border-color: var(--faint); color: var(--faint); font-weight: 600; }
+.date-pill:hover { background: color-mix(in srgb, var(--c, var(--list-color)) 14%, transparent); }
+.ms-text { flex: 1 1 auto; min-width: 0; font-size: 14.5px; line-height: 1.35; outline: none; overflow-wrap: anywhere; cursor: text; }
+.ms-text:empty::before, .bic-text:empty::before { content: attr(data-ph); color: var(--faint); }
+.ms-end { display: flex; align-items: center; gap: 6px; flex: none; margin-left: auto; }
+.status-pill { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 999px; flex: none; background: color-mix(in srgb, var(--s) 16%, transparent); border: 1px solid color-mix(in srgb, var(--s) 40%, transparent); }
+.status-pill:hover { background: color-mix(in srgb, var(--s) 30%, transparent); }
+.s-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--s); flex: none; }
+.s-ns { --s: #8e8e93; } .s-ip { --s: #FFB547; } .s-blk { --s: #FF5A5A; } .s-done { --s: #5FD68A; }
+.bic { display: inline-flex; align-items: baseline; flex: none; width: 70px; }
+.bic-text { min-width: 0; flex: 1; font-size: 13px; line-height: 1.35; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; outline: none; cursor: text; border-bottom: 1px dashed transparent; color: var(--dim); }
+.bic-text:focus { border-bottom-color: var(--faint); text-overflow: clip; color: var(--ink); }
+.row-open { width: 24px; height: 24px; border-radius: 6px; color: var(--faint); display: grid; place-items: center; flex: none; }
+.row-open svg { width: 16px; height: 16px; }
+.row-open:hover { color: var(--ink); background: rgba(255,255,255,.08); }
+.row-open.has { color: var(--dim); }
+
+/* ---------- month calendar (MYCAL) ---------- */
+.cal { min-width: 0; }
+.cal-top { display: flex; align-items: center; gap: 10px; margin: 2px 0 12px; }
+.cal-month { font-weight: 700; font-size: 24px; letter-spacing: .08em; text-transform: uppercase; margin-right: auto; }
+.cal-month span { color: var(--dim); font-weight: 600; }
+.nav-btn { width: 36px; height: 36px; border-radius: 9px; background: var(--card); border: 1px solid var(--card-edge); display: grid; place-items: center; color: var(--ink); flex: none; }
+.nav-btn:hover { background: #3a3a3d; }
+.nav-btn svg { width: 20px; height: 20px; }
+.today-btn { height: 36px; padding: 0 14px; border-radius: 9px; background: var(--card); border: 1px solid var(--card-edge); font-weight: 700; font-size: 13px; letter-spacing: .06em; }
+.today-btn:hover { background: #3a3a3d; }
+.month { background: var(--card); border: 1px solid var(--card-edge); border-radius: 12px; overflow: hidden; box-shadow: 0 6px 20px rgba(0,0,0,.5); touch-action: pan-y; }
+.dow { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); border-bottom: 1px solid var(--card-edge); }
+.dow span { padding: 9px 10px; font-size: 11.5px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--dim); }
+.weeks { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); }
+.cell { min-height: 116px; padding: 6px 6px 8px; border-right: 1px solid var(--card-edge); border-bottom: 1px solid var(--card-edge); cursor: pointer; display: flex; flex-direction: column; gap: 3px; min-width: 0; transition: background .12s; -webkit-user-select: none; user-select: none; }
+.cell:nth-child(7n) { border-right: 0; }
+.cell.last-row { border-bottom: 0; }
+.cell:hover { background: rgba(255,255,255,.025); }
+.cell.other { background: #222224; }
+.cell.other .num { color: var(--faint); }
+.num { align-self: flex-start; min-width: 26px; height: 26px; padding: 0 6px; border-radius: 13px; display: grid; place-items: center; font-size: 13px; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--ink); margin-bottom: 1px; }
+.cell.today .num { background: var(--accent); color: #000; }
+.chip { display: flex; align-items: center; gap: 5px; width: 100%; min-width: 0; padding: 2px 6px; border-radius: 5px; font-size: 12.5px; line-height: 1.35; text-align: left; color: var(--ink); }
+.chip .t { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+.chip .tm { color: var(--dim); font-variant-numeric: tabular-nums; flex: none; }
+.chip.timed:hover { background: rgba(255,255,255,.07); }
+.chip.timed .d { width: 8px; height: 8px; border-radius: 50%; background: var(--c); flex: none; }
+.chip.allday { background: var(--c); color: #111; font-weight: 600; }
+.chip.allday:hover { filter: brightness(1.08); }
+.chip.done .t { text-decoration: line-through; }
+.chip.done { opacity: .6; }
+.chip.cont { border-top-left-radius: 0; border-bottom-left-radius: 0; opacity: .85; }
+.more { align-self: flex-start; font-size: 12px; font-weight: 700; color: var(--dim); padding: 1px 6px; border-radius: 5px; }
+.more:hover { color: var(--ink); background: rgba(255,255,255,.07); }
+.cal-legend { display: flex; flex-wrap: wrap; gap: 6px 14px; margin: 10px 2px 0; font-size: 12px; color: var(--dim); }
+.cal-legend button { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--dim); }
+.cal-legend button:hover { color: var(--ink); }
+.cal-legend i { width: 9px; height: 9px; border-radius: 50%; background: var(--c); }
+.cal-tip { font-size: 12px; color: var(--faint); margin: 8px 2px 0; }
+.home-cal { margin-top: 40px; }
+.home-cal .home-head { margin-bottom: 10px; }
+.cal-key { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 0 0 12px; }
+.ck { display: inline-flex; align-items: center; gap: 8px; height: 32px; max-width: 100%; padding: 0 12px 0 10px; border-radius: 999px; font-size: 13px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase;
+  color: var(--dim); background: var(--card); border: 1px solid var(--card-edge); transition: background .15s, color .15s, border-color .15s; }
+.ck span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+.ck i { width: 12px; height: 12px; border-radius: 50%; flex: none; box-shadow: inset 0 0 0 2px var(--c); }
+.ck[aria-pressed="true"] { color: var(--ink); background: color-mix(in srgb, var(--c) 18%, var(--card)); border-color: color-mix(in srgb, var(--c) 55%, transparent); }
+.ck[aria-pressed="true"] i { background: var(--c); }
+.ck:hover { border-color: var(--c); }
+.ck-n { font-weight: 600; color: var(--faint); letter-spacing: 0; }
+.ck-quick { display: inline-flex; gap: 2px; margin-left: 4px; }
+.ck-quick button { height: 32px; padding: 0 10px; border-radius: 8px; font-size: 12.5px; font-weight: 700; letter-spacing: .06em; color: var(--dim); }
+.ck-quick button:hover { color: var(--ink); background: rgba(255,255,255,.07); }
+.cal-empty-note { font-size: 13px; color: var(--dim); margin: 0 2px 10px; }
+
+/* ---------- popovers (date picker, colors, EDIT menus) ---------- */
+.pop { position: fixed; z-index: 30000; background: var(--pop); border: 1px solid var(--card-edge); border-radius: 10px; padding: 12px; box-shadow: 0 14px 30px rgba(0,0,0,.6); width: 244px; color: var(--ink); }
+.pop-label { font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--dim); margin-bottom: 8px; }
+.swatches { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+.sw { aspect-ratio: 1; border-radius: 50%; }
+.sw[aria-pressed="true"] { box-shadow: 0 0 0 2px var(--pop), 0 0 0 4px var(--ink); }
+.custom { display: flex; align-items: center; gap: 8px; margin-top: 10px; font-size: 13px; color: var(--dim); cursor: pointer; }
+.custom input { width: 34px; height: 26px; border: 0; padding: 0; background: none; cursor: pointer; }
+.pop hr { border: 0; border-top: 1px solid var(--card-edge); margin: 12px 0 10px; }
+.pop-menu { display: flex; flex-direction: column; gap: 1px; margin: 0 -6px; }
+.pop-action { display: flex; align-items: center; gap: 10px; width: 100%; text-align: left; font-size: 14px; padding: 7px 8px; border-radius: 7px; }
+.pop-action:hover { background: rgba(255,255,255,.07); }
+.pop-action svg { width: 16px; height: 16px; flex: none; color: var(--dim); }
+.pop-action:disabled { opacity: .4; cursor: default; }
+.pop-action:disabled:hover { background: none; }
+.pop-action.danger, .pop-action.danger svg { color: var(--danger); }
+.confirm { display: flex; gap: 8px; align-items: center; font-size: 13px; color: var(--dim); flex-wrap: wrap; padding: 4px 8px; }
+.confirm button { padding: 4px 10px; border-radius: 6px; border: 1px solid var(--card-edge); color: var(--ink); font-size: 13px; }
+.confirm .yes { background: var(--danger); border-color: var(--danger); color: #000; font-weight: 700; }
+.status-pop { width: 180px; padding: 6px; display: flex; flex-direction: column; gap: 2px; }
+.status-opt { display: flex; align-items: center; gap: 8px; padding: 7px 10px; border-radius: 7px; font-size: 14px; text-align: left; }
+.status-opt:hover, .status-opt[aria-pressed="true"] { background: rgba(255,255,255,.07); }
+.cal-pop { width: 260px; padding: 10px; }
+.cp-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+.cp-title { font-weight: 700; font-size: 14px; }
+.cp-nav { width: 30px; height: 30px; border-radius: 7px; font-size: 20px; line-height: 1; color: var(--dim); }
+.cp-nav:hover { background: rgba(255,255,255,.08); color: var(--ink); }
+.cp-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 2px; text-align: center; }
+.cp-grid > * { min-width: 0; }
+.cp-dow span { font-size: 11px; font-weight: 700; color: var(--faint); padding: 4px 0; }
+.cp-day { height: 32px; width: 100%; border-radius: 7px; font-size: 13px; font-variant-numeric: tabular-nums; }
+.cp-day:hover { background: rgba(255,255,255,.08); }
+.cp-day.today { box-shadow: inset 0 0 0 1.5px var(--faint); }
+.cp-day.sel { background: var(--c); color: #000; font-weight: 700; box-shadow: none; }
+.cp-foot { display: flex; justify-content: space-between; margin-top: 8px; }
+.cp-foot button { font-size: 13px; font-weight: 600; padding: 4px 8px; border-radius: 6px; color: var(--c); }
+.cp-foot button:hover { background: rgba(255,255,255,.07); }
+.cp-foot .cp-clear { color: var(--dim); }
+
+/* ---------- item details window (MYCAL) ---------- */
+.modal { position: fixed; inset: 0; z-index: 20000; background: rgba(0,0,0,.6); display: grid; place-items: center; padding: 24px; animation: fadeIn .15s ease; }
+@keyframes fadeIn { from { opacity: 0; } }
+.ev { width: min(560px, 100%); max-height: calc(100vh - 48px); display: flex; flex-direction: column; background: var(--card); border: 1px solid var(--card-edge); border-radius: 14px; box-shadow: 0 24px 60px rgba(0,0,0,.7); overflow: hidden; animation: popIn .16s ease; }
+@keyframes popIn { from { transform: translateY(10px) scale(.98); opacity: 0; } }
+.ev-head { display: flex; align-items: flex-start; gap: 10px; padding: 18px 16px 12px 20px; border-bottom: 3px solid var(--c); margin: 0 16px 0 0; }
+.ev-title { flex: 1; min-width: 0; background: transparent; border: 0; outline: none; color: var(--c); font-weight: 700; font-size: 20px; letter-spacing: .04em; padding: 2px 0; }
+.ev-title::placeholder { color: var(--faint); }
+.ev-x { width: 32px; height: 32px; border-radius: 8px; font-size: 24px; line-height: 1; color: var(--dim); flex: none; margin: -3px -4px 0 0; }
+.ev-x:hover { background: rgba(255,255,255,.08); color: var(--ink); }
+.ev-proj { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 8px 20px 0; font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--dim); }
+.ev-proj b { color: var(--pc); }
+.ev-body { overflow-y: auto; padding: 6px 20px 8px; overscroll-behavior: contain; }
+.ev-sec { display: grid; grid-template-columns: 22px minmax(0, 1fr); gap: 4px 14px; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,.06); }
+.ev-sec:last-child { border-bottom: 0; }
+.ev-ico { color: var(--dim); padding-top: 6px; }
+.ev-ico svg { width: 20px; height: 20px; display: block; }
+.ev-lbl { font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--dim); margin: 2px 0 6px; }
+.when { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.when-grp { display: flex; align-items: center; gap: 6px; }
+.when-to { color: var(--dim); font-size: 13px; }
+.dt-btn { height: 34px; padding: 0 10px; border-radius: 8px; background: #232325; border: 1px solid var(--card-edge); font-size: 14px; font-weight: 600; white-space: nowrap; }
+.dt-btn:hover { border-color: var(--dim); }
+.dt-btn.empty { color: var(--faint); border-style: dashed; }
+.tm-in { height: 34px; padding: 0 8px; border-radius: 8px; background: #232325; border: 1px solid var(--card-edge); font-size: 14px; color: var(--ink); color-scheme: dark; min-width: 0; }
+.tm-in:focus { outline: none; border-color: var(--c); }
+.allday { display: inline-flex; align-items: center; gap: 7px; margin-top: 8px; font-size: 13.5px; color: var(--ink); cursor: pointer; user-select: none; }
+.allday input { width: 17px; height: 17px; accent-color: var(--c); margin: 0; }
+.ev-status { display: flex; flex-wrap: wrap; gap: 6px; }
+.ev-status .status-opt { border: 1px solid var(--card-edge); background: #232325; padding: 6px 10px; font-size: 13.5px; }
+.ev-status .status-opt[aria-pressed="true"] { background: color-mix(in srgb, var(--s) 22%, #232325); border-color: color-mix(in srgb, var(--s) 60%, transparent); }
+.bic-row { display: flex; align-items: center; gap: 8px; margin-top: 10px; }
+.bic-row .field { flex: 1; }
+.bic-row span { font-size: 12px; font-weight: 700; letter-spacing: .08em; color: var(--dim); flex: none; }
+.ev-colors { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.ev-colors .sw { width: 26px; height: 26px; }
+.ev-colors .sw-proj { width: auto; aspect-ratio: auto; height: 26px; padding: 0 10px; border-radius: 13px; font-size: 12px; font-weight: 700; background: #232325; border: 1px solid var(--card-edge); color: var(--dim); }
+.ev-colors .sw-proj[aria-pressed="true"] { color: var(--ink); }
+.sel { height: 36px; padding: 0 30px 0 10px; border-radius: 8px; background: #232325 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238e8e93' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 8px center / 14px; border: 1px solid var(--card-edge); color: var(--ink); font-size: 14px; -webkit-appearance: none; appearance: none; max-width: 100%; }
+.sel:focus { outline: none; border-color: var(--c, var(--accent)); }
+.field { width: 100%; background: #232325; border: 1px solid var(--card-edge); border-radius: 8px; padding: 8px 10px; color: var(--ink); font-size: 14px; outline: none; }
+.field:focus { border-color: var(--c); }
+.field::placeholder { color: var(--faint); }
+textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hidden; }
+.add-row { display: flex; gap: 6px; flex-wrap: wrap; }
+.add-row .field { flex: 1 1 140px; min-width: 0; }
+.mini-btn { height: 36px; padding: 0 14px; border-radius: 8px; background: var(--c); color: #000; font-weight: 700; font-size: 13px; flex: none; }
+.mini-btn.ghost { background: rgba(255,255,255,.07); color: var(--ink); }
+.join { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.join-btn { display: inline-flex; align-items: center; gap: 8px; height: 38px; padding: 0 16px; border-radius: 9px; background: var(--c); color: #000; font-weight: 700; font-size: 14px; text-decoration: none; }
+.join-btn svg { width: 18px; height: 18px; }
+.join-url { flex: 1 1 100%; font-size: 12.5px; color: var(--dim); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.x-btn { width: 28px; height: 28px; border-radius: 7px; color: var(--faint); font-size: 18px; line-height: 1; flex: none; }
+.x-btn:hover { background: rgba(255,255,255,.08); color: var(--ink); }
+.links { display: flex; flex-direction: column; gap: 6px; margin-bottom: 8px; }
+.links:empty { display: none; }
+.link-row { display: flex; align-items: center; gap: 6px; }
+.link-chip { display: inline-flex; align-items: center; gap: 7px; min-width: 0; max-width: 100%; padding: 5px 10px 5px 8px; border-radius: 8px; color: var(--c); font-weight: 600; font-size: 14px; background: color-mix(in srgb, var(--c) 12%, transparent); text-decoration: none; }
+.link-chip svg { width: 15px; height: 15px; flex: none; }
+.link-chip span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-decoration: underline; text-underline-offset: 2px; }
+.comments { display: flex; flex-direction: column; gap: 8px; margin-bottom: 8px; }
+.comments:empty { display: none; }
+.cmt { background: #232325; border-radius: 9px; padding: 8px 10px; position: relative; }
+.cmt-t { font-size: 14px; line-height: 1.45; white-space: pre-wrap; overflow-wrap: anywhere; padding-right: 22px; }
+.cmt-at { font-size: 11.5px; color: var(--faint); margin-top: 3px; }
+.cmt .x-btn { position: absolute; top: 4px; right: 4px; width: 24px; height: 24px; font-size: 16px; }
+.ev-foot { display: flex; align-items: center; gap: 8px; padding: 12px 16px 14px 20px; border-top: 1px solid var(--card-edge); flex-wrap: wrap; }
+.ev-foot .grow { flex: 1; }
+.foot-btn { display: inline-flex; align-items: center; gap: 7px; height: 36px; padding: 0 12px; border-radius: 8px; font-size: 14px; font-weight: 600; color: var(--dim); }
+.foot-btn:hover { background: rgba(255,255,255,.07); color: var(--ink); }
+.foot-btn svg { width: 16px; height: 16px; }
+.foot-btn.danger:hover { color: var(--danger); }
+.done-btn { height: 36px; padding: 0 20px; border-radius: 8px; background: var(--c); color: #000; font-weight: 800; font-size: 14px; letter-spacing: .03em; }
+.pj-lbl { display: block; font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--dim); margin: 14px 0 6px; }
+.pj-lbl:first-child { margin-top: 4px; }
+.pj-desc { min-height: 120px; }
+
+/* day list */
+.day { width: min(420px, 100%); background: var(--card); border: 1px solid var(--card-edge); border-radius: 14px; box-shadow: 0 24px 60px rgba(0,0,0,.7); padding: 16px 16px 14px 20px; animation: popIn .16s ease; max-height: calc(100vh - 48px); display: flex; flex-direction: column; }
+.day-head { display: flex; align-items: center; gap: 8px; padding-bottom: 8px; border-bottom: 3px solid var(--c); color: var(--c); }
+.day-title { flex: 1; font-weight: 700; font-size: 17px; letter-spacing: .05em; text-transform: uppercase; }
+.day-list { overflow-y: auto; margin: 8px 0 4px; display: flex; flex-direction: column; gap: 4px; }
+.day-item { display: flex; align-items: center; gap: 10px; padding: 9px 10px; border-radius: 9px; text-align: left; background: #232325; border-left: 4px solid var(--c); }
+.day-item:hover { background: #2f2f32; }
+.day-item .t { flex: 1; min-width: 0; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.day-item .pn { display: block; font-size: 11.5px; font-weight: 700; letter-spacing: .06em; color: var(--dim); text-transform: uppercase; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.day-item .tm { font-size: 12.5px; color: var(--dim); flex: none; font-variant-numeric: tabular-nums; }
+.day-item.done .t { text-decoration: line-through; opacity: .6; }
+.day-empty { color: var(--dim); font-size: 14px; padding: 10px 2px; }
+.day-add { display: flex; gap: 6px; margin-top: 8px; }
+.day-add .field { flex: 1; }
+
+.toast { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(20px + env(safe-area-inset-bottom, 0px)); z-index: 40000; display: flex; align-items: center; gap: 14px; background: #3a3a3d; border-radius: 10px; padding: 10px 12px 10px 16px; box-shadow: 0 10px 28px rgba(0,0,0,.6); font-size: 14px; max-width: calc(100% - 32px); }
+.toast button { font-weight: 700; color: #5aa9ff; padding: 4px 6px; border-radius: 6px; }
+.toast button:hover { background: rgba(255,255,255,.08); }
+.status { position: fixed; left: 20px; bottom: calc(14px + env(safe-area-inset-bottom, 0px)); font-size: 12px; color: var(--faint); z-index: 1000; }
+
+/* ---------- iPad portrait ---------- */
+@media (max-width: 999px) and (min-width: 700px) {
+  .pgrid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+/* ---------- iPhone: one stacked column ---------- */
+@media (max-width: 699px) {
+  .topbar { padding: 12px 14px; gap: 10px; flex-wrap: wrap; row-gap: 10px; }
+  .brand { gap: clamp(6px, 2.2vw, 9px); }
+  .brand-icon { height: clamp(34px, 12.6vw, 52px); }
+  .brand-name { font-size: clamp(17px, 5.9vw, 24px); }
+  .brand-sub { font-size: clamp(11px, 3.65vw, 15px); white-space: nowrap; }
+  .top-right { gap: 8px; }
+  .round-btn { width: 38px; height: 38px; }
+  .tabs { order: 3; flex-basis: 100%; margin-right: 0; }
+  .tab { flex: 1; justify-content: center; padding: 8px 6px; gap: 6px; font-size: 13px; }
+  .home { padding: 4px 12px 40px; }
+  .home-head h1 { font-size: 19px; }
+  .home-cal { margin-top: 28px; }
+  .ck { height: 30px; font-size: 12px; padding: 0 10px 0 8px; }
+  .pgrid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  .ptile { padding: 12px 12px 10px 14px; border-radius: 12px; }
+  .ptile .title { font-size: 14px; }
+  .p-subs li { font-size: 12px; }
+  .pcols { grid-template-columns: minmax(0, 1fr); padding: 0 12px 40px; gap: 28px; }
+  .add-col { margin-top: 0; min-height: 90px; flex-direction: row; }
+  .tile-stats { gap: 14px; margin-top: 10px; }
+  .tile-stats b { font-size: 30px; }
+  .tile-stats span { font-size: 10.5px; }
+  .page-body { padding: 0 12px 40px; }
+  .ptile { aspect-ratio: auto; min-height: 172px; }
+  .p-foot { margin-top: 12px; }
+  .p-subs { gap: 4px; margin-top: 8px; }
+  .p-desc { font-size: 13px; line-height: 1.4; -webkit-line-clamp: 4; margin-top: 8px; }
+  .p-next { font-size: 12px; }
+  .p-meta { font-size: 11px; }
+  .new-tile { border-radius: 12px; font-size: 12px; aspect-ratio: auto; grid-column: 1 / -1; flex-direction: row; min-height: 64px; }
+  .new-tile .ni { width: 36px; height: 36px; }
+  .proj-head { padding: 0 12px 12px; gap: 10px; }
+  .sched-card .bic { width: 46px; }
+  .item .bic { width: 56px; }
+  .sched-card .ms-end { gap: 4px; }
+  .ph-title { font-size: 18px; }
+  .ph-stats { display: none; }
+  .pv { padding: 0 12px 40px; gap: 16px; }
+  .col { gap: 16px; }
+  .title { font-size: 16px; }
+  .text { font-size: 16px; }
+  .item.sub .text { font-size: 16px; }
+  .bic { width: 64px; }
+  /* iPhone zooms the page when you tap a field smaller than 16px, so every editable field is 16px here */
+  .qa-input, .ms-text, .bic-text, .proj-desc, .qa-text, .field, .tm-in, .ev-title, .sel { font-size: 16px; }
+  .cal-month { font-size: 19px; }
+  .nav-btn, .today-btn { height: 34px; }
+  .nav-btn { width: 34px; }
+  .dow span { padding: 7px 0; text-align: center; font-size: 10.5px; letter-spacing: .04em; }
+  .cell { min-height: 78px; padding: 4px 2px 4px; gap: 2px; }
+  .num { font-size: 12px; min-width: 22px; height: 22px; align-self: center; }
+  .chip { padding: 1px 3px; font-size: 10px; border-radius: 3px; background: color-mix(in srgb, var(--c) 30%, transparent); }
+  .chip.allday { background: var(--c); }
+  .chip.timed .d, .chip .tm { display: none; }
+  .more { font-size: 10px; padding: 0 3px; align-self: center; }
+  .modal { padding: 0; place-items: end stretch; }
+  .ev { width: 100%; max-height: 92vh; border-radius: 16px 16px 0 0; border-bottom: 0; padding-bottom: env(safe-area-inset-bottom, 0px); }
+  .day { width: 100%; border-radius: 16px 16px 0 0; max-height: 80vh; padding-bottom: calc(14px + env(safe-area-inset-bottom, 0px)); }
+  .status { display: none; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand" id="brand" role="link" tabindex="0" aria-label="PMBridge home">
+    <svg class="brand-icon" viewBox="0 0 64 64" aria-hidden="true"><g fill="#3CB371"><rect x="29" y="5" width="6" height="51" rx="1.5"/><rect x="2" y="38" width="60" height="5" rx="1.5"/></g><g stroke="#3CB371" stroke-width="2" stroke-linecap="round"><path d="M32 9L5 38M32 13L13 38M32 17L21 38M32 9L59 38M32 13L51 38M32 17L43 38"/></g></svg>
+    <div class="brand-text"><span class="brand-name">PMBridge</span><span class="brand-sub">Projects, Tasks &amp; Dates</span></div>
+  </div>
+  <div class="top-right">
+    <span class="brand-tag" id="brandTag">Open a campus card - star tasks for Status - every date is on the Calendar</span>
+    <button class="round-btn" id="addBtn" data-pop aria-label="Add" title="Add"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
+    <button class="round-btn" id="moreBtn" data-pop aria-label="Backup and restore" title="Backup and restore"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5.5" cy="12" r="1.9"/><circle cx="12" cy="12" r="1.9"/><circle cx="18.5" cy="12" r="1.9"/></svg></button>
+  </div>
+</header>
+
+<main id="view"></main>
+<input type="file" id="importFile" accept="application/json,.json" hidden>
+<div class="toast" id="toast" hidden><span id="toastMsg"></span><button id="toastUndo">Undo</button></div>
+<div class="status" id="status"></div>
+
+<script>
+(() => {
+  "use strict";
+  /* ================= basics ================= */
+  const COLORS = ["#5AA9FF", "#5FD68A", "#FF7EB6", "#FFA24C", "#B18CFF", "#4FD1C5", "#FF6B6B", "#8C9EFF", "#FFD84D", "#F2F2F2"];
+  const PROJECT_COLORS = ["#3CB371", "#5AA9FF", "#FFA24C", "#B18CFF", "#FF7EB6", "#4FD1C5", "#FFD84D", "#8C9EFF", "#FF6B6B"];
+  const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  const MON = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+  const DOW3 = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
+  const STATUSES = ["Not Started", "In Progress", "Blocked", "Done"];
+  const STATUS_CLASS = { "Not Started": "s-ns", "In Progress": "s-ip", "Blocked": "s-blk", "Done": "s-done" };
+  const LS_KEY = "pmbridge-v1";
+  const APP_VERSION = "25 (Oct 14)";
+  const $ = id => document.getElementById(id);
+  const uid = () => Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4);
+  const pad2 = n => String(n).padStart(2, "0");
+  const iso = d => d.getFullYear() + "-" + pad2(d.getMonth() + 1) + "-" + pad2(d.getDate());
+  const isIso = s => /^\d{4}-\d{2}-\d{2}$/.test(s || "");
+  const parseIso = s => { const [y, m, d] = s.split("-").map(Number); return new Date(y, m - 1, d); };
+  const todayIso = () => iso(new Date());
+  const addDays = (s, n) => { const d = parseIso(s); d.setDate(d.getDate() + n); return iso(d); };
+  const dayDiff = (a, b) => Math.round((parseIso(b) - parseIso(a)) / 86400000);
+  const isPhone = () => matchMedia("(max-width: 699px)").matches;
+  const isTouch = () => matchMedia("(hover: none) and (pointer: coarse)").matches;
+  const tapOpens = it => isTouch() && !!it.text.trim();
+  const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const safeColor = (c, f) => (/^#[0-9a-f]{3,8}$/i.test(c || "") ? c : (f || COLORS[0]));
+  const normUrl = u => { u = (u || "").trim(); if (!u) return ""; if (!/^[a-z][a-z0-9+.-]*:/i.test(u)) u = "https://" + u; return u; };
+  const safeHref = u => (/^(https?:|mailto:|tel:)/i.test(u || "") ? u : "#");
+  const shortDate = s => { const d = parseIso(s); return MON[d.getMonth()] + " " + d.getDate(); };
+  const longDate = s => parseIso(s).toLocaleDateString([], { weekday: "short", month: "short", day: "numeric", year: parseIso(s).getFullYear() === new Date().getFullYear() ? undefined : "numeric" });
+  const fullDate = s => parseIso(s).toLocaleDateString([], { weekday: "long", month: "long", day: "numeric", year: "numeric" });
+  const fmtTime = t => { if (!t) return ""; let [h, m] = t.split(":").map(Number); const ap = h >= 12 ? "PM" : "AM"; h = h % 12 || 12; return h + ":" + pad2(m) + " " + ap; };
+  const shortTime = t => { if (!t) return ""; let [h, m] = t.split(":").map(Number); const ap = h >= 12 ? "p" : "a"; h = h % 12 || 12; return h + (m ? ":" + pad2(m) : "") + ap; };
+  const addHour = t => { let [h, m] = t.split(":").map(Number); h = Math.min(23, h + 1); return pad2(h) + ":" + pad2(m); };
+  const when = ts => { try { return new Date(ts).toLocaleString([], { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }); } catch (e) { return ""; } };
+  const meetingName = u => { const s = (u || "").toLowerCase(); if (/teams\.(microsoft|live)\.com/.test(s)) return "Teams"; if (/webex\.com/.test(s)) return "Webex"; if (/zoom\.(us|com)/.test(s)) return "Zoom"; if (/meet\.google\.com/.test(s)) return "Google Meet"; return ""; };
+  const I = (d, w = 2) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round">${d}</svg>`;
+  const ICON = {
+    plus: I('<path d="M12 5v14M5 12h14"/>', 2.2),
+    chev: I('<path d="M6 9l6 6 6-6"/>', 2.4),
+    back: I('<path d="M15 6l-6 6 6 6"/>', 2.4),
+    next: I('<path d="M9 6l6 6-6 6"/>', 2.4),
+    check: I('<path d="M5 12.5l4.2 4.2L19 7"/>', 3.4),
+    grip: '<svg viewBox="0 0 10 14" fill="currentColor"><circle cx="2.5" cy="2" r="1.4"/><circle cx="7.5" cy="2" r="1.4"/><circle cx="2.5" cy="7" r="1.4"/><circle cx="7.5" cy="7" r="1.4"/><circle cx="2.5" cy="12" r="1.4"/><circle cx="7.5" cy="12" r="1.4"/></svg>',
+    indent: I('<path d="M4 6h16M10 12h10M10 18h10M4 10l3 2.5L4 15"/>'),
+    task: I('<rect x="3.5" y="3.5" width="17" height="17" rx="4"/><path d="M8 12.5l2.8 2.8L16.5 9"/>'),
+    cal: I('<rect x="3.5" y="5" width="17" height="15.5" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/>'),
+    folder: I('<path d="M3.5 7.5A2 2 0 0 1 5.5 5.5h4l2 2.5h7a2 2 0 0 1 2 2v7.5a2 2 0 0 1-2 2h-13a2 2 0 0 1-2-2z"/>'),
+    pencil: I('<path d="M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16z"/><path d="M13.5 6.5l4 4"/>'),
+    clock: I('<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>'),
+    palette: I('<path d="M12 3.5a8.5 8.5 0 1 0 0 17c1.2 0 1.8-.9 1.4-1.9-.5-1.2.3-2.6 1.7-2.6H17a3.5 3.5 0 0 0 3.5-3.5c0-5-3.8-9-8.5-9z"/><circle cx="7.8" cy="11" r="1.1" fill="currentColor"/><circle cx="10.5" cy="7.6" r="1.1" fill="currentColor"/><circle cx="14.8" cy="7.8" r="1.1" fill="currentColor"/>'),
+    flag: I('<path d="M5 21V4M5 4h11l-2 4 2 4H5"/>'),
+    video: I('<rect x="3" y="6.5" width="12.5" height="11" rx="2.5"/><path d="M15.5 10.5l5-3v9l-5-3"/>'),
+    link: I('<path d="M10 13.5a4.5 4.5 0 0 0 6.4.4l3-3a4.5 4.5 0 0 0-6.4-6.4l-1.2 1.2"/><path d="M14 10.5a4.5 4.5 0 0 0-6.4-.4l-3 3a4.5 4.5 0 0 0 6.4 6.4l1.2-1.2"/>'),
+    notes: I('<path d="M5 3.5h14a1.5 1.5 0 0 1 1.5 1.5v9.5l-6 6H5A1.5 1.5 0 0 1 3.5 19V5A1.5 1.5 0 0 1 5 3.5z"/><path d="M14.5 20.5v-4.5a1.5 1.5 0 0 1 1.5-1.5h4.5M8 8.5h8M8 12.5h5"/>'),
+    comment: I('<path d="M20.5 12a8 8 0 0 1-11.6 7.1L3.5 20.5l1.4-4.9A8 8 0 1 1 20.5 12z"/>'),
+    trash: I('<path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12M9 7V4h6v3"/>'),
+    dup: I('<rect x="8.5" y="8.5" width="12" height="12" rx="2.5"/><path d="M15.5 8.5V6A2.5 2.5 0 0 0 13 3.5H6A2.5 2.5 0 0 0 3.5 6v7A2.5 2.5 0 0 0 6 15.5h2.5"/>'),
+    sort: I('<path d="M7 4v16M3.5 16.5L7 20l3.5-3.5M13 6h8M13 11h6M13 16h4"/>'),
+    sweep: I('<path d="M4 7l2 2 3.5-3.5M4 15l2 2 3.5-3.5M13 7.5h7M13 15.5h7"/>'),
+    up: I('<path d="M12 19V5M6 11l6-6 6 6"/>'),
+    down: I('<path d="M12 5v14M6 13l6 6 6-6"/>'),
+    open: I('<path d="M9 6l6 6-6 6"/>', 2.4),
+    go: I('<path d="M5 12h13M13 6.5l5.5 5.5-5.5 5.5"/>', 2.6),
+    save: I('<path d="M12 4v11M7 10.5l5 5 5-5M5 19.5h14"/>'),
+    load: I('<path d="M12 20V9M7 13.5l5-5 5 5M5 4.5h14"/>'),
+    user: I('<circle cx="12" cy="8" r="3.8"/><path d="M4.5 20a7.5 7.5 0 0 1 15 0"/>')
+  };
+
+  /* ================= data ================= */
+  // state.projects[] -> { id, title, desc, color, cards: [{ id, kind: "task"|"sched", title, color, collapsed, items: [] }] }
+  // task item:  { id, text, done, sub, imp }
+  // sched item: { id, text, date, end, startTime, endTime, status, prev, bic, color, notes, meeting, links, comments }
+  const state = { projects: [] };
+  // every task line can carry a date; dated tasks also show on the schedule card and the calendar
+  const cleanItem = r => {
+    const it = {
+      id: r.id || uid(), kind: r.kind === "phase" ? "phase" : "task", text: String(r.text || ""), sub: !!r.sub, imp: !!r.imp,
+      date: isIso(r.date) ? r.date : null, end: isIso(r.end) ? r.end : null,
+      startTime: /^\d{2}:\d{2}$/.test(r.startTime || "") ? r.startTime : "", endTime: /^\d{2}:\d{2}$/.test(r.endTime || "") ? r.endTime : "",
+      status: STATUSES.includes(r.status) ? r.status : "Not Started", prev: r.prev || null, bic: String(r.bic || ""),
+      color: r.color && /^#[0-9a-f]{3,8}$/i.test(r.color) ? r.color : "",
+      notes: String(r.notes || ""), meeting: String(r.meeting || ""),
+      links: (Array.isArray(r.links) ? r.links : []).map(l => ({ id: l.id || uid(), label: String(l.label || ""), url: String(l.url || "") })),
+      blockReason: String(r.blockReason || ""), update: String(r.update || ""), star: !!r.star, stAt: +r.stAt || 0,
+      comments: (Array.isArray(r.comments) ? r.comments : []).map(c => ({ id: c.id || uid(), text: String(c.text || ""), at: c.at || 0 })),
+      created: r.created || Date.now()
+    };
+    if (r.done && it.status !== "Done") { it.prev = it.status; it.status = "Done"; }
+    it.done = it.status === "Done";
+    if (it.kind === "phase") { it.sub = false; it.imp = false; it.date = null; it.end = null; it.done = false; it.status = "Not Started"; }
+    return it;
+  };
+  const cleanTask = cleanItem, cleanSched = cleanItem;
+  function setStatus(it, s) { it.stAt = Date.now(); if ((s === "Done" || s === "Blocked") && it.status !== s && it.status !== "Done" && it.status !== "Blocked") it.prev = it.status; it.status = s; it.done = s === "Done"; }
+  function toggleBlocked(it) { if (it.status === "Blocked") setStatus(it, it.prev && it.prev !== "Blocked" && it.prev !== "Done" ? it.prev : "Not Started"); else setStatus(it, "Blocked"); }
+  const ICON_STAR = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.8l2.8 5.9 6.4.8-4.7 4.4 1.2 6.4L12 17.2l-5.7 3.1 1.2-6.4-4.7-4.4 6.4-.8z"/></svg>', ICON_STAR_O = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2.8l2.8 5.9 6.4.8-4.7 4.4 1.2 6.4L12 17.2l-5.7 3.1 1.2-6.4-4.7-4.4 6.4-.8z"/></svg>';
+  const ICON_BLOCK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M6 6l12 12"/></svg>';
+  function toggleDone(it) { if (it.done) setStatus(it, it.prev && it.prev !== "Done" ? it.prev : "Not Started"); else setStatus(it, "Done"); }
+  const cleanCard = c => ({ id: c.id || uid(), kind: "task", title: String(c.title || "TASKS"), color: safeColor(c.color, "#5FD68A"), collapsed: !!c.collapsed, showDates: c.showDates !== false, showOwners: c.showOwners !== false, sub: String(c.sub || ""),
+    items: (Array.isArray(c.items) ? c.items : []).map(cleanItem) });
+  const cleanSchedView = v => ({ title: String(v && v.title && v.title !== "SCHEDULE" ? v.title : "CRITICAL PATH"), color: safeColor(v && v.color, "#5AA9FF"), collapsed: !!(v && v.collapsed), hideDone: !!(v && v.hideDone), blkCollapsed: !!(v && v.blkCollapsed), xc: { ...((v && v.xc) || {}) } });
+  const cleanSub = x => ({ id: x.id || uid(), title: String(x.title || "NEW PROJECT"), sched: cleanSchedView(x.sched) });
+  function cleanProject(p) {
+    let cards = (Array.isArray(p.cards) ? p.cards : []).filter(Boolean);
+    let sched = p.sched;
+    // earlier versions had separate schedule cards: fold their lines into the first task card
+    const old = cards.filter(c => c.kind === "sched");
+    if (old.length) {
+      cards = cards.filter(c => c.kind !== "sched").map(c => ({ ...c, items: [...(c.items || [])] }));
+      if (!cards.length) cards = [{ title: "TASKS", color: "#5FD68A", items: [] }];
+      old.forEach(o => cards[0].items.push(...(o.items || [])));
+      if (!sched) sched = { title: old[0].title, color: old[0].color };
+    }
+    if (!cards.length) cards = [{ title: "TASKS", color: "#5FD68A", items: [] }];
+    // a campus holds one or more projects; each project owns its task cards, critical path and blockers
+    let subs = (Array.isArray(p.subs) ? p.subs : []).filter(Boolean).map(cleanSub);
+    if (!subs.length) subs = [cleanSub({ title: "PROJECT 1", sched })];
+    const ids = new Set(subs.map(x => x.id));
+    cards = cards.map(cleanCard).map(c => ({ ...c, sub: ids.has(c.sub) ? c.sub : subs[0].id }));
+    subs.forEach(x => { if (!cards.some(c => c.sub === x.id)) cards.push({ ...cleanCard({ title: "TASKS", items: [] }), sub: x.id }); });
+    return { id: p.id || uid(), title: String(p.title || "NEW CAMPUS"), desc: String(p.desc || ""), color: safeColor(p.color, PROJECT_COLORS[0]),
+      cards, subs, created: p.created || Date.now(), updated: p.updated || Date.now() };
+  }
+
+  let saveT, statusT;
+  const showStatus = msg => { const s = $("status"); s.textContent = msg; clearTimeout(statusT); statusT = setTimeout(() => (s.textContent = ""), 2500); };
+  function writeNow() {
+    clearTimeout(saveT); saveT = null;
+    try { localStorage.setItem(LS_KEY, JSON.stringify({ v: 1, projects: state.projects })); showStatus("Saved"); }
+    catch (e) { showStatus("Couldn't save on this device."); }
+  }
+  function save(p) { if (p) p.updated = Date.now(); clearTimeout(saveT); saveT = setTimeout(writeNow, 250); }
+  function load() {
+    try {
+      const d = JSON.parse(localStorage.getItem(LS_KEY) || "null");
+      state.projects = d && Array.isArray(d.projects) ? d.projects.map(cleanProject) : [];
+    } catch (e) { state.projects = []; }
+  }
+  addEventListener("pagehide", () => { if (saveT) writeNow(); });
+  document.addEventListener("visibilitychange", () => { if (document.hidden && saveT) writeNow(); });
+  // another tab on this device changed the data
+  addEventListener("storage", e => { if (e.key === LS_KEY && !document.querySelector(".modal")) { load(); route(); } });
+
+  const proj = id => state.projects.find(p => p.id === id);
+  const cardOf = (p, cid) => p && p.cards.find(c => c.id === cid);
+  function findItem(ref) {
+    const [pid, cid, iid] = ref.split("|");
+    const p = proj(pid), c = cardOf(p, cid), it = c && c.items.find(x => x.id === iid);
+    return it ? { p, c, it } : null;
+  }
+  const itemColor = (it, p) => safeColor(it.color || p.color);
+  const isAllDay = it => !it.startTime;
+  const itemEnd = it => (it.end && it.end >= it.date ? it.end : it.date);
+
+  function newProject(title) {
+    const used = state.projects.map(p => p.color);
+    const color = PROJECT_COLORS.find(c => !used.includes(c)) || PROJECT_COLORS[state.projects.length % PROJECT_COLORS.length];
+    const p = cleanProject({ title: title || "NEW CAMPUS", color, cards: [] });
+    state.projects.push(p); save(p);
+    return p;
+  }
+  function projectStats(p) {
+    let done = 0, all = 0, dated = 0, next = null;
+    const t = todayIso();
+    p.cards.forEach(c => c.items.forEach(it => {
+      if (it.kind === "phase" || (!it.text.trim() && !it.date)) return;
+      all++; if (it.done) done++;
+      if (it.date) { dated++; if (!it.done && itemEnd(it) >= t && (!next || it.date < next.it.date)) next = { it, c }; }
+    }));
+    return { done, all, dated, next, pct: all ? Math.round(done / all * 100) : 0 };
+  }
+  const subOf = (p, c) => p.subs.find(x => x.id === c.sub) || p.subs[0];
+  const subById = (p, sid) => p.subs.find(x => x.id === sid);
+  const subCards = (p, sid) => p.cards.filter(c => c.sub === sid);
+  function newSub(p, title) {
+    const x = cleanSub({ title: title || "PROJECT " + (p.subs.length + 1) });
+    p.subs.push(x); p.cards.push({ ...cleanCard({ title: "TASKS", items: [] }), sub: x.id });
+    return x;
+  }
+  // dated lines from a project's task cards (or the whole campus), in date order
+  function datedItems(p, sid) {
+    const out = [];
+    p.cards.forEach(c => { if (sid && c.sub !== sid) return; c.items.forEach(it => { if (it.date) out.push({ c, it }); }); });
+    return out.sort((a, b) => (a.it.date + (a.it.startTime || "00:00")).localeCompare(b.it.date + (b.it.startTime || "00:00")));
+  }
+
+  /* ================= toast / undo ================= */
+  let undoFn = null, toastT;
+  function showUndo(msg, fn) { $("toastMsg").textContent = msg; undoFn = fn; $("toastUndo").hidden = !fn; $("toast").hidden = false; clearTimeout(toastT); toastT = setTimeout(() => { $("toast").hidden = true; undoFn = null; }, 6000); }
+  const showMsg = msg => showUndo(msg, null);
+  $("toastUndo").addEventListener("click", () => { const f = undoFn; undoFn = null; $("toast").hidden = true; if (f) f(); });
+  const snapshot = () => JSON.stringify(state.projects);
+  const restore = snap => { state.projects = JSON.parse(snap).map(cleanProject); save(); route(); };
+
+  /* ================= popovers ================= */
+  function closePops() { document.querySelectorAll(".pop, .add-menu").forEach(p => p.remove()); document.querySelectorAll(".round-btn.open").forEach(b => b.classList.remove("open")); }
+  function placePop(pop, anchor) {
+    document.body.appendChild(pop);
+    const r = anchor.getBoundingClientRect(), w = pop.offsetWidth, h = pop.offsetHeight;
+    let left = Math.min(Math.max(8, r.left), innerWidth - w - 8);
+    if (r.left + w > innerWidth - 8 && r.right - w >= 8) left = r.right - w;
+    let top = r.bottom + 6;
+    if (top + h > innerHeight - 8) top = Math.max(8, r.top - h - 6);
+    pop.style.left = left + "px"; pop.style.top = top + "px";
+  }
+  document.addEventListener("pointerdown", e => { if (!e.target.closest(".pop, .add-menu, [data-pop]")) closePops(); }, true);
+  document.addEventListener("keydown", e => { if (e.key === "Escape") { if (document.querySelector(".pop, .add-menu")) closePops(); else if (document.querySelector(".ev-modal")) finishEditor(); else closeModal(); } });
+  const popOpen = sel => !!document.querySelector(sel);
+
+  function openDatePop(anchor, value, color, onPick, allowClear) {
+    closePops();
+    const pop = document.createElement("div");
+    pop.className = "pop cal-pop"; pop.style.setProperty("--c", color);
+    const base = value ? parseIso(value) : new Date();
+    let vy = base.getFullYear(), vm = base.getMonth();
+    const draw = () => {
+      const first = new Date(vy, vm, 1).getDay(), days = new Date(vy, vm + 1, 0).getDate(), t = todayIso();
+      let cells = "";
+      for (let i = 0; i < first; i++) cells += "<span></span>";
+      for (let d = 1; d <= days; d++) { const s = vy + "-" + pad2(vm + 1) + "-" + pad2(d); cells += `<button class="cp-day${s === t ? " today" : ""}${s === value ? " sel" : ""}" data-d="${s}">${d}</button>`; }
+      pop.innerHTML = `<div class="cp-head"><button class="cp-nav" data-n="-1" aria-label="Previous month">‹</button><div class="cp-title">${MONTHS[vm]} ${vy}</div><button class="cp-nav" data-n="1" aria-label="Next month">›</button></div>
+        <div class="cp-grid cp-dow"><span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span></div>
+        <div class="cp-grid">${cells}</div>
+        <div class="cp-foot">${allowClear ? '<button class="cp-clear">Clear</button>' : "<span></span>"}<button class="cp-today">Today</button></div>`;
+    };
+    draw();
+    pop.addEventListener("click", e => {
+      e.stopPropagation();
+      const n = e.target.closest(".cp-nav");
+      if (n) { vm += +n.dataset.n; if (vm < 0) { vm = 11; vy--; } if (vm > 11) { vm = 0; vy++; } draw(); return; }
+      const d = e.target.closest(".cp-day");
+      if (d) { closePops(); onPick(d.dataset.d); return; }
+      if (e.target.closest(".cp-today")) { closePops(); onPick(todayIso()); return; }
+      if (e.target.closest(".cp-clear")) { closePops(); onPick(null); }
+    });
+    placePop(pop, anchor);
+  }
+  const swatchesHtml = cur => `<div class="swatches">${COLORS.map(c => `<button class="sw" style="background:${c}" data-c="${c}" aria-label="Color ${c}" aria-pressed="${c.toLowerCase() === (cur || "").toLowerCase()}"></button>`).join("")}</div>
+    <label class="custom"><input type="color" value="${/^#[0-9a-f]{6}$/i.test(cur || "") ? cur : "#ffffff"}">Custom color</label>`;
+  function wireSwatches(pop, onPick) {
+    pop.addEventListener("click", e => { const sw = e.target.closest(".sw"); if (sw) { pop.querySelectorAll(".sw").forEach(x => x.setAttribute("aria-pressed", String(x === sw))); onPick(sw.dataset.c); } });
+    const ci = pop.querySelector('input[type="color"]'); if (ci) ci.addEventListener("input", e => onPick(e.target.value));
+  }
+  function openColorPop(anchor, label, cur, onPick) {
+    closePops();
+    const pop = document.createElement("div");
+    pop.className = "pop";
+    pop.innerHTML = `<div class="pop-label">${esc(label)}</div>` + swatchesHtml(cur);
+    wireSwatches(pop, c => { onPick(c); });
+    pop.addEventListener("click", e => { if (e.target.closest(".sw")) closePops(); });
+    placePop(pop, anchor);
+  }
+  // EDIT button menu: color swatches on top, actions below, optional delete with confirm
+  function openEditMenu(anchor, { label, color, onColor, actions, del }) {
+    closePops();
+    const pop = document.createElement("div");
+    pop.className = "pop";
+    pop.innerHTML = (onColor ? `<div class="pop-label">${esc(label)}</div>` + swatchesHtml(color) + "<hr>" : "") +
+      `<div class="pop-menu">${actions.map((a, i) => `<button class="pop-action" data-i="${i}"${a.disabled ? " disabled" : ""}>${a.icon || ""}${esc(a.text)}</button>`).join("")}
+      ${del ? `<div class="del-row"><button class="pop-action danger del">${ICON.trash}${esc(del.text)}</button></div>` : ""}</div>`;
+    if (onColor) wireSwatches(pop, onColor);
+    pop.addEventListener("click", e => {
+      e.stopPropagation();
+      const a = e.target.closest(".pop-action[data-i]");
+      if (a) { closePops(); actions[+a.dataset.i].run(); return; }
+      if (e.target.closest(".del")) { pop.querySelector(".del-row").innerHTML = `<div class="confirm">${esc(del.ask)} <button class="yes">Delete</button><button class="no">Keep</button></div>`; return; }
+      if (e.target.closest(".yes")) { closePops(); del.run(); return; }
+      if (e.target.closest(".no")) closePops();
+    });
+    placePop(pop, anchor);
+  }
+  function openStatusMenu(anchor, cur, onPick) {
+    closePops();
+    const pop = document.createElement("div");
+    pop.className = "pop status-pop";
+    pop.innerHTML = STATUSES.map(st => `<button class="status-opt ${STATUS_CLASS[st]}" data-s="${st}" aria-pressed="${cur === st}"><span class="s-dot"></span>${st}</button>`).join("");
+    pop.addEventListener("click", e => { const o = e.target.closest(".status-opt"); if (o) { closePops(); onPick(o.dataset.s); } });
+    placePop(pop, anchor);
+  }
+
+  /* ================= routing ================= */
+  const view = $("view");
+  let route_ = { name: "home" };
+  const calView = { y: new Date().getFullYear(), m: new Date().getMonth() };
+  function parseHash() {
+    const h = location.hash.replace(/^#\/?/, "");
+    const m = /^p\/([\w-]+)/.exec(h);
+    if (m && proj(m[1])) return { name: "project", pid: m[1] };
+    if (h === "status") return { name: "status" };
+    if (h === "calendar") return { name: "calendar" };
+    return { name: "home" };
+  }
+  function go(hash) { if (location.hash !== hash) location.hash = hash; else route(); }
+  function route() {
+    closePops();
+    const prev = route_;
+    route_ = parseHash();
+    if (route_.name === "project") { if (prev.pid !== route_.pid) { const t = new Date(); calView.y = t.getFullYear(); calView.m = t.getMonth(); } renderProject(); }
+    else if (route_.name === "calendar") renderGlobalCal();
+    else if (route_.name === "status") renderStatusPage();
+    else renderHome();
+    if (prev.name !== route_.name || prev.pid !== route_.pid) scrollTo(0, 0);
+  }
+  addEventListener("hashchange", route);
+  const currentProject = () => (route_.name === "project" ? proj(route_.pid) : null);
+  function rerender() { if (route_.name === "project") { if (!currentProject()) return go("#/"); renderProject(); } else if (route_.name === "calendar") renderGlobalCal(); else if (route_.name === "status") renderStatusPage(); else renderHome(); }
+
+  /* ================= home: project squares ================= */
+  const MAXSUBS = isPhone() ? 3 : 5;
+  function tileHtml(p) {
+    const s = projectStats(p);
+    const nx = s.next ? `<div class="p-next" style="--c:${itemColor(s.next.it, p)}"><span class="np">${shortDate(s.next.it.date)}</span>${esc(s.next.it.text || "Untitled")}</div>` : `<div class="p-next" style="color:var(--faint)">No upcoming dates</div>`;
+    return `<article class="card ptile" data-act="open-project" data-pid="${p.id}" style="--c:${p.color}" tabindex="0" aria-label="Open ${esc(p.title)}">
+      <header class="card-head" style="color:${p.color}"><div class="title">${esc(p.title)}</div><button class="head-btn edit-btn" data-act="project-menu" data-pid="${p.id}" data-pop aria-label="Edit campus">EDIT</button></header>
+      <ul class="p-subs">${p.subs.slice(0, MAXSUBS).map(x => `<li>${esc(x.title)}</li>`).join("")}${p.subs.length > MAXSUBS ? `<li class="more-subs">+${p.subs.length - MAXSUBS} more</li>` : ""}</ul>
+      <div class="p-foot">${nx}
+        <div class="p-prog"><div class="bar"><i style="width:${s.pct}%"></i></div><span><b>${s.done}/${s.all}</b> done</span></div>
+      </div>
+    </article>`;
+  }
+  function renderHome() {
+    const n = state.projects.length;
+    view.innerHTML = `<section class="home">
+      <div class="home-head"><h1>Campuses</h1><span>${n ? n + (n === 1 ? " campus" : " campuses") : ""}</span></div>
+      ${n ? "" : `<p class="home-empty">Each campus is a card. Give it a name and describe the work there, then open it to add projects, tasks and dates.</p>`}
+      <div class="pgrid">${state.projects.map(tileHtml).join("")}
+        <button class="new-tile" data-act="new-project"><span class="ni">${ICON.plus}</span>New campus</button>
+      </div>
+      ${n ? `<div class="ov-sec"><div class="home-head"><h1>Overview</h1></div><div class="pgrid">${statusTileHtml()}${calTileHtml()}</div></div>` : ""}
+      </section>`;
+  }
+  function statusTileHtml() {
+    let items = 0, blockers = 0, last = 0;
+    state.projects.forEach(p => p.cards.forEach(c => c.items.forEach(it => {
+      if (it.kind === "phase" || it.done || !it.text.trim()) return;
+      const blk = it.status === "Blocked";
+      if (!blk && !it.star) return;
+      items++; if (blk) blockers++; if (it.stAt > last) last = it.stAt;
+    })));
+    return `<article class="card ptile ov-tile" data-act="go-status" tabindex="0" style="--c:var(--accent)" aria-label="Open the Status table">
+      <header class="card-head" style="color:var(--accent)"><div class="title">Status</div></header>
+      <div class="tile-stats"><div><b>${items}</b><span>${items === 1 ? "Item" : "Items"} on status</span></div><div class="red"><b>${blockers}</b><span>${blockers === 1 ? "Blocker" : "Blockers"}</span></div></div>
+      <div class="p-foot"><div class="tile-sub">Last updated ${last ? esc(when(last)) : "—"}</div><div class="tile-go">Open status table ›</div></div>
+    </article>`;
+  }
+  function calTileHtml() {
+    const t = todayIso(), wk = addDays(t, 7), mon = t.slice(0, 7);
+    const all = collectItems(null).filter(x => !x.it.done);
+    const week = all.filter(x => x.it.date >= t && x.it.date <= wk).length, month = all.filter(x => x.it.date.slice(0, 7) === mon).length;
+    const next = all.filter(x => itemEnd(x.it) >= t).sort((a, b) => a.it.date.localeCompare(b.it.date))[0];
+    return `<article class="card ptile ov-tile" data-act="go-cal" tabindex="0" style="--c:var(--accent)" aria-label="Open the combined calendar">
+      <header class="card-head" style="color:var(--accent)"><div class="title">Calendar</div></header>
+      <div class="tile-stats"><div><b>${week}</b><span>Next 7 days</span></div><div><b>${month}</b><span>This month</span></div></div>
+      <div class="p-foot">${next ? `<div class="p-next" style="--c:var(--accent)"><span class="np">${shortDate(next.it.date)}</span>${esc(next.it.text || "Untitled")}</div>` : `<div class="tile-sub">No upcoming dates</div>`}<div class="tile-go">Open calendar ›</div></div>
+    </article>`;
+  }
+
+  /* ----- status table: Campus · Project · Item · Update · Blocker · Owner ----- */
+  const TBL_KEY = "pmbridge-tbl-mode";
+  let tblMode = (() => { try { const m = localStorage.getItem(TBL_KEY); return ["cp", "open", "blk"].includes(m) ? m : "cp"; } catch (e) { return "cp"; } })();
+  function tableRows() {
+    const out = [];
+    state.projects.forEach(p => p.subs.forEach(x => {
+      const rows = [];
+      subCards(p, x.id).forEach(c => c.items.forEach(it => {
+        if (it.kind === "phase" || it.done || !it.text.trim()) return;
+        const blocked = it.status === "Blocked";
+        if (tblMode === "blk" && !blocked) return;
+        if (tblMode === "cp" && !blocked && !it.star) return;
+        rows.push({ p, s: x, c, it });
+      }));
+      rows.sort((a, b) => (a.it.date || "9999").localeCompare(b.it.date || "9999"));
+      out.push(...rows);
+    }));
+    return out;
+  }
+  function tableHtml() {
+    const rows = tableRows();
+    const empty = { cp: "Nothing starred or blocked yet. Tap the star on a task to show it here.", open: "No open tasks yet.", blk: "Nothing is blocked." }[tblMode];
+    return `<div class="st-sec"><div class="home-head"><span>${rows.length} ${rows.length === 1 ? "item" : "items"}</span>
+        <div class="seg st-seg" role="group" aria-label="Show">${[["cp", "Starred & blockers"], ["open", "All open"], ["blk", "Blockers"]].map(([k, l]) => `<button data-act="tbl-mode" data-m="${k}" aria-pressed="${tblMode === k}">${l}</button>`).join("")}</div></div>
+      <section class="card st-card" aria-label="Status"><div class="st-wrap"><table class="st"><thead><tr><th>Campus</th><th>Project</th><th>Item</th><th>Update</th><th>Blocker</th><th>Owner</th></tr></thead>
+      <tbody>${rows.length ? rows.map(r => { const ref = r.p.id + "|" + r.c.id + "|" + r.it.id, blk = r.it.status === "Blocked"; return `<tr data-ref="${ref}">
+        <td><span class="st-camp" style="--c:${r.p.color}"><i></i>${esc(r.p.title)}</span></td>
+        <td class="st-proj">${esc(r.s.title)}</td>
+        <td><button class="st-star${r.it.star ? " on" : ""}" data-act="st-star" data-ref="${ref}" aria-pressed="${r.it.star}" title="${r.it.star ? "Starred. Tap to remove from Status" : "Star to keep on Status"}">${r.it.star ? ICON_STAR : ICON_STAR_O}</button><button class="st-item" data-act="open-item" data-ref="${ref}">${r.it.date ? `<span class="np" style="--c:${r.p.color}">${shortDate(r.it.date)}</span>` : ""}${esc(r.it.text)}</button></td>
+        <td><div class="st-edit" contenteditable="true" spellcheck="true" data-tfield="update" data-ph="Add update"></div></td>
+        <td>${blk ? `<div class="st-blk"><i></i><div class="st-edit" contenteditable="true" spellcheck="true" data-tfield="blockReason" data-ph="Add reason"></div></div>` : `<span class="st-none">—</span>`}</td>
+        <td><div class="st-edit" contenteditable="true" spellcheck="false" autocapitalize="words" data-tfield="bic" data-ph="Owner"></div></td></tr>`; }).join("") : `<tr><td colspan="6" class="st-empty">${empty}</td></tr>`}</tbody></table></div>
+    </section></div>`;
+  }
+  function fillTable() {
+    view.querySelectorAll(".st tr[data-ref]").forEach(tr => {
+      const f = findItem(tr.dataset.ref); if (!f) return;
+      tr.querySelectorAll("[data-tfield]").forEach(el => (el.textContent = f.it[el.dataset.tfield] || ""));
+    });
+  }
+  function renderTable() { const el = view.querySelector(".st-sec"); if (!el) return; const tmp = document.createElement("div"); tmp.innerHTML = tableHtml(); el.replaceWith(tmp.firstElementChild); fillTable(); }
+  view.addEventListener("input", e => {
+    const t = e.target; if (!t.dataset || !t.dataset.tfield) return;
+    const tr = t.closest("tr[data-ref]"), f = tr && findItem(tr.dataset.ref); if (!f) return;
+    f.it[t.dataset.tfield] = t.textContent.replace(/\s+/g, " ").trim(); f.it.stAt = Date.now(); save(f.p);
+  });
+  view.addEventListener("keydown", e => { if (e.target.dataset && e.target.dataset.tfield && e.key === "Enter") { e.preventDefault(); e.target.blur(); } });
+
+  /* ================= project view ================= */
+  const qaEntry = { pid: null, date: null, color: null, cid: null };
+  let freshId = null;
+  const markFresh = id => { freshId = id; setTimeout(() => { if (freshId === id) freshId = null; }, 1700); };
+  function statsHtml(p) { const s = projectStats(p); return `<span>${s.done}/${s.all} done · ${s.dated} dated</span><div class="bar" style="--c:${p.color}"><i style="width:${s.pct}%"></i></div>`; }
+  function qaHtml(p) {
+    const col = qaEntry.color || p.color;
+    return `<section class="card qa-card" style="--c:${col}">
+      <header class="card-head"><div class="title">Quick add</div></header>
+      <form class="qa-entry" id="qaForm" autocomplete="off">
+        <button type="button" class="date-pill${qaEntry.date ? "" : " no-date"}" id="qaDate" data-pop aria-label="Date" title="${qaEntry.date ? fullDate(qaEntry.date) : "Choose a date"}">${qaEntry.date ? shortDate(qaEntry.date) : "DATE"}</button>
+        <input class="qa-input" id="qaText" placeholder="Type a dated task…" enterkeyhint="done" autocapitalize="sentences" aria-label="Task">
+        <button type="button" class="qa-color" id="qaColor" data-pop aria-label="Color" title="Color"><span></span></button>
+        <button type="submit" class="qa-go" aria-label="Add" title="Add">${ICON.go}</button>
+      </form>
+      ${p.cards.length > 1 ? `<label class="qa-to">Add to <select class="sel" id="qaCard">${p.cards.map(c => `<option value="${c.id}"${c.id === qaEntry.cid ? " selected" : ""}>${esc(c.title)}</option>`).join("")}</select></label>` : ""}
+    </section>`;
+  }
+  function renderProject() {
+    const p = currentProject(); if (!p) return;
+    const keep = captureFocus();
+    if (qaEntry.pid !== p.id) { qaEntry.pid = p.id; qaEntry.date = null; qaEntry.color = null; qaEntry.cid = null; }
+    if (!p.cards.find(c => c.id === qaEntry.cid)) qaEntry.cid = p.cards[0] ? p.cards[0].id : null;
+    view.innerHTML = `
+      <nav class="proj-head">
+        <button class="nav-btn" data-act="go-home" aria-label="All campuses" title="All campuses">${ICON.back}</button>
+        <div class="ph-main"><span class="ph-crumb" data-act="go-home">All campuses</span><h1 class="ph-title" style="color:${p.color}">${esc(p.title)}</h1></div>
+        <div class="ph-stats" id="phStats">${statsHtml(p)}</div>
+        <button class="head-btn edit-btn" style="color:${p.color}" data-act="project-menu" data-pid="${p.id}" data-pop aria-label="Edit campus">EDIT</button>
+      </nav>
+      <div class="pcols" style="--c:${p.color}">${p.subs.map(x => subHtml(p, x)).join("")}
+        <button class="add-col" data-act="add-sub"><span class="ni">${ICON.plus}</span>Add project</button>
+      </div>`;
+    p.cards.forEach(c => fillCardText(p, c));
+    fillSchedText(p);
+    fillBlkText(p);
+    renderCal();
+    restoreFocus(keep);
+  }
+
+  function normalizeCard(c) { c.items.forEach((it, i) => { if (it.sub && (i === 0 || c.items[i - 1].kind === "phase" || it.kind === "phase")) it.sub = false; }); }
+  const canIndent = (c, it) => { const i = c.items.indexOf(it); return it.kind !== "phase" && i > 0 && c.items[i - 1].kind !== "phase"; };
+  function subHtml(p, x) {
+    return `<section class="psec" data-sid="${x.id}">
+      <header class="psec-head"><div class="psec-title">${esc(x.title)}</div><button class="head-btn edit-btn" data-act="sub-menu" data-sid="${x.id}" data-pop aria-label="Edit project">EDIT</button></header>
+      <div class="col">${subCards(p, x.id).map(c => cardHtml(p, c)).join("")}${blkHtml(p, x)}${schedHtml(p, x)}${X_CARDS.map(([k, t]) => xCardHtml(p, x, k, t)).join("")}</div>
+      </section>`;
+  }
+  // placeholder cards for each project (filled in later)
+  const X_CARDS = [["contacts", "Contacts"], ["drawings", "Drawings"], ["contracts", "Contracts"]];
+  function xCardHtml(p, x, k, title) {
+    const col = !!(x.sched.xc && x.sched.xc[k]);
+    return `<article class="card xcard${col ? " collapsed" : ""}" data-sid="${x.id}" data-x="${k}" style="--list-color:${p.color}">
+      <header class="card-head" style="color:${p.color}"><div class="title">${title}</div>
+        <button class="head-btn toggle" data-act="x-collapse" aria-label="Collapse or expand" title="Collapse or expand">${ICON.chev}</button></header>
+      <div class="card-body"><p class="sched-empty">Nothing here yet.</p></div></article>`;
+  }
+  function cardHtml(p, c) {
+    normalizeCard(c);
+    return `<article class="card task-card${c.collapsed ? " collapsed" : ""}${c.showDates ? "" : " no-dates"}${c.showOwners ? "" : " no-owners"}" data-cid="${c.id}" style="--list-color:${p.color}">
+      <header class="card-head" style="color:${p.color}"><div class="title">${esc(c.title)}</div>
+        <button class="head-btn edit-btn" data-act="card-menu" data-pop aria-label="Edit card">EDIT</button>
+        <button class="head-btn toggle" data-act="collapse" aria-label="Collapse or expand" title="Collapse or expand">${ICON.chev}</button></header>
+      <div class="card-body">
+        <ul class="items">${c.items.map(it => taskHtml(p, c, it)).join("")}</ul>
+        <div class="add-btns"><button class="add-task" data-act="add-task">${ICON.plus}Add task</button><button class="add-task" data-act="add-phase">${ICON.plus}Add phase</button></div>
+        <div class="sched-meta">${esc(taskMeta(c))}</div>
+      </div></article>`;
+  }
+  const hasMore = it => !!(it.notes.trim() || it.meeting || it.links.length || it.comments.length || it.startTime || it.bic);
+  function taskHtml(p, c, it) {
+    const col = itemColor(it, p);
+    if (it.kind === "phase") return `<li class="item phase" data-iid="${it.id}" data-cid="${c.id}">
+      <div class="phase-text" contenteditable="true" spellcheck="true" autocapitalize="words" data-ph="Phase name" data-field="text"></div>
+      <button class="phase-x" data-act="del-phase" aria-label="Remove phase" title="Remove phase">×</button>
+    </li>`;
+    const pill = it.sub && !it.date ? "" : `<button class="date-pill${it.date ? "" : " no-date"}" style="--c:${col}" data-act="date" data-pop title="${it.date ? fullDate(it.date) : "Add a date"}">${it.date ? shortDate(it.date) : "DATE"}</button>`;
+    return `<li class="item${it.star ? " starred" : ""}${it.id === editingIid ? " editing" : ""}${it.status === "Blocked" ? " blocked" : ""}${it.sub ? " sub" : ""}${it.done ? " done" : ""}${it.imp ? " important" : ""}${it.id === freshId ? " fresh" : ""}" data-iid="${it.id}" data-cid="${c.id}">
+      <span class="grip" aria-label="Drag to reorder" title="Drag to reorder">${ICON.grip}</span>
+      <button class="check" role="checkbox" aria-checked="${it.done}" aria-label="Done" data-act="check">${ICON.check}<i class="bang">!</i></button>
+      ${pill}
+      <div class="text" ${tapOpens(it) ? 'contenteditable="false" data-act="open"' : 'contenteditable="true"'} spellcheck="true" autocapitalize="sentences" data-field="text"></div>
+      <button class="indent" data-act="indent" aria-label="Make subtask" title="Subtask (Tab)">${ICON.indent}</button>
+      <button class="indent" data-act="imp" aria-label="Mark important" title="Important">!</button>
+      <button class="star-btn" data-act="star" aria-pressed="${it.star}" aria-label="${it.star ? "On the Status table. Tap to remove" : "Show on the Status table"}" title="${it.star ? "On the Status table" : "Show on the Status table"}">${it.star ? ICON_STAR : ICON_STAR_O}</button>
+      <button class="status-pill blk-btn ${it.status === "Blocked" ? "s-blk" : "s-ns"}" data-act="block" aria-pressed="${it.status === "Blocked"}" aria-label="${it.status === "Blocked" ? "Blocked. Tap to clear" : "Mark as blocker"}" title="${it.status === "Blocked" ? "Blocked" + (it.blockReason ? ": " + esc(it.blockReason) : "") : "Mark as blocker"}"><span class="s-dot"></span></button>
+      <span class="bic"><span class="bic-text" contenteditable="true" spellcheck="false" autocapitalize="words" data-ph="Owner" data-field="bic" title="Owner"></span></span>
+      <button class="row-open${it.date || hasMore(it) ? " has" : ""}" data-act="open" aria-label="Open details" title="Open details">${ICON.open}</button>
+    </li>`;
+  }
+  function schedHtml(p, sb) {
+    const v = { ...sb.sched, color: p.color }, rows = datedItems(p, sb.id).filter(x => !(v.hideDone && x.it.done));
+    return `<article class="card sched-card${v.collapsed ? " collapsed" : ""}" data-sid="${sb.id}" style="--list-color:${v.color}">
+      <header class="card-head" style="color:${v.color}"><div class="title">${esc(v.title)}</div>
+        <button class="head-btn edit-btn" data-act="sched-menu" data-pop aria-label="Edit schedule">EDIT</button>
+        <button class="head-btn toggle" data-act="sched-collapse" aria-label="Collapse or expand" title="Collapse or expand">${ICON.chev}</button></header>
+      <div class="card-body">
+        ${rows.length ? `<ul class="items srows">${rows.map(x => srowHtml(p, x.c, x.it)).join("")}</ul>` : `<p class="sched-empty">${datedItems(p, sb.id).length ? "All dated tasks are done. Turn on Show completed in EDIT to see them." : "Give a task a date and it shows up here and on the calendar."}</p>`}
+        <div class="sched-meta">${esc(schedMeta(p, sb.id))}</div>
+      </div></article>`;
+  }
+  function blockedItems(p, sid) { const out = []; p.cards.forEach(c => { if (sid && c.sub !== sid) return; c.items.forEach(it => { if (it.kind !== "phase" && it.status === "Blocked") out.push({ c, it }); }); }); return out; }
+  function blkHtml(p, sb) {
+    const rows = blockedItems(p, sb.id), v = sb.sched;
+    return `<article class="card blk-card${v.blkCollapsed ? " collapsed" : ""}" data-sid="${sb.id}" style="--list-color:${p.color}">
+      <header class="card-head" style="color:${p.color}"><div class="title">Blockers</div>${rows.length ? `<span class="dates-count" style="color:${p.color};font-weight:800">${rows.length}</span>` : ""}
+        <button class="head-btn toggle" data-act="blk-collapse" aria-label="Collapse or expand" title="Collapse or expand">${ICON.chev}</button></header>
+      <div class="card-body">
+        ${rows.length ? `<ul class="items srows">${rows.map(({ c, it }) => `<li class="srow brow" data-iid="${it.id}" data-cid="${c.id}" title="${esc(it.blockReason ? "Blocker: " + it.blockReason : "No reason given yet. Open the item to add one.")}">
+          <button class="check" role="checkbox" aria-checked="${it.done}" aria-label="Done" data-act="check">${ICON.check}</button>
+          <div class="ms-text" ${tapOpens(it) ? 'contenteditable="false" data-act="open"' : 'contenteditable="true"'} spellcheck="true" autocapitalize="sentences" data-ph="Task" data-field="text"></div>
+          <span class="bic"><span class="bic-text" contenteditable="true" spellcheck="false" autocapitalize="words" data-ph="Owner" data-field="bic" title="Owner"></span></span>
+        </li>`).join("")}</ul>` : `<p class="sched-empty">Nothing is blocked. Tap the circle on a task to mark it as a blocker.</p>`}
+      </div></article>`;
+  }
+  function fillBlkText(p) {
+    p.subs.forEach(sb => { const el = view.querySelector(`.blk-card[data-sid="${sb.id}"]`); if (!el) return;
+    blockedItems(p, sb.id).forEach(({ it }) => { const li = el.querySelector(`[data-iid="${it.id}"]`); if (!li) return; li.querySelector(".ms-text").textContent = it.text; li.querySelector(".bic-text").textContent = it.bic; }); });
+  }
+  function srowHtml(p, c, r) {
+    const col = itemColor(r, p);
+    return `<li class="srow${r.done ? " done" : ""}${r.id === freshId ? " fresh" : ""}" data-iid="${r.id}" data-cid="${c.id}">
+      <button class="check" role="checkbox" aria-checked="${r.done}" aria-label="Done" data-act="check">${ICON.check}</button>
+      <button class="date-pill" style="--c:${col}" data-act="date" data-pop title="${fullDate(r.date)}">${shortDate(r.date)}</button>
+      <div class="ms-text" ${tapOpens(r) ? 'contenteditable="false" data-act="open"' : 'contenteditable="true"'} spellcheck="true" autocapitalize="sentences" data-ph="Task" data-field="text"></div>
+      <span class="ms-end">
+        <button class="status-pill ${STATUS_CLASS[r.status]}" data-act="status" data-pop aria-label="Status: ${r.status}" title="${r.status}"><span class="s-dot"></span></button>
+        <span class="bic"><span class="bic-text" contenteditable="true" spellcheck="false" autocapitalize="words" data-ph="Owner" data-field="bic" title="Owner"></span></span>
+        <button class="row-open${hasMore(r) ? " has" : ""}" data-act="open" aria-label="Open details" title="Open details">${ICON.open}</button>
+      </span></li>`;
+  }
+  function fillCardText(p, c) {
+    const el = cardEl(c.id); if (!el) return;
+    c.items.forEach(it => { const li = el.querySelector(`[data-iid="${it.id}"]`); if (!li) return; li.querySelector('[data-field="text"]').textContent = it.text; const b = li.querySelector(".bic-text"); if (b) b.textContent = it.bic; });
+  }
+  function fillSchedText(p) {
+    p.subs.forEach(sb => { const el = view.querySelector(`.sched-card[data-sid="${sb.id}"]`); if (!el) return;
+    datedItems(p, sb.id).forEach(({ it }) => { const li = el.querySelector(`[data-iid="${it.id}"]`); if (!li) return; li.querySelector(".ms-text").textContent = it.text; li.querySelector(".bic-text").textContent = it.bic; }); });
+  }
+  const cardEl = cid => view.querySelector(`.task-card[data-cid="${cid}"]`);
+  function taskMeta(c) {
+    const real = c.items.filter(t => t.kind !== "phase" && (t.text.trim() || t.date)); if (!real.length) return "";
+    const d = real.filter(t => t.done).length, dated = real.filter(t => t.date).length;
+    return `${d} of ${real.length} done` + (dated ? ` · ${dated} dated` : "");
+  }
+  function schedMeta(p, sid) {
+    const all = datedItems(p, sid).map(x => x.it); if (!all.length) return "";
+    const done = all.filter(r => r.done).length, blocked = all.filter(r => r.status === "Blocked").length, t = todayIso();
+    const next = all.find(r => !r.done && itemEnd(r) >= t);
+    return `${done} of ${all.length} done` + (blocked ? ` · ${blocked} blocked` : "") + (next ? ` · Next: ${shortDate(next.date)}${next.text ? " " + next.text : ""}` : "");
+  }
+  // redraw the changed task card and the schedule card in place, keeping the caret where it was
+  function repaint(p, c, focusIid, atStart) {
+    if (route_.name !== "project") return;
+    const keep = focusIid ? null : captureFocus();
+    if (c) { const el = cardEl(c.id); if (el) { const tmp = document.createElement("div"); tmp.innerHTML = cardHtml(p, c); el.replaceWith(tmp.firstElementChild); fillCardText(p, c); } }
+    p.subs.forEach(sb => {
+      const se = view.querySelector(`.sched-card[data-sid="${sb.id}"]`);
+      if (se) { const tmp = document.createElement("div"); tmp.innerHTML = schedHtml(p, sb); se.replaceWith(tmp.firstElementChild); }
+      const be = view.querySelector(`.blk-card[data-sid="${sb.id}"]`);
+      if (be) { const tmp = document.createElement("div"); tmp.innerHTML = blkHtml(p, sb); be.replaceWith(tmp.firstElementChild); }
+    });
+    fillSchedText(p); fillBlkText(p);
+    const st = $("phStats"); if (st) st.innerHTML = statsHtml(p);
+    renderCalSoon();
+    if (focusIid) focusText(focusIid, atStart); else restoreFocus(keep);
+  }
+  const rerenderCard = (p, c, focusIid, atStart) => repaint(p, c, focusIid, atStart);
+  // light refresh while typing: counts, the twin line and the calendar
+  function refreshAfterChange(p, c) {
+    if (c) { const el = cardEl(c.id); if (el) el.querySelector(".sched-meta").textContent = taskMeta(c); }
+    p.subs.forEach(sb => { const sm = view.querySelector(`.sched-card[data-sid="${sb.id}"] .sched-meta`); if (sm) sm.textContent = schedMeta(p, sb.id); });
+    const st = $("phStats"); if (st) st.innerHTML = statsHtml(p);
+    renderCalSoon();
+  }
+  function captureFocus() {
+    const a = document.activeElement; if (!a || !view.contains(a)) return null;
+    const li = a.closest("[data-iid]");
+    let off = null; const sel = getSelection();
+    if (a.isContentEditable && sel.rangeCount) { const r = sel.getRangeAt(0).cloneRange(); r.selectNodeContents(a); r.setEnd(sel.getRangeAt(0).endContainer, sel.getRangeAt(0).endOffset); off = r.toString().length; }
+    return { iid: li && li.dataset.iid, field: a.dataset.field || a.id, off, isId: !!a.id && !a.dataset.field, box: a.closest(".sched-card") ? ".sched-card" : a.closest(".blk-card") ? ".blk-card" : ".task-card" };
+  }
+  function restoreFocus(k) {
+    if (!k) return;
+    let el = null;
+    if (k.isId) el = $(k.field);
+    else if (k.iid) el = view.querySelector(`${k.box || ".task-card"} [data-iid="${k.iid}"] [data-field="${k.field}"]`);
+    if (!el) return;
+    el.focus({ preventScroll: true });
+    if (el.isContentEditable && k.off != null) placeCaret(el, k.off);
+  }
+  function placeCaret(el, off) {
+    const sel = getSelection(), r = document.createRange();
+    let n = el.firstChild;
+    if (n && n.nodeType === 3) r.setStart(n, Math.min(off, n.length)); else { r.selectNodeContents(el); r.collapse(off === 0); }
+    r.collapse(true); sel.removeAllRanges(); sel.addRange(r);
+  }
+  function focusText(iid, atStart) {
+    const el = view.querySelector(`.task-card [data-iid="${iid}"] [data-field="text"]`);
+    if (!el) return;
+    el.focus();
+    placeCaret(el, atStart ? 0 : el.textContent.length);
+  }
+
+  /* ----- quick add: a dated task in one line ----- */
+  const flash = el => { if (!el) return; el.classList.remove("flash"); void el.offsetWidth; el.classList.add("flash"); };
+  function submitQuick() {
+    const p = currentProject(); if (!p) return;
+    const input = $("qaText");
+    const title = input.value.replace(/\s+/g, " ").trim();
+    if (!title) { flash(input); input.focus(); return; }
+    if (!qaEntry.date) { flash($("qaDate")); setTimeout(() => $("qaDate").click(), 0); return; }
+    const c = cardOf(p, qaEntry.cid) || p.cards[0]; if (!c) return;
+    const it = cleanItem({ text: title.charAt(0).toUpperCase() + title.slice(1), date: qaEntry.date, end: qaEntry.date, color: qaEntry.color && qaEntry.color !== p.color ? qaEntry.color : "" });
+    c.items.push(it); c.collapsed = false; subOf(p, c).sched.collapsed = false;
+    save(p);
+    const whenD = qaEntry.date;
+    qaEntry.date = null;
+    calView.y = parseIso(whenD).getFullYear(); calView.m = parseIso(whenD).getMonth();
+    markFresh(it.id);
+    renderProject();
+    if (!isPhone()) $("qaText").focus();
+    showUndo(`Added “${it.text}” on ${shortDate(whenD)}`, () => { c.items = c.items.filter(x => x.id !== it.id); save(p); rerender(); });
+  }
+
+  /* ================= month calendar ================= */
+  let calT;
+  const renderCalSoon = () => { clearTimeout(calT); calT = setTimeout(renderCal, 150); };
+  function collectItems(onlyPid) {
+    const out = [];
+    state.projects.forEach(p => {
+      if (onlyPid && p.id !== onlyPid) return;
+      p.cards.forEach(c => c.items.forEach(it => { if (it.date) out.push({ p, c, it, ref: p.id + "|" + c.id + "|" + it.id }); }));
+    });
+    return out;
+  }
+  const sortKey = x => (isAllDay(x.it) ? "0" : "1" + x.it.startTime) + (x.it.text || "").toLowerCase();
+  function itemsOn(list, d) { return list.filter(x => x.it.date <= d && itemEnd(x.it) >= d).sort((a, b) => sortKey(a).localeCompare(sortKey(b))); }
+  function chipHtml(x, d, global) {
+    const col = global ? x.p.color : itemColor(x.it, x.p), cont = x.it.date < d && d !== weekStart(d);
+    const t = esc(x.it.text || "Untitled"), tip = esc((x.it.text || "Untitled") + (x.it.bic ? " · " + x.it.bic : ""));
+    const done = x.it.done ? " done" : "";
+    if (isAllDay(x.it)) return `<button class="chip allday${done}${x.it.date < d ? " cont" : ""}" style="--c:${col}" data-act="open-item" data-ref="${x.ref}" title="${tip}"><span class="t">${t}</span></button>`;
+    return `<button class="chip timed${done}" style="--c:${col}" data-act="open-item" data-ref="${x.ref}" title="${tip}"><span class="d"></span><span class="tm">${shortTime(x.it.startTime)}</span><span class="t">${t}</span></button>`;
+  }
+  const weekStart = d => addDays(d, -parseIso(d).getDay());
+  const CAL_HIDE_KEY = "pmbridge-cal-hidden";
+  const calHidden = new Set((() => { try { const a = JSON.parse(localStorage.getItem(CAL_HIDE_KEY) || "[]"); return Array.isArray(a) ? a : []; } catch (e) { return []; } })());
+  const saveCalHidden = () => { try { localStorage.setItem(CAL_HIDE_KEY, JSON.stringify([...calHidden])); } catch (e) {} };
+  const calShows = p => !calHidden.has(p.id);
+  function keyHtml() {
+    const counts = new Map(state.projects.map(q => [q.id, collectItems(q.id).length]));
+    return `<div class="cal-key" role="group" aria-label="Campuses shown on the calendar">
+      ${state.projects.map(q => `<button class="ck" data-act="cal-toggle" data-pid="${q.id}" aria-pressed="${calShows(q)}" style="--c:${q.color}" title="${calShows(q) ? "Hide" : "Show"} ${esc(q.title)}"><i></i><span>${esc(q.title)}</span><b class="ck-n">${counts.get(q.id) || 0}</b></button>`).join("")}
+      ${state.projects.length > 1 ? `<span class="ck-quick"><button data-act="cal-all">ALL</button><button data-act="cal-none">NONE</button></span>` : ""}
+    </div>`;
+  }
+  function renderCal() {
+    const box = $("cal"); if (!box) return;
+    const p = currentProject(), global = !p;
+    const list = global ? collectItems(null).filter(x => calShows(x.p)) : collectItems(p.id);
+    const first = new Date(calView.y, calView.m, 1), days = new Date(calView.y, calView.m + 1, 0).getDate();
+    const lead = first.getDay(), weeks = Math.ceil((lead + days) / 7), start = iso(new Date(calView.y, calView.m, 1 - lead)), t = todayIso();
+    const maxChips = isPhone() ? 3 : 4;
+    let cells = "";
+    for (let i = 0; i < weeks * 7; i++) {
+      const d = addDays(start, i), dd = parseIso(d), other = dd.getMonth() !== calView.m;
+      const on = itemsOn(list, d), show = on.length > maxChips ? on.slice(0, maxChips - 1) : on;
+      cells += `<div class="cell${other ? " other" : ""}${d === t ? " today" : ""}${i >= (weeks - 1) * 7 ? " last-row" : ""}" data-act="day" data-d="${d}">
+        <span class="num">${dd.getDate()}</span>${show.map(x => chipHtml(x, d, global)).join("")}${on.length > show.length ? `<button class="more" data-act="day" data-d="${d}">+${on.length - show.length} more</button>` : ""}</div>`;
+    }
+    const shown = global ? state.projects.filter(calShows).length : 0;
+    box.innerHTML = `<div class="cal-top"><div class="cal-month">${MONTHS[calView.m]} <span>${calView.y}</span></div>
+        <button class="today-btn" data-act="cal-today">TODAY</button>
+        <button class="nav-btn" data-act="cal-prev" aria-label="Previous month">${ICON.back}</button>
+        <button class="nav-btn" data-act="cal-next" aria-label="Next month">${ICON.next}</button></div>
+      ${global ? keyHtml() + (shown ? "" : `<p class="cal-empty-note">All campuses are hidden. Tap a campus name to show its dates.</p>`) : ""}
+      <div class="month"><div class="dow">${["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map(x => `<span>${x}</span>`).join("")}</div><div class="weeks">${cells}</div></div>
+      <p class="cal-tip">${global ? "Tap a campus name to show or hide its dates. Tap an item to open it, or a day to add a task." : "Tap an item to see its details. Tap a day to add an item on that date."}</p>`;
+  }
+  function shiftMonth(n) { calView.m += n; if (calView.m < 0) { calView.m = 11; calView.y--; } if (calView.m > 11) { calView.m = 0; calView.y++; } renderCal(); }
+  // swipe the month left/right on touch screens
+  (() => {
+    let sx = 0, sy = 0, on = false;
+    view.addEventListener("touchstart", e => { if (!e.target.closest(".month")) return; on = true; sx = e.touches[0].clientX; sy = e.touches[0].clientY; }, { passive: true });
+    view.addEventListener("touchend", e => { if (!on) return; on = false; const dx = e.changedTouches[0].clientX - sx, dy = e.changedTouches[0].clientY - sy; if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) shiftMonth(dx < 0 ? 1 : -1); }, { passive: true });
+  })();
+  const pageHead = (title, color) => `<nav class="proj-head">
+        <button class="nav-btn" data-act="go-home" aria-label="All campuses" title="All campuses">${ICON.back}</button>
+        <div class="ph-main"><span class="ph-crumb" data-act="go-home">All campuses</span><h1 class="ph-title" style="color:${color}">${title}</h1></div></nav>`;
+  function renderGlobalCal() {
+    view.innerHTML = pageHead("All projects calendar", "var(--accent)") + `<div class="page-body"><section class="cal" id="cal"></section></div>`;
+    renderCal();
+  }
+  function renderStatusPage() {
+    view.innerHTML = pageHead("Status", "var(--accent)") + `<div class="page-body">${tableHtml()}</div>`;
+    fillTable();
+  }
+
+  /* ----- day sheet ----- */
+  let dayOpen = null;
+  function closeModal() { document.querySelectorAll(".modal").forEach(m => m.remove()); closePops(); dayOpen = null; }
+  function openDay(d) {
+    closeModal();
+    dayOpen = d;
+    const p = currentProject();
+    const list = itemsOn(p ? collectItems(p.id) : collectItems(null).filter(x => calShows(x.p)), d);
+    const col = p ? p.color : "var(--accent)";
+    const targets = p ? allSchedTargets(p) : allSchedTargets(null).filter(x => calShows(proj(x.value.split("|")[0])));
+    const m = document.createElement("div");
+    m.className = "modal day-modal";
+    m.innerHTML = `<div class="day" role="dialog" aria-label="${esc(fullDate(d))}" style="--c:${col}">
+      <div class="day-head"><div class="day-title">${esc(parseIso(d).toLocaleDateString([], { weekday: "short", month: "short", day: "numeric", year: "numeric" }))}</div><button class="ev-x" data-act="close-modal" aria-label="Close">×</button></div>
+      <div class="day-list">${list.length ? list.map(x => `<button class="day-item${x.it.done ? " done" : ""}" style="--c:${p ? itemColor(x.it, x.p) : x.p.color}" data-act="open-item" data-ref="${x.ref}"><span class="t">${p ? (p.subs.length > 1 ? `<span class="pn">${esc(subOf(x.p, x.c).title)}</span>` : "") : `<span class="pn">${esc(x.p.title)} · ${esc(subOf(x.p, x.c).title)}</span>`}${esc(x.it.text || "Untitled")}</span>${x.it.bic ? `<span class="ow">${esc(x.it.bic)}</span>` : ""}<span class="tm">${isAllDay(x.it) ? "All day" : fmtTime(x.it.startTime)}</span></button>`).join("") : `<div class="day-empty">Nothing on this day.</div>`}</div>
+      ${targets.length ? `<form class="day-add" autocomplete="off"><input class="field" name="t" placeholder="Add a task on this day" style="--c:${col}" enterkeyhint="done"><button class="mini-btn" style="--c:${p ? p.color : "#3CB371"}" type="submit">Add</button></form>
+      ${targets.length > 1 ? `<select class="sel day-target" style="margin-top:8px;width:100%" aria-label="Add to">${targets.map(x => `<option value="${x.value}">${esc(x.label)}</option>`).join("")}</select>` : ""}`
+      : `<div class="day-empty">Make a campus first, then add dated tasks to it.</div>`}
+    </div>`;
+    document.body.appendChild(m);
+    m.addEventListener("click", e => { if (e.target === m) closeModal(); });
+    const f = m.querySelector(".day-add");
+    if (f) f.addEventListener("submit", e => {
+      e.preventDefault();
+      const v = f.t.value.replace(/\s+/g, " ").trim();
+      const sel = m.querySelector(".day-target"), tv = sel ? sel.value : targets[0].value;
+      const [pid, cid] = tv.split("|"), q = proj(pid), c = cardOf(q, cid);
+      const it = cleanItem({ text: v ? v.charAt(0).toUpperCase() + v.slice(1) : "", date: d, end: d });
+      c.items.push(it); save(q);
+      if (v) { markFresh(it.id); rerender(); openDay(d); showUndo(`Added “${it.text}” on ${shortDate(d)}`, () => { c.items = c.items.filter(x => x.id !== it.id); save(q); rerender(); }); }
+      else { rerender(); openEditor(q.id + "|" + c.id + "|" + it.id, { draft: true, returnDay: d }); }
+    });
+    if (!isPhone() && f) setTimeout(() => f.t.focus(), 30);
+  }
+  function allSchedTargets(onlyP) {
+    const out = [];
+    (onlyP ? [onlyP] : state.projects).forEach(p => p.subs.forEach(sb => subCards(p, sb.id).forEach(c => out.push({ value: p.id + "|" + c.id, label: (onlyP ? "" : p.title + " · ") + sb.title + (subCards(p, sb.id).length > 1 ? " · " + c.title : "") }))));
+    return out;
+  }
+
+  /* ================= item details window ================= */
+  const edit = { ref: null, draft: false, returnDay: null };
+  function openEditor(ref, opts = {}) {
+    closeModal();
+    if (!findItem(ref)) return;
+    edit.ref = ref; edit.draft = !!opts.draft; edit.returnDay = opts.returnDay || null;
+    const m = document.createElement("div");
+    m.className = "modal ev-modal";
+    m.innerHTML = `<div class="ev" role="dialog" aria-label="Item details"></div>`;
+    document.body.appendChild(m);
+    wireEditor(m);
+    renderEditor();
+    if (opts.draft) setTimeout(() => { const t = m.querySelector(".ev-title"); if (t) t.focus(); }, 30);
+  }
+  function finishEditor() {
+    const f = edit.ref && findItem(edit.ref);
+    if (f && edit.draft && !f.it.text.trim() && !f.it.notes.trim()) { f.c.items = f.c.items.filter(x => x !== f.it); save(f.p); }
+    const back = edit.returnDay;
+    edit.ref = null; edit.draft = false; edit.returnDay = null;
+    closeModal(); rerender();
+    if (back) openDay(back);
+  }
+  function renderEditor() {
+    const m = document.querySelector(".ev-modal"), f = findItem(edit.ref || "");
+    if (!m || !f) return;
+    const { p, c, it } = f, col = itemColor(it, p), box = m.querySelector(".ev");
+    box.style.setProperty("--c", col);
+    const all = isAllDay(it), meet = meetingName(it.meeting), targets = allSchedTargets(null);
+    const showOpen = route_.name !== "project" || route_.pid !== p.id;
+    box.innerHTML = `
+      <div class="ev-head"><input class="ev-title" placeholder="Add title" maxlength="160" aria-label="Title" value="${esc(it.text)}"><button class="ev-x" aria-label="Close">×</button></div>
+      <div class="ev-proj" style="--pc:${p.color}"><b>${esc(p.title)}</b> · ${esc(subOf(p, c).title)}${subCards(p, c.sub).length > 1 ? " · " + esc(c.title) : ""}</div>
+      <div class="ev-body">
+        <div class="ev-sec"><span class="ev-ico">${ICON.clock}</span><div>
+          <div class="when">
+            <span class="when-grp"><button class="dt-btn${it.date ? "" : " empty"}" data-pop data-k="date">${it.date ? esc(longDate(it.date)) : "Add a date"}</button>${all ? "" : `<input class="tm-in" type="time" data-k="startTime" value="${it.startTime}" aria-label="Start time">`}</span>
+            <span class="when-to">to</span>
+            <span class="when-grp"><button class="dt-btn${it.end ? "" : " empty"}" data-pop data-k="end">${it.end ? esc(longDate(it.end)) : "End date"}</button>${all ? "" : `<input class="tm-in" type="time" data-k="endTime" value="${it.endTime}" aria-label="End time">`}</span>
+          </div>
+          <label class="allday"><input type="checkbox" class="allday-in"${all ? " checked" : ""}> All day</label>
+        </div></div>
+        <div class="ev-sec"><span class="ev-ico">${ICON.flag}</span><div>
+          <div class="ev-lbl">Status</div>
+          <div class="ev-status">${STATUSES.map(st => `<button class="status-opt ${STATUS_CLASS[st]}" data-s="${st}" aria-pressed="${it.status === st}"><span class="s-dot"></span>${st}</button>`).join("")}</div>
+          <div class="bic-row"><span>OWNER</span><input class="field ev-bic" placeholder="Who owns this item?" value="${esc(it.bic)}" autocomplete="off" autocapitalize="words"></div>
+        </div></div>
+        <div class="ev-sec"><span class="ev-ico">${ICON.comment}</span><div>
+          <div class="ev-lbl">Update</div>
+          <label class="allday" style="margin:0 0 8px"><input type="checkbox" class="star-in"${it.star ? " checked" : ""} style="accent-color:#FFD84D"> Show on the Status table</label>
+          <textarea class="field ev-upd" placeholder="Latest update on this item" aria-label="Update">${esc(it.update)}</textarea>
+        </div></div>
+        <div class="ev-sec"><span class="ev-ico" style="color:${it.status === "Blocked" ? "#FF5A5A" : "var(--dim)"}">${ICON_BLOCK}</span><div>
+          <div class="ev-lbl">Blocker</div>
+          <label class="allday" style="margin-top:0"><input type="checkbox" class="blk-in"${it.status === "Blocked" ? " checked" : ""} style="accent-color:#FF5A5A"> Blocked (shows on the Blockers card)</label>
+          <textarea class="field ev-blk" placeholder="Reason for the blocker" aria-label="Reason for the blocker">${esc(it.blockReason)}</textarea>
+        </div></div>
+        <div class="ev-sec"><span class="ev-ico">${ICON.folder}</span><div>
+          <div class="ev-lbl">Campus, project &amp; task card</div>
+          <select class="sel ev-move" style="width:100%" aria-label="Project and task card">${targets.map(x => `<option value="${x.value}"${x.value === p.id + "|" + c.id ? " selected" : ""}>${esc(x.label)}</option>`).join("")}</select>
+          ${c.items.indexOf(it) >= 0 ? `<label class="allday"><input type="checkbox" class="sub-in"${it.sub ? " checked" : ""}${!it.sub && !canIndent(c, it) ? " disabled" : ""}> Subtask of the task above${!it.sub && !canIndent(c, it) ? ' <span style="color:var(--faint)">(not right under a phase)</span>' : ""}</label>` : ""}
+        </div></div>
+        <div class="ev-sec"><span class="ev-ico">${ICON.palette}</span><div>
+          <div class="ev-lbl">Color</div>
+          <div class="ev-colors"><button class="sw sw-proj" data-c="" aria-pressed="${!it.color}">Project color</button>${COLORS.map(x => `<button class="sw" style="background:${x}" data-c="${x}" aria-label="Color ${x}" aria-pressed="${x.toLowerCase() === (it.color || "").toLowerCase()}"></button>`).join("")}<label class="custom" style="margin:0"><input type="color" class="ev-custom" value="${/^#[0-9a-f]{6}$/i.test(col) ? col : "#ffffff"}" aria-label="Custom color"></label></div>
+        </div></div>
+        <div class="ev-sec"><span class="ev-ico">${ICON.video}</span><div>
+          <div class="ev-lbl">Meeting link</div>
+          ${it.meeting ? `<div class="join"><a class="join-btn" href="${esc(safeHref(it.meeting))}" target="_blank" rel="noopener noreferrer">${ICON.video}Join${meet ? " " + meet : ""} meeting</a><button class="x-btn meet-x" aria-label="Remove meeting link" title="Remove">×</button><span class="join-url">${esc(it.meeting)}</span></div>`
+            : `<form class="add-row meet-form"><input class="field" name="u" placeholder="Teams, Webex or Zoom link" inputmode="url" autocomplete="off" autocapitalize="off" spellcheck="false"><button class="mini-btn" type="submit">Add</button></form>`}
+        </div></div>
+        <div class="ev-sec"><span class="ev-ico">${ICON.link}</span><div>
+          <div class="ev-lbl">Links</div>
+          <div class="links">${it.links.map(l => `<div class="link-row"><a class="link-chip" href="${esc(safeHref(l.url))}" target="_blank" rel="noopener noreferrer" title="${esc(l.url)}">${ICON.link}<span>${esc(l.label || l.url.replace(/^https?:\/\//i, ""))}</span></a><button class="x-btn link-x" data-id="${l.id}" aria-label="Remove link" title="Remove">×</button></div>`).join("")}</div>
+          <form class="add-row link-form"><input class="field" name="l" placeholder="Link name (optional)" autocomplete="off"><input class="field" name="u" placeholder="Web address" inputmode="url" autocomplete="off" autocapitalize="off" spellcheck="false"><button class="mini-btn ghost" type="submit">Add link</button></form>
+        </div></div>
+        <div class="ev-sec"><span class="ev-ico">${ICON.notes}</span><div>
+          <div class="ev-lbl">Notes</div>
+          <textarea class="field ev-notes" placeholder="Add notes" aria-label="Notes">${esc(it.notes)}</textarea>
+        </div></div>
+        <div class="ev-sec"><span class="ev-ico">${ICON.comment}</span><div>
+          <div class="ev-lbl">Comments</div>
+          <div class="comments">${it.comments.map(x => `<div class="cmt"><div class="cmt-t">${esc(x.text)}</div><div class="cmt-at">${esc(when(x.at))}</div><button class="x-btn cmt-x" data-id="${x.id}" aria-label="Delete comment" title="Delete">×</button></div>`).join("")}</div>
+          <form class="add-row cmt-form"><input class="field" name="c" placeholder="Add a comment" autocomplete="off"><button class="mini-btn ghost" type="submit">Post</button></form>
+        </div></div>
+      </div>
+      <div class="ev-foot"><button class="foot-btn danger ev-del">${ICON.trash}Delete</button><button class="foot-btn ev-dup">${ICON.dup}Duplicate</button>${showOpen ? `<button class="foot-btn ev-goto">${ICON.folder}Open campus</button>` : ""}<span class="grow"></span><button class="done-btn ev-done">Done</button></div>`;
+    sizeNotes(box.querySelector(".ev-notes")); sizeNotes(box.querySelector(".ev-blk")); sizeNotes(box.querySelector(".ev-upd"));
+  }
+  const sizeNotes = t => { if (!t) return; t.style.height = "auto"; t.style.height = Math.max(74, t.scrollHeight + 2) + "px"; };
+  function fixTimes(it) {
+    if (!it.date) { it.end = null; return; }
+    if (!it.end || it.end < it.date) it.end = it.date;
+    if (it.startTime) { if (!it.endTime) it.endTime = addHour(it.startTime); if (it.end === it.date && it.endTime <= it.startTime) it.endTime = addHour(it.startTime); }
+    else it.endTime = "";
+  }
+  function wireEditor(m) {
+    const F = () => findItem(edit.ref || "");
+    const changed = () => { const f = F(); if (!f) return; save(f.p); renderBehind(); };
+    m.addEventListener("click", ev => {
+      const f = F(); if (!f) return;
+      const { p, c, it } = f, t = ev.target;
+      if (t === m || t.closest(".ev-x") || t.closest(".ev-done")) { finishEditor(); return; }
+      const dt = t.closest(".dt-btn");
+      if (dt) {
+        if (popOpen(".cal-pop")) { closePops(); return; }
+        const k = dt.dataset.k;
+        openDatePop(dt, it[k] || it.date, itemColor(it, p), v => {
+          if (k === "date") { const span = it.date && it.end ? Math.max(0, dayDiff(it.date, it.end)) : 0; it.date = v; it.end = v ? addDays(v, span) : null; }
+          else { it.end = v && it.date && v < it.date ? it.date : v; if (!it.date && v) it.date = v; }
+          fixTimes(it); changed(); renderEditor();
+          if (it.date) { calView.y = parseIso(it.date).getFullYear(); calView.m = parseIso(it.date).getMonth(); renderCalSoon(); }
+        }, true);
+        return;
+      }
+      const so = t.closest(".ev-status .status-opt");
+      if (so) { setStatus(it, so.dataset.s); changed(); renderEditor(); return; }
+      const sw = t.closest(".ev-colors .sw");
+      if (sw) { it.color = sw.dataset.c; changed(); renderEditor(); return; }
+      if (t.closest(".meet-x")) { it.meeting = ""; changed(); renderEditor(); return; }
+      const lx = t.closest(".link-x"); if (lx) { it.links = it.links.filter(l => l.id !== lx.dataset.id); changed(); renderEditor(); return; }
+      const cx = t.closest(".cmt-x"); if (cx) { it.comments = it.comments.filter(x => x.id !== cx.dataset.id); changed(); renderEditor(); return; }
+      if (t.closest(".ev-goto")) { const pid = p.id; edit.returnDay = null; finishEditor(); go("#/p/" + pid); return; }
+      if (t.closest(".ev-del")) {
+        const snap = snapshot(), back = edit.returnDay;
+        c.items = c.items.filter(x => x !== it); save(p);
+        edit.ref = null; edit.draft = false; edit.returnDay = null; closeModal(); rerender();
+        if (back) openDay(back);
+        showUndo("Item deleted", () => restore(snap));
+        return;
+      }
+      if (t.closest(".ev-dup")) {
+        const copy = cleanItem({ ...JSON.parse(JSON.stringify(it)), id: uid(), comments: [], created: Date.now() });
+        copy.links = copy.links.map(l => ({ ...l, id: uid() }));
+        c.items.splice(c.items.indexOf(it) + 1, 0, copy); save(p);
+        edit.ref = p.id + "|" + c.id + "|" + copy.id; edit.draft = false;
+        renderBehind(); renderEditor();
+        showMsg("Duplicated. You're now editing the copy.");
+      }
+    });
+    m.addEventListener("input", ev => {
+      const f = F(); if (!f) return;
+      const t = ev.target, it = f.it;
+      if (t.classList.contains("ev-title")) { it.text = t.value; changed(); }
+      else if (t.classList.contains("ev-notes")) { it.notes = t.value; sizeNotes(t); changed(); }
+      else if (t.classList.contains("ev-bic")) { it.bic = t.value; changed(); }
+      else if (t.classList.contains("ev-blk")) { it.blockReason = t.value; it.stAt = Date.now(); sizeNotes(t); changed(); }
+      else if (t.classList.contains("ev-upd")) { it.update = t.value; it.stAt = Date.now(); sizeNotes(t); changed(); }
+      else if (t.classList.contains("ev-custom")) { it.color = t.value; m.querySelector(".ev").style.setProperty("--c", t.value); changed(); }
+    });
+    m.addEventListener("change", ev => {
+      const f = F(); if (!f) return;
+      const t = ev.target, it = f.it;
+      if (t.classList.contains("tm-in")) { it[t.dataset.k] = t.value || ""; if (t.dataset.k === "startTime" && !t.value) it.endTime = ""; fixTimes(it); changed(); renderEditor(); }
+      else if (t.classList.contains("allday-in")) {
+        if (t.checked) { it.startTime = ""; it.endTime = ""; } else { it.startTime = "09:00"; it.endTime = "10:00"; if (!it.date) { it.date = todayIso(); it.end = it.date; } }
+        fixTimes(it); changed(); renderEditor();
+      } else if (t.classList.contains("ev-custom")) renderEditor();
+      else if (t.classList.contains("star-in")) { it.star = t.checked; it.stAt = Date.now(); changed(); }
+      else if (t.classList.contains("blk-in")) { if (t.checked !== (it.status === "Blocked")) toggleBlocked(it); changed(); renderEditor(); }
+      else if (t.classList.contains("sub-in")) {
+        if (t.checked && !canIndent(f.c, it)) { t.checked = false; return; }
+        it.sub = t.checked; changed(); renderEditor();
+      }
+      else if (t.classList.contains("ev-move")) {
+        const [pid, cid] = t.value.split("|"), q = proj(pid), c2 = cardOf(q, cid);
+        if (!c2 || c2 === f.c) return;
+        f.c.items = f.c.items.filter(x => x !== it); c2.items.push(it); save(f.p); save(q);
+        edit.ref = pid + "|" + cid + "|" + it.id;
+        renderBehind(); renderEditor();
+        showMsg(`Moved to ${q.title} · ${c2.title}`);
+      }
+    });
+    m.addEventListener("submit", ev => {
+      ev.preventDefault();
+      const f = F(); if (!f) return;
+      const form = ev.target, it = f.it;
+      if (form.classList.contains("meet-form")) { const u = normUrl(form.u.value); if (!u) return; it.meeting = u; }
+      else if (form.classList.contains("link-form")) { const u = normUrl(form.u.value); if (!u) { form.u.focus(); return; } it.links.push({ id: uid(), label: form.l.value.trim(), url: u }); }
+      else if (form.classList.contains("cmt-form")) { const v = form.c.value.trim(); if (!v) return; it.comments.push({ id: uid(), text: v, at: Date.now() }); }
+      changed(); renderEditor();
+      const again = m.querySelector("." + [...form.classList].find(x => x.endsWith("-form")) + " .field"); if (again && !isPhone()) again.focus();
+    });
+  }
+  let behindT;
+  function renderBehind() { clearTimeout(behindT); behindT = setTimeout(rerender, 200); }
+
+  /* ================= clicks (one handler for the whole app) ================= */
+  document.addEventListener("click", e => {
+    const a = e.target.closest("[data-act]"); if (!a) return;
+    if (a.closest(".ev-modal") && a.dataset.act !== "close-modal") return;
+    const act = a.dataset.act;
+    const p = currentProject();
+    switch (act) {
+      case "noop": return;
+      case "go-home": go("#/"); return;
+      case "cal-toggle": { const id = a.dataset.pid; if (calHidden.has(id)) calHidden.delete(id); else calHidden.add(id); saveCalHidden(); renderCal(); return; }
+      case "cal-all": calHidden.clear(); saveCalHidden(); renderCal(); return;
+      case "cal-none": state.projects.forEach(q => calHidden.add(q.id)); saveCalHidden(); renderCal(); return;
+      case "close-modal": closeModal(); return;
+      case "new-project": startNewProject(); return;
+      case "open-project": if (e.target.closest(".edit-btn")) return; closeModal(); go("#/p/" + a.dataset.pid); return;
+      case "project-menu": e.stopPropagation(); projectMenu(a, proj(a.dataset.pid)); return;
+      case "cal-prev": shiftMonth(-1); return;
+      case "cal-next": shiftMonth(1); return;
+      case "st-star": { const f = findItem(a.dataset.ref); if (f) { f.it.star = !f.it.star; f.it.stAt = Date.now(); save(f.p); renderTable(); } return; }
+      case "go-status": go("#/status"); return;
+      case "go-cal": go("#/calendar"); return;
+      case "tbl-mode": tblMode = a.dataset.m; try { localStorage.setItem(TBL_KEY, tblMode); } catch (err) {} renderTable(); return;
+      case "cal-today": { const t = new Date(); calView.y = t.getFullYear(); calView.m = t.getMonth(); renderCal(); return; }
+      case "day": e.stopPropagation(); openDay(a.dataset.d); return;
+      case "open-item": e.stopPropagation(); { const back = a.closest(".day-modal") ? dayOpen : null; openEditor(a.dataset.ref, { returnDay: back }); } return;
+    }
+    if (!p) return;
+    const sb = a.closest("[data-sid]") ? subById(p, a.closest("[data-sid]").dataset.sid) : null;
+    if (act === "sched-collapse" && sb) { sb.sched.collapsed = !sb.sched.collapsed; save(p); a.closest(".sched-card").classList.toggle("collapsed", sb.sched.collapsed); return; }
+    if (act === "sched-menu" && sb) { schedMenu(a, p, sb); return; }
+    if (act === "sub-menu" && sb) { subMenu(a, p, sb); return; }
+    if (act === "add-sub") { addSub(p); return; }
+    if (act === "x-collapse" && sb) { const k = a.closest(".xcard").dataset.x; sb.sched.xc = sb.sched.xc || {}; sb.sched.xc[k] = !sb.sched.xc[k]; save(p); a.closest(".xcard").classList.toggle("collapsed", sb.sched.xc[k]); return; }
+    if (act === "blk-collapse" && sb) { sb.sched.blkCollapsed = !sb.sched.blkCollapsed; save(p); a.closest(".blk-card").classList.toggle("collapsed", sb.sched.blkCollapsed); return; }
+    const li = a.closest("[data-iid]"), cardE = a.closest(".task-card[data-cid]");
+    const cid = li ? li.dataset.cid : cardE && cardE.dataset.cid;
+    const c = cid ? cardOf(p, cid) : null; if (!c) return;
+    switch (act) {
+      case "collapse": c.collapsed = !c.collapsed; save(p); cardE.classList.toggle("collapsed", c.collapsed); return;
+      case "card-menu": cardMenu(a, p, c); return;
+      case "add-task": { const t = cleanItem({}); c.items.push(t); save(p); c.collapsed = false; repaint(p, c, t.id); return; }
+      case "add-phase": { const ph = cleanItem({ kind: "phase" }); c.items.push(ph); save(p); c.collapsed = false; repaint(p, c, ph.id); return; }
+    }
+    const it = li && c.items.find(x => x.id === li.dataset.iid); if (!it) return;
+    switch (act) {
+      case "check": toggleDone(it); save(p); repaint(p, c); return;
+      case "indent": if (!it.sub && !canIndent(c, it)) { showMsg("A subtask goes under a task, not right under a phase."); return; } it.sub = !it.sub; save(p); repaint(p, c, it.id); return;
+      case "del-phase": { const snap = snapshot(), had = it.text.trim(); c.items = c.items.filter(x => x !== it); save(p); repaint(p, c); if (had) showUndo(`Removed phase “${it.text}”. Its tasks stay.`, () => restore(snap)); return; }
+      case "imp": it.imp = !it.imp; save(p); repaint(p, c, it.id); return;
+      case "date":
+        if (popOpen(".cal-pop")) { closePops(); return; }
+        openDatePop(a, it.date, itemColor(it, p), v => {
+          const had = !!it.date, span = it.date && it.end ? Math.max(0, dayDiff(it.date, it.end)) : 0;
+          it.date = v; it.end = v ? addDays(v, span) : null; fixTimes(it); save(p);
+          if (v) { calView.y = parseIso(v).getFullYear(); calView.m = parseIso(v).getMonth(); if (!had) { markFresh(it.id); subOf(p, c).sched.collapsed = false; } }
+          repaint(p, c, it.id === editingIid && !isTouch() ? it.id : null);
+          if (v && !had) showMsg(`“${it.text || "Task"}” is on the critical path for ${shortDate(v)}`);
+        }, true);
+        return;
+      case "star": { it.star = !it.star; it.stAt = Date.now(); save(p); repaint(p, c); showMsg(it.star ? `“${it.text || "Task"}” is on the Status table` : `“${it.text || "Task"}” removed from the Status table`); return; }
+      case "block": { toggleBlocked(it); save(p); repaint(p, c); if (it.status === "Blocked") showMsg(`“${it.text || "Task"}” added to Blockers. Open it to note the reason.`); return; }
+      case "status": openStatusMenu(a, it.status, st => { setStatus(it, st); save(p); repaint(p, c); }); return;
+      case "open": openEditor(p.id + "|" + c.id + "|" + it.id); return;
+    }
+  });
+  view.addEventListener("dblclick", e => {
+    const t = e.target.closest('.task-card .item:not(.phase) [data-field="text"], .sched-card [data-field="text"], .blk-card [data-field="text"]'); if (!t) return;
+    const p = currentProject(), li = t.closest("[data-iid]"); if (!p || !li) return;
+    getSelection().removeAllRanges(); t.blur();
+    openEditor(p.id + "|" + li.dataset.cid + "|" + li.dataset.iid);
+  });
+  // keyboard: Enter/Space opens a project square
+  view.addEventListener("keydown", e => { const t = e.target; if (t.classList && t.classList.contains("ptile") && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); if (t.dataset.pid) go("#/p/" + t.dataset.pid); else t.click(); } });
+  $("brand").addEventListener("click", () => go("#/"));
+  $("brand").addEventListener("keydown", e => { if (e.key === "Enter") go("#/"); });
+
+  /* ----- which task line is being entered (only that line shows its date spot) ----- */
+  let editingIid = null;
+  function setEditing(id) {
+    if (id === editingIid) return;
+    editingIid = id;
+    view.querySelectorAll(".task-card .item").forEach(li => li.classList.toggle("editing", li.dataset.iid === id));
+  }
+  view.addEventListener("focusin", e => {
+    const li = e.target.closest(".task-card .item:not(.phase)");
+    if (li) { if (e.target.isContentEditable) setEditing(li.dataset.iid); }
+    else if (!e.target.closest(".pop")) setEditing(null);
+  });
+  document.addEventListener("pointerdown", e => {
+    if (!editingIid || e.target.closest(".pop, .modal")) return;
+    const li = e.target.closest(".task-card .item");
+    if (!li || li.dataset.iid !== editingIid) setEditing(li && !li.classList.contains("phase") && e.target.closest('[contenteditable="true"]') ? li.dataset.iid : null);
+  });
+  /* ----- typing inside cards ----- */
+  function lineOf(t, p) {
+    const li = t.closest("[data-iid]"); if (!li) return {};
+    const c = cardOf(p, li.dataset.cid), it = c && c.items.find(x => x.id === li.dataset.iid);
+    return { li, c, it };
+  }
+  view.addEventListener("input", e => {
+    const t = e.target, p = currentProject(); if (!p) return;
+    const { c, it } = lineOf(t, p); if (!it) return;
+    const v = t.textContent.replace(/\s+/g, " ");
+    if (t.dataset.field === "text") {
+      it.text = v.trim() ? v.replace(/^\s+/, "") : "";
+      // keep the same task's other line (task card / schedule card) in step
+      view.querySelectorAll(`[data-iid="${it.id}"] [data-field="text"]`).forEach(x => { if (x !== t) x.textContent = it.text; });
+    }
+    if (t.dataset.field === "bic") {
+      it.bic = v.trim();
+      view.querySelectorAll(`[data-iid="${it.id}"] [data-field="bic"]`).forEach(x => { if (x !== t) x.textContent = it.bic; });
+    }
+    save(p); refreshAfterChange(p, c);
+  });
+  view.addEventListener("submit", e => { if (e.target.id === "qaForm") { e.preventDefault(); submitQuick(); } });
+  view.addEventListener("change", e => { if (e.target.id === "qaCard") { qaEntry.cid = e.target.value; } });
+  view.addEventListener("click", e => {
+    const p = currentProject(); if (!p) return;
+    if (e.target.closest("#qaDate")) {
+      if (popOpen(".cal-pop")) { closePops(); return; }
+      openDatePop($("qaDate"), qaEntry.date, qaEntry.color || p.color, v => { qaEntry.date = v; const d = $("qaDate"); d.classList.toggle("no-date", !v); d.textContent = v ? shortDate(v) : "DATE"; d.title = v ? fullDate(v) : "Choose a date"; if (v) { calView.y = parseIso(v).getFullYear(); calView.m = parseIso(v).getMonth(); renderCal(); } if (!isPhone()) $("qaText").focus(); }, false);
+    }
+    if (e.target.closest("#qaColor")) openColorPop($("qaColor"), "Color", qaEntry.color || p.color, c => { qaEntry.color = c; view.querySelector(".qa-card").style.setProperty("--c", c); });
+  });
+  view.addEventListener("paste", e => {
+    const t = e.target; if (!t.isContentEditable) return;
+    e.preventDefault();
+    const txt = (e.clipboardData || window.clipboardData).getData("text/plain").replace(/\s*\n\s*/g, " ");
+    document.execCommand("insertText", false, txt);
+  });
+  view.addEventListener("keydown", e => {
+    const t = e.target, p = currentProject(); if (!p || !t.isContentEditable) return;
+    if (t.classList.contains("title") || t.classList.contains("psec-title")) { if (e.key === "Enter" || e.key === "Escape") { e.preventDefault(); t.blur(); } return; }
+    if (t.dataset.field === "bic" || t.closest(".sched-card, .blk-card")) { if (e.key === "Enter") { e.preventDefault(); t.blur(); } return; }
+    const { c, it } = lineOf(t, p); if (!it) return;
+    const idx = c.items.indexOf(it);
+    const caretAtStart = () => { const s = getSelection(); return s.rangeCount && s.isCollapsed && s.getRangeAt(0).startOffset === 0; };
+    if (it.kind === "phase") {
+      if (e.key === "Enter" && !e.isComposing) { e.preventDefault(); const n = cleanItem({}); c.items.splice(idx + 1, 0, n); save(p); repaint(p, c, n.id); }
+      else if (e.key === "Tab") e.preventDefault();
+      else if (e.key === "Backspace" && !t.textContent) { e.preventDefault(); c.items.splice(idx, 1); save(p); const prev = c.items[idx - 1]; repaint(p, c, prev ? prev.id : null); }
+      return;
+    }
+    if (e.key === "Enter" && !e.isComposing) {
+      e.preventDefault();
+      const n = cleanItem({ sub: it.sub });
+      c.items.splice(idx + 1, 0, n); save(p); repaint(p, c, n.id);
+    } else if (e.key === "Backspace" && !t.textContent && !it.date && !hasMore(it)) {
+      e.preventDefault();
+      c.items.splice(idx, 1); save(p);
+      const prev = c.items[idx - 1];
+      repaint(p, c, prev ? prev.id : null);
+    } else if (e.key === "Tab") {
+      e.preventDefault();
+      if (!e.shiftKey && !canIndent(c, it)) { showMsg("A subtask goes under a task, not right under a phase."); return; }
+      it.sub = !e.shiftKey; save(p); repaint(p, c, it.id);
+    } else if (e.key === "Backspace" && it.sub && caretAtStart() && t.textContent) {
+      e.preventDefault(); it.sub = false; save(p); repaint(p, c, it.id, true);
+    }
+  });
+  // card titles: commit on blur
+  view.addEventListener("focusout", e => {
+    const t = e.target, p = currentProject(); if (!p) return;
+    if (t.classList.contains("psec-title") && t.getAttribute("contenteditable") === "true") {
+      t.setAttribute("contenteditable", "false");
+      const sb = subById(p, t.closest(".psec").dataset.sid); if (!sb) return;
+      const v = t.textContent.replace(/\s+/g, " ").trim().toUpperCase() || sb.title;
+      t.textContent = v; if (sb.title !== v) { sb.title = v; save(p); }
+      return;
+    }
+    if (t.classList.contains("title") && t.getAttribute("contenteditable") === "true") {
+      t.setAttribute("contenteditable", "false");
+      if (t.closest(".sched-card")) {
+        const sb = subById(p, t.closest(".sched-card").dataset.sid); if (!sb) return;
+        const v = t.textContent.replace(/\s+/g, " ").trim().toUpperCase() || "CRITICAL PATH";
+        t.textContent = v; if (sb.sched.title !== v) { sb.sched.title = v; save(p); }
+        return;
+      }
+      const cardE = t.closest(".task-card[data-cid]"), c = cardE && cardOf(p, cardE.dataset.cid);
+      const v = t.textContent.replace(/\s+/g, " ").trim().toUpperCase() || "TASKS";
+      t.textContent = v;
+      if (c && c.title !== v) { c.title = v; save(p); }
+    }
+  });
+
+  /* ----- drag to reorder task lines (grip) ----- */
+  view.addEventListener("pointerdown", e => {
+    const g = e.target.closest(".grip"); if (!g || e.button > 0) return;
+    const p = currentProject(); if (!p) return;
+    const li = g.closest("[data-iid]"), ul = li.parentElement, c = cardOf(p, li.dataset.cid);
+    if (!c) return;
+    e.preventDefault();
+    const rows = [...ul.children].filter(x => x.matches("[data-iid]"));
+    const from = rows.indexOf(li), startY = e.clientY;
+    const mids = rows.map(r => { const b = r.getBoundingClientRect(); return b.top + b.height / 2; });
+    const ulTop = ul.getBoundingClientRect().top;
+    const line = document.createElement("div"); line.className = "drop-line";
+    let to = from, moved = false;
+    document.body.classList.add("row-drag");
+    const move = ev => {
+      const dy = ev.clientY - startY;
+      if (!moved && Math.abs(dy) < 4) return;
+      if (!moved) { moved = true; li.classList.add("lifting"); ul.appendChild(line); }
+      li.style.transform = `translateY(${dy}px)`;
+      to = mids.filter((m, i) => i !== from && m < ev.clientY).length;
+      const others = rows.filter((r, i) => i !== from);
+      const ref = others[to];
+      const b = ref ? ref.getBoundingClientRect().top : others.length ? others[others.length - 1].getBoundingClientRect().bottom : ulTop;
+      line.style.top = (b - ulTop - 2) + "px";
+    };
+    const up = () => {
+      removeEventListener("pointermove", move); removeEventListener("pointerup", up); removeEventListener("pointercancel", up);
+      document.body.classList.remove("row-drag");
+      li.classList.remove("lifting"); li.style.transform = ""; line.remove();
+      if (moved && to !== from) { const [x] = c.items.splice(from, 1); c.items.splice(to, 0, x); save(p); repaint(p, c); }
+    };
+    addEventListener("pointermove", move); addEventListener("pointerup", up); addEventListener("pointercancel", up);
+  });
+
+  /* ================= EDIT menus ================= */
+  function editTitle(el) { const t = el.querySelector(".title"); t.setAttribute("contenteditable", "true"); t.focus(); const r = document.createRange(); r.selectNodeContents(t); const s = getSelection(); s.removeAllRanges(); s.addRange(r); }
+  function editSubTitle(sec) { const t = sec.querySelector(".psec-title"); t.setAttribute("contenteditable", "true"); t.focus(); const r = document.createRange(); r.selectNodeContents(t); const s = getSelection(); s.removeAllRanges(); s.addRange(r); }
+  function addSub(p) {
+    const x = newSub(p); save(p); renderProject();
+    const sec = view.querySelector(`.psec[data-sid="${x.id}"]`);
+    if (sec) { sec.scrollIntoView({ behavior: "smooth", block: "start" }); editSubTitle(sec); }
+  }
+  function subMenu(anchor, p, x) {
+    const i = p.subs.indexOf(x);
+    const swap = dir => { const j = i + dir; [p.subs[i], p.subs[j]] = [p.subs[j], p.subs[i]]; save(p); renderProject(); };
+    const actions = [
+      { icon: ICON.pencil, text: "Rename project", run: () => editSubTitle(view.querySelector(`.psec[data-sid="${x.id}"]`)) },
+      { icon: ICON.task, text: "Add a task card", run: () => {
+        const n = subCards(p, x.id).length, last = subCards(p, x.id).pop();
+        const c = { ...cleanCard({ title: "TASKS " + (n + 1), items: [] }), sub: x.id };
+        p.cards.splice(last ? p.cards.indexOf(last) + 1 : p.cards.length, 0, c); save(p); renderProject();
+        const el = cardEl(c.id); el.scrollIntoView({ behavior: "smooth", block: "center" }); editTitle(el); } }
+    ];
+    if (p.subs.length > 1) {
+      actions.push({ icon: ICON.up, text: "Move project up", disabled: i <= 0, run: () => swap(-1) });
+      actions.push({ icon: ICON.down, text: "Move project down", disabled: i >= p.subs.length - 1, run: () => swap(1) });
+    }
+    actions.push({ icon: ICON.palette, text: "Change campus color", run: () => projectMenu(anchor, p) });
+    openEditMenu(anchor, {
+      actions,
+      del: p.subs.length > 1 ? { text: "Delete project", ask: "Delete this project and all of its tasks?", run: () => { const snap = snapshot(); p.subs = p.subs.filter(y => y !== x); p.cards = p.cards.filter(c => c.sub !== x.id); save(p); renderProject(); showUndo("Project deleted", () => restore(snap)); } } : null
+    });
+  }
+  function cardMenu(anchor, p, c) {
+    const sibs = subCards(p, c.sub), si = sibs.indexOf(c);
+    const swap = dir => { const i = p.cards.indexOf(c), j = p.cards.indexOf(sibs[si + dir]); [p.cards[i], p.cards[j]] = [p.cards[j], p.cards[i]]; save(p); renderProject(); };
+    const actions = [
+      { icon: ICON.pencil, text: "Rename card", run: () => editTitle(cardEl(c.id)) },
+      { icon: ICON.cal, text: c.showDates ? "Hide the date on each task" : "Show the date on each task", run: () => { c.showDates = !c.showDates; save(p); repaint(p, c); } },
+      { icon: ICON.user, text: c.showOwners ? "Hide the owner on each task" : "Show the owner on each task", run: () => { c.showOwners = !c.showOwners; save(p); repaint(p, c); } },
+      { icon: ICON.sort, text: "Sort dated tasks by date within each phase", disabled: !c.items.some(t => t.date), run: () => {
+        const snap = snapshot();
+        const out = []; let groups = [];
+        const flush = () => { const d = groups.filter(g => g[0].date).sort((a, b) => (a[0].date + (a[0].startTime || "")).localeCompare(b[0].date + (b[0].startTime || ""))); out.push(...d.flat(), ...groups.filter(g => !g[0].date).flat()); groups = []; };
+        c.items.forEach(t => { if (t.kind === "phase") { flush(); out.push(t); } else if (t.sub && groups.length) groups[groups.length - 1].push(t); else groups.push([t]); });
+        flush();
+        c.items = out; save(p); repaint(p, c); showUndo("Dated tasks moved to the top of each phase, in date order", () => restore(snap)); } },
+      { icon: ICON.sweep, text: "Clear completed tasks", disabled: !c.items.some(t => t.done), run: () => { const snap = snapshot(); c.items = c.items.filter(t => !t.done); save(p); repaint(p, c); showUndo("Cleared completed tasks", () => restore(snap)); } }
+    ];
+    if (sibs.length > 1) {
+      actions.push({ icon: ICON.up, text: "Move card up", disabled: si <= 0, run: () => swap(-1) });
+      actions.push({ icon: ICON.down, text: "Move card down", disabled: si >= sibs.length - 1, run: () => swap(1) });
+    }
+    openEditMenu(anchor, {
+      actions: [...actions, { icon: ICON.palette, text: "Change campus color", run: () => projectMenu(anchor, p) }],
+      del: sibs.length > 1 ? { text: "Delete task card", ask: "Delete this card and its tasks?", run: () => { const snap = snapshot(); p.cards = p.cards.filter(x => x !== c); save(p); renderProject(); showUndo("Card deleted", () => restore(snap)); } } : null
+    });
+  }
+  function schedMenu(anchor, p, sb) {
+    const v = sb.sched;
+    openEditMenu(anchor, {
+      actions: [
+        { icon: ICON.pencil, text: "Rename card", run: () => editTitle(view.querySelector(`.sched-card[data-sid="${sb.id}"]`)) },
+        { icon: ICON.palette, text: "Change campus color", run: () => projectMenu(anchor, p) },
+        { icon: ICON.sweep, text: v.hideDone ? "Show completed" : "Hide completed", run: () => { v.hideDone = !v.hideDone; save(p); repaint(p, null); } }
+      ]
+    });
+  }
+  function projectMenu(anchor, p) {
+    if (!p) return;
+    openEditMenu(anchor, {
+      label: "Campus color", color: p.color,
+      onColor: col => { p.color = col; save(p); rerender(); },
+      actions: [
+        ...(route_.name === "project" ? [] : [{ icon: ICON.folder, text: "Open campus", run: () => go("#/p/" + p.id) }]),
+        { icon: ICON.pencil, text: "Edit name & description", run: () => openProjectForm(p) },
+        { icon: ICON.dup, text: "Duplicate campus", run: () => { const copy = cleanProject(JSON.parse(JSON.stringify(p))); copy.id = uid(); copy.title = (p.title + " COPY").slice(0, 80); const map = {}; copy.subs.forEach(x => { const n = uid(); map[x.id] = n; x.id = n; }); copy.cards.forEach(c => { c.id = uid(); c.sub = map[c.sub]; c.items.forEach(x => (x.id = uid())); }); copy.created = Date.now(); state.projects.splice(state.projects.indexOf(p) + 1, 0, copy); save(copy); rerender(); showMsg("Campus duplicated"); } },
+        ...(route_.name === "project" ? [] : [
+          { icon: ICON.up, text: "Move earlier", disabled: state.projects.indexOf(p) === 0, run: () => { const i = state.projects.indexOf(p); [state.projects[i - 1], state.projects[i]] = [state.projects[i], state.projects[i - 1]]; save(); renderHome(); } },
+          { icon: ICON.down, text: "Move later", disabled: state.projects.indexOf(p) === state.projects.length - 1, run: () => { const i = state.projects.indexOf(p); [state.projects[i + 1], state.projects[i]] = [state.projects[i], state.projects[i + 1]]; save(); renderHome(); } }
+        ])
+      ],
+      del: { text: "Delete campus", ask: "Delete this campus and all of its projects?", run: () => { const snap = snapshot(); state.projects = state.projects.filter(x => x !== p); save(); if (route_.name === "project") go("#/"); else rerender(); showUndo("Campus deleted", () => restore(snap)); } }
+    });
+  }
+
+  /* ----- project title & description window ----- */
+  function openProjectForm(p, isNew) {
+    closeModal();
+    const m = document.createElement("div");
+    m.className = "modal pj-modal";
+    m.innerHTML = `<div class="ev" role="dialog" aria-label="Campus" style="--c:${p.color}">
+      <div class="ev-head"><input class="ev-title pj-title" placeholder="Campus name" maxlength="80" aria-label="Campus name" value="${isNew ? "" : esc(p.title)}" autocapitalize="characters"><button class="ev-x" aria-label="Close">×</button></div>
+      <div class="ev-body">
+        <label class="pj-lbl" for="pjDesc">Description</label>
+        <textarea class="field pj-desc" id="pjDesc" placeholder="What work is happening at this campus?">${esc(p.desc)}</textarea>
+        <span class="pj-lbl">Color</span>
+        <div class="ev-colors">${PROJECT_COLORS.concat(COLORS.filter(c => !PROJECT_COLORS.includes(c))).map(x => `<button class="sw" style="background:${x}" data-c="${x}" aria-label="Color ${x}" aria-pressed="${x.toLowerCase() === p.color.toLowerCase()}"></button>`).join("")}</div>
+      </div>
+      <div class="ev-foot"><span class="grow"></span><button class="done-btn pj-done">${isNew ? "Create campus" : "Done"}</button></div></div>`;
+    document.body.appendChild(m);
+    const ta = m.querySelector(".pj-desc"); sizeNotes(ta);
+    const finish = open => {
+      const t = m.querySelector(".pj-title").value.replace(/\s+/g, " ").trim().toUpperCase();
+      p.title = t || (isNew ? "NEW CAMPUS" : p.title); p.desc = ta.value.replace(/\s+$/, "");
+      save(p); closeModal();
+      if (open) go("#/p/" + p.id); else rerender();
+    };
+    m.addEventListener("click", e => {
+      if (e.target === m || e.target.closest(".ev-x")) return finish(false);
+      if (e.target.closest(".pj-done")) return finish(!!isNew);
+      const sw = e.target.closest(".sw"); if (sw) { p.color = sw.dataset.c; m.querySelector(".ev").style.setProperty("--c", p.color); m.querySelectorAll(".sw").forEach(x => x.setAttribute("aria-pressed", String(x === sw))); }
+    });
+    ta.addEventListener("input", () => sizeNotes(ta));
+    m.querySelector(".pj-title").addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); ta.focus(); } });
+    setTimeout(() => { if (!m.contains(document.activeElement)) m.querySelector(".pj-title").focus(); }, 30);
+  }
+  function startNewProject() { const p = newProject(); renderHome(); openProjectForm(p, true); }
+
+  /* ================= header buttons ================= */
+  $("addBtn").addEventListener("click", e => {
+    const b = e.currentTarget;
+    if (b.classList.contains("open")) { closePops(); return; }
+    const p = currentProject();
+    if (!p) { closePops(); startNewProject(); return; }
+    closePops(); b.classList.add("open");
+    const menu = document.createElement("div"); menu.className = "add-menu"; menu.setAttribute("role", "menu");
+    menu.innerHTML = `
+      <button role="menuitem" data-k="sub"><span class="am-icon" style="color:#5FD68A">${ICON.task}</span><span><strong>Project</strong><small>Its own tasks, critical path and blockers, on this campus's calendar</small></span></button>
+      <hr class="am-sep">
+      <button role="menuitem" data-k="proj"><span class="am-icon" style="color:#3CB371">${ICON.folder}</span><span><strong>New campus</strong><small>Start another campus card</small></span></button>`;
+    menu.addEventListener("click", ev => {
+      const k = ev.target.closest("[data-k]"); if (!k) return;
+      closePops();
+      if (k.dataset.k === "proj") { go("#/"); setTimeout(startNewProject, 0); return; }
+      addSub(p);
+    });
+    placePop(menu, b);
+  });
+  $("moreBtn").addEventListener("click", e => {
+    const b = e.currentTarget;
+    if (b.classList.contains("open")) { closePops(); return; }
+    b.classList.add("open");
+    openEditMenu(b, {
+      actions: [
+        { icon: ICON.save, text: "Back up my data (download)", run: exportData },
+        { icon: ICON.load, text: "Restore from a backup file", run: () => $("importFile").click() },
+        { text: "PMBridge version " + APP_VERSION, disabled: true, run: () => {} }
+      ]
+    });
+    b.classList.add("open");
+  });
+  function exportData() {
+    writeNow();
+    const blob = new Blob([JSON.stringify({ app: "PMBridge", v: 1, exported: new Date().toISOString(), projects: state.projects }, null, 2)], { type: "application/json" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob); a.download = "pmbridge-backup-" + todayIso() + ".json";
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+    showMsg("Backup saved");
+  }
+  $("importFile").addEventListener("change", async e => {
+    const f = e.target.files && e.target.files[0]; e.target.value = "";
+    if (!f) return;
+    try {
+      const d = JSON.parse(await f.text());
+      if (!d || !Array.isArray(d.projects)) throw new Error("bad");
+      const snap = snapshot();
+      state.projects = d.projects.map(cleanProject); writeNow(); go("#/");
+      showUndo(`Restored ${state.projects.length} campus${state.projects.length === 1 ? "" : "es"}`, () => restore(snap));
+    } catch (err) { showMsg("That file isn't a PMBridge backup."); }
+  });
+
+  /* ================= start ================= */
+  load();
+  route();
+  addEventListener("resize", (() => { let w = innerWidth, t; return () => { clearTimeout(t); t = setTimeout(() => { if (innerWidth !== w) { w = innerWidth; renderCal(); } }, 150); }; })());
+  // ask the browser to keep this app's data even when storage runs low
+  try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist(); } catch (e) {}
+  // works offline and installs as a home-screen app
+  if ("serviceWorker" in navigator && /^https?:$/.test(location.protocol)) addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => {}));
+})();
+</script>
+</body>
+</html>
