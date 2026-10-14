@@ -697,7 +697,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
   const STATUSES = ["Not Started", "In Progress", "Blocked", "Done"];
   const STATUS_CLASS = { "Not Started": "s-ns", "In Progress": "s-ip", "Blocked": "s-blk", "Done": "s-done" };
   const LS_KEY = "pmbridge-v1";
-  const APP_VERSION = "35 (Oct 14)";
+  const APP_VERSION = "36 (Oct 14)";
   const $ = id => document.getElementById(id);
   const uid = () => Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4);
   const pad2 = n => String(n).padStart(2, "0");
@@ -1918,7 +1918,11 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
   function editTitle(el) { const t = el.querySelector(".title"); t.setAttribute("contenteditable", "true"); t.focus(); const r = document.createRange(); r.selectNodeContents(t); const s = getSelection(); s.removeAllRanges(); s.addRange(r); }
   function editSubTitle(sec) { const t = sec.querySelector(".psec-title"); t.setAttribute("contenteditable", "true"); t.focus(); const r = document.createRange(); r.selectNodeContents(t); const s = getSelection(); s.removeAllRanges(); s.addRange(r); }
   function addSub(p) {
-    const x = newSub(p); save(p); renderProject();
+    const x = newSub(p);
+    // a new project starts tidy: everything folded up except Tasks, which is open and ready for items
+    x.sched.collapsed = true; x.sched.blkCollapsed = true; x.sched.xc = {}; X_CARDS.forEach(([k]) => { x.sched.xc[k] = true; });
+    p.cards.filter(c => c.sub === x.id).forEach(c => { c.collapsed = false; });
+    save(p); renderProject();
     const sec = view.querySelector(`.psec[data-sid="${x.id}"]`);
     if (sec) { sec.scrollIntoView({ behavior: "smooth", block: "start" }); editSubTitle(sec); }
   }
