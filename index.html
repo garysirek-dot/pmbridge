@@ -75,6 +75,8 @@ input, textarea, select { font: inherit; color: inherit; }
 
 /* ---------- cards ---------- */
 .card { position: relative; background: var(--card); border: 1px solid var(--card-edge); border-radius: 10px; padding: 14px 16px 12px 20px; box-shadow: 0 6px 20px rgba(0,0,0,.5); min-width: 0; }
+/* Critical Path stands out with a thick border in the campus color */
+.psec .sched-card { border: 3px solid var(--list-color); padding: 12px 14px 10px 18px; }
 .card-head { display: flex; align-items: center; gap: 8px; padding-bottom: 8px; border-bottom: 3px solid currentColor; }
 .title { flex: 1; min-width: 0; font-weight: 700; font-size: 17px; letter-spacing: .05em; text-transform: uppercase; line-height: 1.3; overflow-wrap: anywhere; padding-top: 2px; }
 .title[contenteditable="true"] { cursor: text; outline: none; }
@@ -149,6 +151,19 @@ input, textarea, select { font: inherit; color: inherit; }
 .add-col .ni { width: 44px; height: 44px; border-radius: 50%; background: var(--card); border: 1px solid var(--card-edge); display: grid; place-items: center; color: var(--c, var(--accent)); }
 .add-col .ni svg { width: 22px; height: 22px; }
 .xcard .sched-empty { margin: 10px 0 2px; }
+.xlist { list-style: none; margin: 8px 0 2px; padding: 0; }
+.xrow { display: flex; align-items: center; gap: 12px; padding: 9px 4px; border-bottom: 1px solid rgba(255,255,255,.06); cursor: pointer; border-radius: 6px; }
+.xrow:last-child { border-bottom: 0; }
+.xrow:hover { background: rgba(255,255,255,.035); }
+.xr-main { flex: 1; min-width: 0; }
+.xr-faint { color: var(--faint); font-weight: 400; }
+.ct-name { font-weight: 700; font-size: 15px; overflow-wrap: anywhere; }
+.ct-sub { color: var(--dim); font-size: 13px; margin-top: 2px; overflow-wrap: anywhere; }
+.ct-phone { flex: none; color: var(--c); font-weight: 600; font-size: 14px; text-decoration: none; white-space: nowrap; padding: 4px 0; }
+.ct-phone:hover { text-decoration: underline; }
+.doc-desc { font-size: 14.5px; line-height: 1.4; white-space: pre-wrap; overflow-wrap: anywhere; }
+.doc-links { display: flex; flex-direction: column; align-items: flex-start; gap: 5px; margin-top: 6px; }
+.xcard .add-btns { margin-top: 6px; }
 /* main page overview cards */
 .ov-sec { margin-top: 40px; }
 .ov-tile { cursor: pointer; }
@@ -221,7 +236,7 @@ table.st { width: 100%; border-collapse: collapse; min-width: 860px; font-size: 
 .st .st-empty { color: var(--dim); padding: 16px 20px; }
 @media (max-width: 699px) { .st-edit { font-size: 16px; } .st-sec { margin-top: 30px; } }
 /* project header (title only; the description lives on the Projects tab) */
-.proj-head { display: flex; align-items: center; gap: 14px; padding: 2px 20px 16px; }
+.proj-head { display: flex; align-items: center; gap: 14px; padding: 2px 20px 16px; margin-top: 34px; }
 .ph-main { flex: 1; min-width: 0; }
 .ph-crumb { display: inline-block; font-size: 11.5px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--dim); cursor: pointer; }
 .ph-crumb:hover { color: var(--ink); }
@@ -617,7 +632,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
   .p-meta { font-size: 11px; }
   .new-tile { border-radius: 12px; font-size: 12px; aspect-ratio: auto; grid-column: 1 / -1; flex-direction: row; min-height: 64px; }
   .new-tile .ni { width: 36px; height: 36px; }
-  .proj-head { padding: 0 12px 12px; gap: 10px; }
+  .proj-head { padding: 0 12px 12px; gap: 10px; margin-top: 24px; }
   .sched-card .bic { width: 46px; }
   .item .bic { width: 56px; }
   .sched-card .ms-end { gap: 4px; }
@@ -682,7 +697,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
   const STATUSES = ["Not Started", "In Progress", "Blocked", "Done"];
   const STATUS_CLASS = { "Not Started": "s-ns", "In Progress": "s-ip", "Blocked": "s-blk", "Done": "s-done" };
   const LS_KEY = "pmbridge-v1";
-  const APP_VERSION = "31 (Oct 14)";
+  const APP_VERSION = "34 (Oct 14)";
   const $ = id => document.getElementById(id);
   const uid = () => Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4);
   const pad2 = n => String(n).padStart(2, "0");
@@ -773,7 +788,11 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
   const cleanCard = c => ({ id: c.id || uid(), kind: "task", title: String(c.title || "TASKS"), color: safeColor(c.color, "#5FD68A"), collapsed: !!c.collapsed, showDates: c.showDates !== false, showOwners: c.showOwners !== false, sub: String(c.sub || ""),
     items: (Array.isArray(c.items) ? c.items : []).map(cleanItem) });
   const cleanSchedView = v => ({ title: String(v && v.title && v.title !== "SCHEDULE" ? v.title : "CRITICAL PATH"), color: safeColor(v && v.color, "#5AA9FF"), collapsed: !!(v && v.collapsed), hideDone: !!(v && v.hideDone), blkCollapsed: !!(v && v.blkCollapsed), xc: { ...((v && v.xc) || {}) } });
-  const cleanSub = x => ({ id: x.id || uid(), title: String(x.title || "NEW PROJECT"), sched: cleanSchedView(x.sched) });
+  const cleanContact = c => ({ id: c.id || uid(), name: String(c.name || ""), company: String(c.company || ""), role: String(c.role || ""), phone: String(c.phone || "") });
+  const cleanDoc = d => ({ id: d.id || uid(), desc: String(d.desc || ""), link1: String(d.link1 || ""), link2: String(d.link2 || "") });
+  const cleanSub = x => ({ id: x.id || uid(), title: String(x.title || "NEW PROJECT"), sched: cleanSchedView(x.sched),
+    contacts: (Array.isArray(x.contacts) ? x.contacts : []).filter(Boolean).map(cleanContact),
+    docs: (Array.isArray(x.docs) ? x.docs : []).filter(Boolean).map(cleanDoc) });
   function cleanProject(p) {
     let cards = (Array.isArray(p.cards) ? p.cards : []).filter(Boolean);
     let sched = p.sched;
@@ -1130,17 +1149,81 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
   function subHtml(p, x) {
     return `<section class="psec" data-sid="${x.id}">
       <header class="psec-head"><div class="psec-title">${esc(x.title)}</div><button class="head-btn edit-btn" data-act="sub-menu" data-sid="${x.id}" data-pop aria-label="Edit project">EDIT</button></header>
-      <div class="col">${subCards(p, x.id).map(c => cardHtml(p, c)).join("")}${blkHtml(p, x)}${schedHtml(p, x)}${X_CARDS.map(([k, t]) => xCardHtml(p, x, k, t)).join("")}</div>
+      <div class="col">${schedHtml(p, x)}${subCards(p, x.id).map(c => cardHtml(p, c)).join("")}${blkHtml(p, x)}${X_CARDS.map(([k, t]) => xCardHtml(p, x, k, t)).join("")}</div>
       </section>`;
   }
   // placeholder cards for each project (filled in later)
-  const X_CARDS = [["contacts", "Contacts"], ["drawings", "Drawings"], ["contracts", "Contracts"]];
+  const X_CARDS = [["contacts", "Contacts"], ["docs", "Documents"]];
+  // only real web links are allowed; "www.site.com" becomes "https://www.site.com"
+  function safeUrl(u) {
+    u = String(u || "").trim(); if (!u) return "";
+    if (!/^[a-z][a-z0-9+.-]*:/i.test(u)) u = "https://" + u;
+    return /^https?:\/\//i.test(u) ? u : "";
+  }
+  const urlLabel = u => { try { const h = new URL(u); return (h.hostname.replace(/^www\./, "") + (h.pathname.length > 1 ? h.pathname : "")).slice(0, 60); } catch (e) { return u; } };
+  const telHref = ph => "tel:" + String(ph).replace(/[^\d+]/g, "");
+  function contactRow(c) {
+    const sub = [c.role, c.company].filter(Boolean).map(esc).join(" · ");
+    return `<li class="xrow ct-row" data-act="x-open" data-id="${c.id}" tabindex="0">
+      <div class="xr-main"><div class="ct-name">${esc(c.name) || '<span class="xr-faint">No name</span>'}</div>${sub ? `<div class="ct-sub">${sub}</div>` : ""}</div>
+      ${c.phone ? `<a class="ct-phone" href="${esc(telHref(c.phone))}">${esc(c.phone)}</a>` : ""}</li>`;
+  }
+  function docRow(d) {
+    const links = [d.link1, d.link2].map(safeUrl).filter(Boolean);
+    return `<li class="xrow doc-row" data-act="x-open" data-id="${d.id}" tabindex="0">
+      <div class="xr-main"><div class="doc-desc">${esc(d.desc) || '<span class="xr-faint">No description</span>'}</div>
+      ${links.length ? `<div class="doc-links">${links.map(u => `<a class="link-chip" href="${esc(u)}" target="_blank" rel="noopener">${ICON.link}<span>${esc(urlLabel(u))}</span></a>`).join("")}</div>` : ""}</div></li>`;
+  }
   function xCardHtml(p, x, k, title) {
     const col = !!(x.sched.xc && x.sched.xc[k]);
-    return `<article class="card xcard${col ? " collapsed" : ""}" data-sid="${x.id}" data-x="${k}" style="--list-color:${p.color}">
+    const list = k === "contacts" ? x.contacts : x.docs;
+    const rows = list.map(k === "contacts" ? contactRow : docRow).join("");
+    const empty = k === "contacts" ? "No contacts yet." : "No documents yet.";
+    return `<article class="card xcard${col ? " collapsed" : ""}" data-sid="${x.id}" data-x="${k}" style="--list-color:${p.color};--c:${p.color}">
       <header class="card-head" style="color:${p.color}"><div class="title">${title}</div>
         <button class="head-btn toggle" data-act="x-collapse" aria-label="Collapse or expand" title="Collapse or expand">${ICON.chev}</button></header>
-      <div class="card-body"><p class="sched-empty">Nothing here yet.</p></div></article>`;
+      <div class="card-body">${rows ? `<ul class="xlist">${rows}</ul>` : `<p class="sched-empty">${empty}</p>`}
+        <div class="add-btns"><button class="add-task" data-act="x-add">${ICON.plus}${k === "contacts" ? "Add contact" : "Add document"}</button></div></div></article>`;
+  }
+  // add / edit window for a contact or a document
+  function openXForm(p, sb, k, id) {
+    closeModal();
+    const isC = k === "contacts", list = isC ? sb.contacts : sb.docs;
+    const isNew = !id; const it = isNew ? (isC ? cleanContact({}) : cleanDoc({})) : list.find(x => x.id === id);
+    if (!it) return;
+    const fld = (key, label, ph, type) => `<label class="pj-lbl" for="xf-${key}">${label}</label><input class="field" id="xf-${key}" data-k="${key}" type="${type || "text"}" placeholder="${ph}" value="${esc(it[key])}" autocomplete="off"${type === "tel" ? ' inputmode="tel"' : type === "url" ? ' inputmode="url" autocapitalize="off" spellcheck="false"' : ""}>`;
+    const m = document.createElement("div");
+    m.className = "modal pj-modal x-modal";
+    m.innerHTML = `<div class="ev" role="dialog" aria-label="${isC ? "Contact" : "Document"}" style="--c:${p.color}">
+      <div class="ev-head"><div class="ev-title" style="padding-top:4px">${isC ? (isNew ? "NEW CONTACT" : "CONTACT") : (isNew ? "NEW DOCUMENT" : "DOCUMENT")}</div><button class="ev-x" aria-label="Close">×</button></div>
+      <div class="ev-proj"><b style="--pc:${p.color}">${esc(p.title)}</b> · ${esc(sb.title)}</div>
+      <div class="ev-body">${isC
+        ? fld("name", "Name", "Full name") + fld("company", "Company", "Company") + fld("role", "Role", "e.g. Superintendent") + fld("phone", "Phone #", "(555) 555-5555", "tel")
+        : `<label class="pj-lbl" for="xf-desc">Description</label><textarea class="field" id="xf-desc" data-k="desc" placeholder="What are these links?">${esc(it.desc)}</textarea>` + fld("link1", "Link 1", "https://…", "url") + fld("link2", "Link 2 (optional)", "https://…", "url")}
+      </div>
+      <div class="ev-foot">${isNew ? "" : `<button class="foot-btn danger x-del">${ICON.trash}Delete</button>`}<span class="grow"></span><button class="done-btn x-done">${isNew ? "Add" : "Done"}</button></div></div>`;
+    document.body.appendChild(m);
+    const ta = m.querySelector("textarea"); if (ta) { sizeNotes(ta); ta.addEventListener("input", () => sizeNotes(ta)); }
+    let closed = false;
+    const finish = () => {
+      if (closed) return; closed = true;
+      m.querySelectorAll("[data-k]").forEach(f => { it[f.dataset.k] = f.value.replace(/\s+$/, "").replace(/^\s+/, ""); });
+      if (!isC) { it.link1 = it.link1 ? (safeUrl(it.link1) || it.link1) : ""; it.link2 = it.link2 ? (safeUrl(it.link2) || it.link2) : ""; }
+      const blank = isC ? !(it.name || it.company || it.role || it.phone) : !(it.desc || it.link1 || it.link2);
+      if (isNew && !blank) list.push(it);
+      if (isNew && !blank) sb.sched.xc = Object.assign(sb.sched.xc || {}, { [k]: false });
+      save(p); closeModal(); rerender();
+    };
+    m.addEventListener("click", e => {
+      if (e.target === m || e.target.closest(".ev-x") || e.target.closest(".x-done")) return finish();
+      if (e.target.closest(".x-del")) {
+        closed = true; const i = list.indexOf(it); const snap = snapshot();
+        if (i >= 0) list.splice(i, 1); save(p); closeModal(); rerender();
+        showUndo(isC ? "Contact deleted" : "Document deleted", () => restore(snap));
+      }
+    });
+    m.addEventListener("keydown", e => { if (e.key === "Enter" && e.target.tagName === "INPUT") { e.preventDefault(); const fs = [...m.querySelectorAll("[data-k]")]; const i = fs.indexOf(e.target); if (i < fs.length - 1) fs[i + 1].focus(); else finish(); } });
+    setTimeout(() => { if (!m.contains(document.activeElement)) m.querySelector("[data-k]").focus(); }, 30);
   }
   function cardHtml(p, c) {
     normalizeCard(c);
@@ -1642,6 +1725,8 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
     if (act === "sched-menu" && sb) { schedMenu(a, p, sb); return; }
     if (act === "sub-menu" && sb) { subMenu(a, p, sb); return; }
     if (act === "add-sub") { addSub(p); return; }
+    if (act === "x-add" && sb) { openXForm(p, sb, a.closest(".xcard").dataset.x); return; }
+    if (act === "x-open" && sb) { if (e.target.closest("a")) return; openXForm(p, sb, a.closest(".xcard").dataset.x, a.dataset.id); return; }
     if (act === "x-collapse" && sb) { const k = a.closest(".xcard").dataset.x; sb.sched.xc = sb.sched.xc || {}; sb.sched.xc[k] = !sb.sched.xc[k]; save(p); a.closest(".xcard").classList.toggle("collapsed", sb.sched.xc[k]); return; }
     if (act === "blk-collapse" && sb) { sb.sched.blkCollapsed = !sb.sched.blkCollapsed; save(p); a.closest(".blk-card").classList.toggle("collapsed", sb.sched.blkCollapsed); return; }
     const li = a.closest("[data-iid]"), cardE = a.closest(".task-card[data-cid]");
