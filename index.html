@@ -234,6 +234,49 @@ table.st { width: 100%; border-collapse: collapse; min-width: 860px; font-size: 
 .st-blk .st-edit { flex: 1; min-width: 0; color: #ffb3b3; }
 .st-none { color: var(--faint); }
 .st .st-empty { color: var(--dim); padding: 16px 20px; }
+/* search page */
+.sr-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; margin: 4px 0 18px; }
+.sr-box { flex: 1 1 320px; max-width: 560px; display: flex; align-items: center; gap: 10px; height: 46px; padding: 0 14px; border-radius: 12px; background: var(--card); border: 1px solid var(--card-edge); color: var(--dim); }
+.sr-box:focus-within { border-color: var(--accent); color: var(--ink); }
+.sr-box svg { width: 20px; height: 20px; flex: none; }
+.sr-in { flex: 1; min-width: 0; height: 100%; background: transparent; border: 0; outline: none; color: var(--ink); font-size: 16px; -webkit-appearance: none; appearance: none; }
+.sr-in::placeholder { color: var(--faint); }
+.sr-in::-webkit-search-cancel-button { filter: invert(1) opacity(.5); }
+.sr-seg button { padding: 8px 14px; font-size: 13.5px; font-weight: 600; color: var(--dim); }
+.sr-seg button[aria-pressed="true"] { background: #3a3a3d; color: var(--ink); }
+.sr-hint, .sr-count { color: var(--dim); font-size: 14px; margin: 0 2px 12px; }
+table.st.sr { min-width: 640px; }
+.st.sr th:nth-child(1) { width: 20%; } .st.sr th:nth-child(2) { width: 17%; } .st.sr th:nth-child(3) { width: 11%; } .st.sr th:nth-child(4) { width: 36%; } .st.sr th:nth-child(5) { width: 16%; }
+.sr-in:focus, .sr-in:focus-visible { outline: none; }
+.sr-meta { display: none; flex-wrap: wrap; align-items: center; gap: 2px 12px; margin-top: 5px; font-size: 12.5px; color: var(--dim); }
+.sr-meta .st-camp { font-size: 11.5px; }
+.sr-meta > span:nth-child(2) { font-weight: 700; letter-spacing: .04em; text-transform: uppercase; font-size: 11.5px; }
+.sr-mo { color: var(--ink); }
+.sr-seg { display: flex; gap: 8px; }
+.sr-seg button { height: 38px; padding: 0 16px; border-radius: 19px; background: var(--card); border: 1px solid var(--card-edge); }
+.sr-seg button:hover { color: var(--ink); }
+.sr-seg button[aria-pressed="true"] { background: color-mix(in srgb, var(--accent) 20%, var(--card)); border-color: var(--accent); color: var(--ink); }
+.st.sr .np { display: inline-block; margin: 0; padding: 1px 7px; border-radius: 6px; border: 2px solid var(--c); color: var(--c); font-weight: 700; font-size: 12px; letter-spacing: .05em; white-space: nowrap; }
+@media (max-width: 699px) {
+  /* on iPhone each result is a small block: date + task, then campus · project · owner */
+  table.st.sr { min-width: 0; }
+  .st.sr thead { display: none; }
+  .st.sr, .st.sr tbody { display: block; }
+  .st.sr tbody tr { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; padding: 12px 16px; border-bottom: 1px solid rgba(255,255,255,.06); }
+  .st.sr tbody tr:last-child { border-bottom: 0; }
+  .st.sr td { display: block; padding: 0 !important; border: 0; background: none !important; }
+  .st.sr td:nth-child(3):has(.st-none) { display: none; }
+  .st.sr td:nth-child(4) { flex: 1 1 0; min-width: 0; font-size: 15px; }
+  .st.sr td:nth-child(1), .st.sr td:nth-child(2), .st.sr td:nth-child(5) { display: none; }
+  .st.sr .sr-meta { display: flex; }
+  .st.sr td.st-empty { flex: 1; padding: 4px 0 !important; }
+}
+.st.sr .np.late { color: var(--danger); border-color: var(--danger); }
+.st.sr .sr-owner { color: var(--ink); }
+.st.sr tr.sr-done td { opacity: .55; }
+.st.sr tr.sr-done .st-item { text-decoration: line-through; text-decoration-color: var(--dim); }
+.sr-subtag { font-size: 10.5px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--dim); margin-right: 6px; }
+.sr-donetag { font-size: 10.5px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); margin-left: 4px; }
 @media (max-width: 699px) { .st-edit { font-size: 16px; } .st-sec { margin-top: 30px; } }
 /* project header (title only; the description lives on the Projects tab) */
 .proj-head { display: flex; align-items: center; gap: 14px; padding: 2px 20px 16px; margin-top: 34px; }
@@ -598,11 +641,12 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
 @media (max-width: 699px) {
   .topbar { padding: 12px 14px; gap: 10px; flex-wrap: wrap; row-gap: 10px; }
   .brand { gap: clamp(6px, 2.2vw, 9px); }
-  .brand-icon { height: clamp(34px, 12.6vw, 52px); }
-  .brand-name { font-size: clamp(17px, 5.9vw, 24px); }
-  .brand-sub { font-size: clamp(11px, 3.65vw, 15px); white-space: nowrap; }
-  .top-right { gap: 8px; }
-  .round-btn { width: 38px; height: 38px; }
+  .brand-icon { height: clamp(32px, 11vw, 46px); }
+  .brand-name { font-size: clamp(16px, 5.4vw, 22px); }
+  .brand-sub { font-size: clamp(10px, 3.3vw, 14px); white-space: nowrap; }
+  .top-right { gap: 6px; }
+  .round-btn { width: 36px; height: 36px; }
+  .round-btn svg { width: 18px; height: 18px; }
   .tabs { order: 3; flex-basis: 100%; margin-right: 0; }
   .tab { flex: 1; justify-content: center; padding: 8px 6px; gap: 6px; font-size: 13px; }
   .home { padding: 4px 12px 40px; }
@@ -675,6 +719,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
   </div>
   <div class="top-right">
     <span class="brand-tag" id="brandTag">Open a campus card - star tasks for Status - every date is on the Calendar</span>
+    <button class="round-btn" id="searchBtn" aria-label="Search tasks" title="Search tasks"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L20.5 20.5"/></svg></button>
     <button class="round-btn" id="addBtn" data-pop aria-label="Add" title="Add"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
     <button class="round-btn" id="moreBtn" data-pop aria-label="Backup and restore" title="Backup and restore"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5.5" cy="12" r="1.9"/><circle cx="12" cy="12" r="1.9"/><circle cx="18.5" cy="12" r="1.9"/></svg></button>
   </div>
@@ -697,7 +742,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
   const STATUSES = ["Not Started", "In Progress", "Blocked", "Done"];
   const STATUS_CLASS = { "Not Started": "s-ns", "In Progress": "s-ip", "Blocked": "s-blk", "Done": "s-done" };
   const LS_KEY = "pmbridge-v1";
-  const APP_VERSION = "36 (Oct 14)";
+  const APP_VERSION = "37 (Oct 14)";
   const $ = id => document.getElementById(id);
   const uid = () => Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4);
   const pad2 = n => String(n).padStart(2, "0");
@@ -980,6 +1025,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
     const m = /^p\/([\w-]+)/.exec(h);
     if (m && proj(m[1])) return { name: "project", pid: m[1] };
     if (h === "status") return { name: "status" };
+    if (h === "search") return { name: "search" };
     if (h === "calendar") return { name: "calendar" };
     return { name: "home" };
   }
@@ -1001,12 +1047,13 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
     if (route_.name === "project") { if (prev.pid !== route_.pid) { const t = new Date(); calView.y = t.getFullYear(); calView.m = t.getMonth(); collapseAll(proj(route_.pid)); } renderProject(); }
     else if (route_.name === "calendar") renderGlobalCal();
     else if (route_.name === "status") renderStatusPage();
+    else if (route_.name === "search") renderSearch();
     else renderHome();
     if (prev.name !== route_.name || prev.pid !== route_.pid) scrollTo(0, 0);
   }
   addEventListener("hashchange", route);
   const currentProject = () => (route_.name === "project" ? proj(route_.pid) : null);
-  function rerender() { if (route_.name === "project") { if (!currentProject()) return go("#/"); renderProject(); } else if (route_.name === "calendar") renderGlobalCal(); else if (route_.name === "status") renderStatusPage(); else renderHome(); }
+  function rerender() { if (route_.name === "project") { if (!currentProject()) return go("#/"); renderProject(); } else if (route_.name === "calendar") renderGlobalCal(); else if (route_.name === "status") renderStatusPage(); else if (route_.name === "search") renderSearch(); else renderHome(); }
 
   /* ================= home: project squares ================= */
   const MAXSUBS = isPhone() ? 3 : 5;
@@ -1465,6 +1512,51 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
   function renderStatusPage() {
     view.innerHTML = pageHead("Status", "var(--accent)") + `<div class="page-body">${tableHtml()}</div>`;
     fillTable();
+  }
+
+  /* ----- search: task cards only ----- */
+  const ICON_SEARCH = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L20.5 20.5"/></svg>';
+  let srch = { q: "", mode: "text" };   // mode: text | past | soon
+  function searchRows() {
+    const t = todayIso(), soon = addDays(t, 3), words = srch.q.toLowerCase().split(/\s+/).filter(Boolean), out = [];
+    if (srch.mode === "text" && !words.length) return null;
+    state.projects.forEach(p => p.subs.forEach(x => subCards(p, x.id).forEach(c => c.items.forEach(it => {
+      if (it.kind === "phase" || !it.text.trim()) return;
+      if (srch.mode === "text") { const hay = (it.text + " " + (it.bic || "")).toLowerCase(); if (!words.every(w => hay.includes(w))) return; }
+      else { if (it.done || !it.date) return;
+        if (srch.mode === "past" && !(itemEnd(it) < t)) return;
+        if (srch.mode === "soon" && !(it.date <= soon && itemEnd(it) >= t)) return; }
+      out.push({ p, s: x, c, it });
+    }))));
+    out.sort((a, b) => (a.it.date || "9999").localeCompare(b.it.date || "9999") || a.p.title.localeCompare(b.p.title));
+    return out;
+  }
+  function searchResultsHtml() {
+    const rows = searchRows(), t = todayIso();
+    if (rows === null) return `<p class="sr-hint">Type a task or an owner's name, or pick Past due or Next 3 days.</p>`;
+    const label = { text: `${rows.length} ${rows.length === 1 ? "task" : "tasks"} matching “${esc(srch.q.trim())}”`, past: `${rows.length} past due`, soon: `${rows.length} due in the next 3 days` }[srch.mode];
+    return `<div class="sr-count">${label}</div>
+      <section class="card st-card" aria-label="Search results"><div class="st-wrap"><table class="st sr"><thead><tr><th>Campus</th><th>Project</th><th>Date</th><th>Task</th><th>Owner</th></tr></thead>
+      <tbody>${rows.length ? rows.map(r => { const ref = r.p.id + "|" + r.c.id + "|" + r.it.id, late = !r.it.done && r.it.date && itemEnd(r.it) < t; return `<tr class="${r.it.done ? "sr-done" : ""}">
+        <td><span class="st-camp" style="--c:${r.p.color}"><i></i>${esc(r.p.title)}</span></td>
+        <td class="st-proj">${esc(r.s.title)}</td>
+        <td>${r.it.date ? `<span class="np${late ? " late" : ""}" style="--c:${late ? "var(--danger)" : r.p.color}">${shortDate(r.it.date)}</span>` : `<span class="st-none">—</span>`}</td>
+        <td><button class="st-item" data-act="open-item" data-ref="${ref}">${r.it.sub ? '<span class="sr-subtag">Subtask</span>' : ""}${esc(r.it.text)}${r.it.done ? ' <span class="sr-donetag">Done</span>' : ""}</button><div class="sr-meta"><span class="st-camp" style="--c:${r.p.color}"><i></i>${esc(r.p.title)}</span><span>${esc(r.s.title)}</span>${r.it.bic ? `<span class="sr-mo">${esc(r.it.bic)}</span>` : ""}</div></td>
+        <td class="sr-owner">${r.it.bic ? esc(r.it.bic) : '<span class="st-none">—</span>'}</td></tr>`; }).join("") : `<tr><td colspan="5" class="st-empty">${srch.mode === "text" ? "No tasks match." : srch.mode === "past" ? "Nothing is past due." : "Nothing is due in the next 3 days."}</td></tr>`}</tbody></table></div></section>`;
+  }
+  function renderSearch() {
+    view.innerHTML = pageHead("Search", "var(--accent)") + `<div class="page-body sr-page">
+      <div class="sr-bar"></div></div>`;
+    const bar = view.querySelector(".sr-bar");
+    bar.innerHTML = `<label class="sr-box">${ICON_SEARCH}<input class="sr-in" type="search" placeholder="Search tasks or owners" aria-label="Search tasks or owners" enterkeyhint="search" autocomplete="off" value="${esc(srch.mode === "text" ? srch.q : "")}"></label>
+      <div class="seg sr-seg" role="group" aria-label="Due dates"><button data-sm="past" aria-pressed="${srch.mode === "past"}">Past due</button><button data-sm="soon" aria-pressed="${srch.mode === "soon"}">Next 3 days</button></div>`;
+    const res = document.createElement("div"); res.className = "sr-res"; res.innerHTML = searchResultsHtml(); bar.after(res);
+    const inp = bar.querySelector(".sr-in");
+    const paint = () => { res.innerHTML = searchResultsHtml(); bar.querySelectorAll("[data-sm]").forEach(b => b.setAttribute("aria-pressed", String(srch.mode === b.dataset.sm))); };
+    inp.addEventListener("input", () => { srch.q = inp.value; srch.mode = "text"; paint(); });
+    inp.addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); inp.blur(); } });
+    bar.querySelectorAll("[data-sm]").forEach(b => b.addEventListener("click", () => { srch.mode = srch.mode === b.dataset.sm ? "text" : b.dataset.sm; if (srch.mode !== "text") { inp.value = ""; srch.q = ""; } paint(); }));
+    if (srch.mode === "text" && !srch.q && !isPhone()) setTimeout(() => inp.focus(), 30);
   }
 
   /* ----- day sheet ----- */
@@ -2034,6 +2126,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
   function startNewProject() { const p = newProject(); renderHome(); openProjectForm(p, true); }
 
   /* ================= header buttons ================= */
+  $("searchBtn").addEventListener("click", () => { closePops(); closeModal(); go("#/search"); });
   $("addBtn").addEventListener("click", e => {
     const b = e.currentTarget;
     if (b.classList.contains("open")) { closePops(); return; }
