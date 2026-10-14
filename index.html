@@ -136,8 +136,12 @@ input, textarea, select { font: inherit; color: inherit; }
 .crumb svg { width: 16px; height: 16px; }
 .pv { display: grid; gap: 20px 24px; align-items: start; padding: 0 20px 60px; grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); grid-template-areas: "main cal"; }
 /* campus page: one card-width column per project */
-.pcols { display: grid; grid-template-columns: repeat(auto-fill, 450px); gap: 24px; align-items: start; justify-content: start; padding: 0 20px 60px; }
-.pcols .psec { min-width: 0; }
+.pcols { display: grid; grid-template-columns: repeat(auto-fill, 434px); gap: 32px 48px; align-items: stretch; justify-content: start; padding: 0 20px 60px; }
+.pcols .psec { min-width: 0; position: relative; }
+  .pcols { overflow-x: clip; }
+/* bold dashed white divider between projects: down the side on computers, across on iPhone */
+.pcols .psec::after { content: ""; position: absolute; top: 0; bottom: 0; right: -25px; border-right: 3px dashed rgba(255,255,255,.6); pointer-events: none; }
+.pcols .add-col { align-self: start; }
 .pcols .psec > .col { gap: 16px; }
 .add-col { margin-top: 38px; min-height: 180px; border: 2px dashed var(--card-edge); border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; color: var(--dim); font-weight: 700; letter-spacing: .06em; text-transform: uppercase; font-size: 13px; transition: border-color .15s, color .15s; }
 .add-col:hover { border-color: var(--c, var(--accent)); color: var(--ink); }
@@ -147,9 +151,11 @@ input, textarea, select { font: inherit; color: inherit; }
 /* main page overview cards */
 .ov-sec { margin-top: 40px; }
 .ov-tile { cursor: pointer; }
-.tile-stats { flex: 1; display: flex; gap: 22px; margin-top: 16px; align-items: flex-start; flex-wrap: wrap; }
-.tile-stats > div { display: flex; flex-direction: column; min-width: 0; }
-.tile-stats b { font-size: 42px; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; color: var(--ink); }
+.ov-tile .card-head { justify-content: center; }
+.ov-tile .title { flex: none; text-align: center; }
+.tile-stats { flex: 1; display: grid; grid-template-columns: 1fr 1fr; align-items: center; justify-items: center; gap: 12px; margin-top: 8px; }
+.tile-stats > div { display: flex; flex-direction: column; align-items: center; text-align: center; min-width: 0; }
+.tile-stats b { font-size: 56px; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; color: var(--ink); }
 .tile-stats span { font-size: 11.5px; color: var(--dim); margin-top: 7px; letter-spacing: .06em; text-transform: uppercase; font-weight: 700; }
 .tile-stats .red b { color: #FF5A5A; }
 .tile-sub { font-size: 12.5px; color: var(--dim); }
@@ -162,7 +168,7 @@ input, textarea, select { font: inherit; color: inherit; }
 /* each project in a campus: task card(s) | critical path + blockers */
 .psec-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 20px 24px; align-items: start; }
 .psec-head { display: flex; align-items: center; gap: 10px; margin: 0 0 12px; padding: 1px 0 1px 12px; border-left: 4px solid var(--c); }
-.psec-title { flex: 1; min-width: 0; font-weight: 800; font-size: 16px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink); outline: none; overflow-wrap: anywhere; }
+.psec-title { flex: 1; min-width: 0; font-weight: 800; font-size: 19px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink); outline: none; overflow-wrap: anywhere; }
 .psec-title[contenteditable="true"] { cursor: text; }
 .psec-head .edit-btn { color: var(--c); }
 .add-proj { display: flex; align-items: center; justify-content: center; gap: 10px; min-height: 56px; border: 2px dashed var(--card-edge); border-radius: 12px; color: var(--dim); font-weight: 700; letter-spacing: .06em; text-transform: uppercase; font-size: 13px; transition: border-color .15s, color .15s; }
@@ -219,6 +225,7 @@ table.st { width: 100%; border-collapse: collapse; min-width: 860px; font-size: 
 .ph-crumb { display: inline-block; font-size: 11.5px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--dim); cursor: pointer; }
 .ph-crumb:hover { color: var(--ink); }
 .ph-title { margin: 2px 0 0; font-size: 22px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; line-height: 1.2; overflow-wrap: anywhere; }
+.ph-title.ph-camp { font-size: 27px; }
 .ph-stats { width: 220px; flex: none; display: flex; flex-direction: column; gap: 6px; font-size: 12px; color: var(--dim); text-align: right; font-variant-numeric: tabular-nums; }
 /* dates on task lines */
 .item .date-pill { min-width: 50px; padding: 1px 5px; font-size: 11px; margin-top: 0; }
@@ -590,10 +597,14 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
   .ptile { padding: 12px 12px 10px 14px; border-radius: 12px; }
   .ptile .title { font-size: 14px; }
   .p-subs li { font-size: 12px; }
-  .pcols { grid-template-columns: minmax(0, 1fr); padding: 0 12px 40px; gap: 28px; }
+  .pcols { grid-template-columns: minmax(0, 1fr); padding: 0 12px 40px; gap: 0; }
+  .pcols .psec::after { display: none; }
+  .pcols .psec:first-child { border-top: 4px dashed rgba(255,255,255,.6); padding-top: 26px; }
+    .pcols .psec + .psec, .pcols .psec + .add-col { margin-top: 26px; padding-top: 26px; border-top: 4px dashed rgba(255,255,255,.6); }
+  .pcols .psec + .add-col { border-top: 4px dashed rgba(255,255,255,.6); border-left: 0; border-right: 0; border-bottom: 0; border-radius: 0; }
   .add-col { margin-top: 0; min-height: 90px; flex-direction: row; }
   .tile-stats { gap: 14px; margin-top: 10px; }
-  .tile-stats b { font-size: 30px; }
+  .tile-stats b { font-size: 40px; }
   .tile-stats span { font-size: 10.5px; }
   .page-body { padding: 0 12px 40px; }
   .ptile { aspect-ratio: auto; min-height: 172px; }
@@ -609,6 +620,8 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
   .item .bic { width: 56px; }
   .sched-card .ms-end { gap: 4px; }
   .ph-title { font-size: 18px; }
+  .ph-title.ph-camp { font-size: 22px; }
+  .psec-title { font-size: 18px; }
   .ph-stats { display: none; }
   .pv { padding: 0 12px 40px; gap: 16px; }
   .col { gap: 16px; }
@@ -667,7 +680,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
   const STATUSES = ["Not Started", "In Progress", "Blocked", "Done"];
   const STATUS_CLASS = { "Not Started": "s-ns", "In Progress": "s-ip", "Blocked": "s-blk", "Done": "s-done" };
   const LS_KEY = "pmbridge-v1";
-  const APP_VERSION = "25 (Oct 14)";
+  const APP_VERSION = "30 (Oct 14)";
   const $ = id => document.getElementById(id);
   const uid = () => Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4);
   const pad2 = n => String(n).padStart(2, "0");
@@ -950,11 +963,21 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
     return { name: "home" };
   }
   function go(hash) { if (location.hash !== hash) location.hash = hash; else route(); }
+  // opening a campus starts with every card folded up so the page looks clean
+  function collapseAll(p) {
+    if (!p) return; let changed = false;
+    p.cards.forEach(c => { if (!c.collapsed) { c.collapsed = true; changed = true; } });
+    p.subs.forEach(x => { const v = x.sched; if (!v) return; v.xc = v.xc || {};
+      if (!v.collapsed) { v.collapsed = true; changed = true; }
+      if (!v.blkCollapsed) { v.blkCollapsed = true; changed = true; }
+      X_CARDS.forEach(([k]) => { if (!v.xc[k]) { v.xc[k] = true; changed = true; } }); });
+    if (changed) save(p);
+  }
   function route() {
     closePops();
     const prev = route_;
     route_ = parseHash();
-    if (route_.name === "project") { if (prev.pid !== route_.pid) { const t = new Date(); calView.y = t.getFullYear(); calView.m = t.getMonth(); } renderProject(); }
+    if (route_.name === "project") { if (prev.pid !== route_.pid) { const t = new Date(); calView.y = t.getFullYear(); calView.m = t.getMonth(); collapseAll(proj(route_.pid)); } renderProject(); }
     else if (route_.name === "calendar") renderGlobalCal();
     else if (route_.name === "status") renderStatusPage();
     else renderHome();
@@ -998,8 +1021,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
     })));
     return `<article class="card ptile ov-tile" data-act="go-status" tabindex="0" style="--c:var(--accent)" aria-label="Open the Status table">
       <header class="card-head" style="color:var(--accent)"><div class="title">Status</div></header>
-      <div class="tile-stats"><div><b>${items}</b><span>${items === 1 ? "Item" : "Items"} on status</span></div><div class="red"><b>${blockers}</b><span>${blockers === 1 ? "Blocker" : "Blockers"}</span></div></div>
-      <div class="p-foot"><div class="tile-sub">Last updated ${last ? esc(when(last)) : "—"}</div><div class="tile-go">Open status table ›</div></div>
+      <div class="tile-stats"><div><b>${items}</b><span>Items</span></div><div class="red"><b>${blockers}</b><span>Blockers</span></div></div>
     </article>`;
   }
   function calTileHtml() {
@@ -1010,7 +1032,6 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
     return `<article class="card ptile ov-tile" data-act="go-cal" tabindex="0" style="--c:var(--accent)" aria-label="Open the combined calendar">
       <header class="card-head" style="color:var(--accent)"><div class="title">Calendar</div></header>
       <div class="tile-stats"><div><b>${week}</b><span>Next 7 days</span></div><div><b>${month}</b><span>This month</span></div></div>
-      <div class="p-foot">${next ? `<div class="p-next" style="--c:var(--accent)"><span class="np">${shortDate(next.it.date)}</span>${esc(next.it.text || "Untitled")}</div>` : `<div class="tile-sub">No upcoming dates</div>`}<div class="tile-go">Open calendar ›</div></div>
     </article>`;
   }
 
@@ -1088,7 +1109,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
     view.innerHTML = `
       <nav class="proj-head">
         <button class="nav-btn" data-act="go-home" aria-label="All campuses" title="All campuses">${ICON.back}</button>
-        <div class="ph-main"><span class="ph-crumb" data-act="go-home">All campuses</span><h1 class="ph-title" style="color:${p.color}">${esc(p.title)}</h1></div>
+        <div class="ph-main"><span class="ph-crumb" data-act="go-home">All campuses</span><h1 class="ph-title ph-camp" style="color:${p.color}">${esc(p.title)}</h1></div>
         <div class="ph-stats" id="phStats">${statsHtml(p)}</div>
         <button class="head-btn edit-btn" style="color:${p.color}" data-act="project-menu" data-pid="${p.id}" data-pop aria-label="Edit campus">EDIT</button>
       </nav>
