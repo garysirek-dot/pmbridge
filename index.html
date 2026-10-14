@@ -95,6 +95,7 @@ input, textarea, select { font: inherit; color: inherit; }
 .home { padding: 6px 20px 60px; }
 .home-head { display: flex; align-items: baseline; gap: 10px; margin: 6px 2px 14px; }
 .home-head h1 { margin: 0; font-size: 24px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+.home-head.home-first { margin-top: 34px; }
 .home-head span { color: var(--dim); font-size: 13px; font-weight: 600; }
 .pgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; }
 .ptile { aspect-ratio: 1; display: flex; flex-direction: column; border-radius: 14px; cursor: pointer; transition: transform .15s, border-color .15s; overflow: hidden; }
@@ -591,6 +592,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
   .tab { flex: 1; justify-content: center; padding: 8px 6px; gap: 6px; font-size: 13px; }
   .home { padding: 4px 12px 40px; }
   .home-head h1 { font-size: 19px; }
+  .home-head.home-first { margin-top: 24px; }
   .home-cal { margin-top: 28px; }
   .ck { height: 30px; font-size: 12px; padding: 0 10px 0 8px; }
   .pgrid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
@@ -680,7 +682,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
   const STATUSES = ["Not Started", "In Progress", "Blocked", "Done"];
   const STATUS_CLASS = { "Not Started": "s-ns", "In Progress": "s-ip", "Blocked": "s-blk", "Done": "s-done" };
   const LS_KEY = "pmbridge-v1";
-  const APP_VERSION = "30 (Oct 14)";
+  const APP_VERSION = "31 (Oct 14)";
   const $ = id => document.getElementById(id);
   const uid = () => Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4);
   const pad2 = n => String(n).padStart(2, "0");
@@ -1003,7 +1005,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
   function renderHome() {
     const n = state.projects.length;
     view.innerHTML = `<section class="home">
-      <div class="home-head"><h1>Campuses</h1><span>${n ? n + (n === 1 ? " campus" : " campuses") : ""}</span></div>
+      <div class="home-head home-first"><h1>Campuses</h1><span>${n ? n + (n === 1 ? " campus" : " campuses") : ""}</span></div>
       ${n ? "" : `<p class="home-empty">Each campus is a card. Give it a name and describe the work there, then open it to add projects, tasks and dates.</p>`}
       <div class="pgrid">${state.projects.map(tileHtml).join("")}
         <button class="new-tile" data-act="new-project"><span class="ni">${ICON.plus}</span>New campus</button>
