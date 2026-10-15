@@ -106,6 +106,182 @@ input, textarea, select { font: inherit; color: inherit; }
 .stab[aria-current="page"] { color: var(--accent); }
 .stab[aria-current="page"]::after { background: var(--accent); }
 .page-body.tab-body { padding-top: 26px; }
+/* ===== estimator ===== */
+.est-top { margin-bottom: 20px; }
+.est-camps { display: flex; flex-wrap: wrap; gap: 8px; }
+.est-camp { display: inline-flex; align-items: center; gap: 8px; height: 36px; padding: 0 14px; border-radius: 18px; background: var(--card); border: 1px solid var(--card-edge); color: var(--dim); font-size: 12.5px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+.est-camp i { width: 9px; height: 9px; border-radius: 50%; background: var(--cc); }
+.est-camp:hover { color: var(--ink); }
+.est-camp[aria-pressed="true"] { color: var(--ink); border-color: var(--cc); background: color-mix(in srgb, var(--cc) 16%, var(--card)); }
+.est-grid { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 24px; align-items: start; }
+.est-main { display: flex; flex-direction: column; gap: 18px; min-width: 0; }
+.est-side { position: sticky; top: 96px; }
+.est-grid { grid-template-columns: minmax(0, 980px) 360px; justify-content: start; }
+.esite { padding: 0; overflow: hidden; }
+.es-head { display: flex; align-items: center; gap: 12px; padding: 16px 14px 16px 20px; border-bottom: 3px solid var(--c); margin: 0; }
+.esite.shut .es-head { border-bottom-color: transparent; }
+.esite.shut .es-body { display: none; }
+.esite.shut .toggle svg { transform: rotate(-90deg); }
+.es-kind { flex: none; font-size: 10.5px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--c); border: 1.5px solid var(--c); border-radius: 6px; padding: 3px 7px; }
+.es-name { flex: 1; min-width: 0; font-size: 18px; font-weight: 800; letter-spacing: .06em; color: var(--ink); outline: none; overflow-wrap: anywhere; cursor: text; border-radius: 4px; }
+.es-name[contenteditable="true"] { box-shadow: 0 0 0 2px color-mix(in srgb, var(--c) 50%, transparent); padding: 0 4px; }
+.es-sum { display: flex; flex-direction: column; align-items: flex-end; gap: 1px; flex: none; }
+.es-sub { font-size: 11.5px; color: var(--dim); white-space: nowrap; }
+.es-sub b { color: var(--ink); font-weight: 600; }
+.es-total { font-size: 22px; font-weight: 800; color: var(--c); font-variant-numeric: tabular-nums; letter-spacing: .01em; }
+.es-body { padding: 4px 0 8px; }
+.ecat { border-bottom: 1px solid rgba(255,255,255,.06); }
+.ecat:last-child { border-bottom: 0; }
+.ec-head { width: 100%; display: flex; align-items: center; gap: 12px; padding: 13px 18px 13px 20px; text-align: left; }
+.ec-chev { width: 20px; justify-content: center; }
+.ec-head:hover { background: rgba(255,255,255,.025); }
+.ec-ico { width: 30px; height: 30px; border-radius: 8px; display: grid; place-items: center; flex: none; color: var(--c); background: color-mix(in srgb, var(--c) 14%, transparent); }
+.ec-ico svg { width: 17px; height: 17px; }
+.ec-name { flex: 1; font-size: 13.5px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--ink); }
+.ec-name .ec-n { margin-left: 10px; letter-spacing: 0; text-transform: none; font-weight: 500; }
+.ec-n { font-size: 12px; color: var(--dim); }
+
+.ec-chev { color: var(--faint); display: grid; }
+.ec-chev svg { width: 16px; height: 16px; transition: transform .2s; }
+.ecat.shut .ec-chev svg { transform: rotate(-90deg); }
+.ecat.shut .ec-rows { display: none; }
+.ec-rows { padding: 0 18px 10px 20px; }
+.erow, .erow-h { display: grid; grid-template-columns: minmax(0, 1fr) 124px 114px 92px 92px 20px; align-items: center; gap: 12px; padding: 9px 0 9px 42px; border-top: 1px solid rgba(255,255,255,.04); }
+.erow-h { padding: 10px 18px 6px 62px; border: 0; font-size: 10.5px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--faint); }
+.erow-h span:nth-child(n+2) { text-align: right; } .erow-h span:nth-child(3) { text-align: center; }
+.er-ext { text-align: right; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--faint); font-size: 14px; }
+.er-ext i { display: none; font-style: normal; font-weight: 600; font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--faint); margin-right: 6px; }
+.erow.on .er-m { color: var(--c); } .erow.on .er-l { color: var(--ink); }
+.er-end { display: grid; place-items: center; }
+.ec-m, .ec-l { width: 92px; text-align: right; font-weight: 700; font-size: 14px; font-variant-numeric: tabular-nums; flex: none; }
+.ec-m { color: var(--c); } .ec-l { color: var(--ink); }
+.es-foot { margin: 6px 18px 8px 20px; padding: 12px 0 4px 42px; border-top: 1px solid var(--card-edge); display: flex; flex-direction: column; gap: 6px; }
+.es-fl { display: flex; align-items: center; justify-content: flex-end; gap: 16px; font-size: 13px; color: var(--dim); }
+.es-fl b { min-width: 104px; text-align: right; color: var(--ink); font-size: 14px; font-variant-numeric: tabular-nums; }
+.es-fl i { font-style: normal; color: var(--faint); }
+.es-fr { width: 104px; height: 32px; }
+.es-ft { margin-top: 4px; padding-top: 8px; border-top: 1px dashed var(--card-edge); color: var(--ink); font-weight: 700; letter-spacing: .04em; }
+.es-ft b { color: var(--c); font-size: 17px; }
+.eset { padding: 14px 16px; margin-top: 14px; }
+.eset-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; font-size: 13px; font-weight: 700; }
+.eset-in { width: 92px; height: 34px; }
+.eset-in input { text-align: right; }
+.eset p { margin: 8px 0 0; font-size: 11.5px; color: var(--faint); line-height: 1.4; }
+.esum-split { grid-template-columns: 1fr 1fr; row-gap: 12px; }
+.esum-tbl { margin-top: 16px; border-top: 1px solid var(--card-edge); padding-top: 8px; font-size: 13px; }
+.et-h, .et-r { display: grid; grid-template-columns: minmax(0, 1fr) 82px 74px; gap: 8px; align-items: center; padding: 5px 0; }
+.et-h { font-size: 10.5px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--dim); }
+.et-h span:nth-child(n+2), .et-r span:nth-child(n+2) { text-align: right; font-variant-numeric: tabular-nums; }
+.et-r span:first-child { font-weight: 700; letter-spacing: .03em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: flex; align-items: center; gap: 8px; }
+.et-r span:nth-child(2) { color: var(--c); font-weight: 600; }
+.et-r.zero { color: var(--faint); } .et-r.zero span:nth-child(2) { color: var(--faint); }
+.pl-tag { display: inline-block; margin-left: 8px; padding: 1px 6px; border-radius: 5px; font-size: 10px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: #5AA9FF; border: 1px solid rgba(90,169,255,.5); vertical-align: 1px; }
+.er-sel { height: 30px; font-size: 13px; margin: 4px 0 2px; max-width: 100%; width: fit-content; min-width: 200px; --c: var(--c); }
+.er-desc { font-size: 13px; color: var(--dim); margin-top: 2px; }
+.erow.on .er-desc { color: var(--ink); }
+.er-x { display: inline-grid; place-items: center; width: 20px; height: 20px; margin-left: 6px; border-radius: 5px; color: var(--faint); font-size: 16px; line-height: 1; vertical-align: 1px; }
+.er-x:hover { background: rgba(255,255,255,.08); color: var(--danger); }
+.er-noprice { justify-self: end; height: 26px; padding: 0 9px; border-radius: 7px; border: 1px dashed var(--faint); color: var(--dim); font-size: 12px; font-weight: 600; }
+.er-noprice:hover { border-color: var(--c); color: var(--ink); }
+.er-more { display: inline-flex; align-items: center; gap: 6px; margin: 2px 0 6px 42px; padding: 4px 8px 4px 4px; border-radius: 7px; color: var(--c); font-size: 12.5px; font-weight: 700; }
+.er-more svg { width: 14px; height: 14px; }
+.er-more:hover { background: color-mix(in srgb, var(--c) 12%, transparent); }
+.est-top { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 18px; }
+.est-seg { display: inline-flex; padding: 3px; border-radius: 12px; background: var(--card); border: 1px solid var(--card-edge); }
+.est-seg button { height: 32px; padding: 0 16px; border-radius: 9px; font-size: 13px; font-weight: 700; color: var(--dim); }
+.est-seg button[aria-pressed="true"] { background: #3a3a3d; color: var(--ink); }
+.esum-warn { display: block; width: 100%; text-align: left; margin-top: 14px; padding: 10px 12px; border-radius: 9px; background: rgba(255,181,71,.1); border: 1px solid rgba(255,181,71,.35); color: #FFB547; font-size: 12.5px; font-weight: 600; line-height: 1.4; }
+.esum-warn:hover { background: rgba(255,181,71,.16); }
+.pl { display: flex; flex-direction: column; gap: 16px; max-width: 980px; }
+.pl-intro { color: var(--dim); font-size: 14px; line-height: 1.5; margin: 0 2px 2px; }
+.pl-intro b { color: #FFB547; }
+.pl-sec { padding: 0; overflow: hidden; }
+.pl-head { display: flex; align-items: center; gap: 12px; padding: 14px 18px 12px 20px; border-bottom: 3px solid var(--c); }
+.pl-cols { margin-left: auto; display: grid; grid-template-columns: 120px 120px; gap: 12px; font-size: 10.5px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--dim); text-align: left; }
+.pl-row { display: grid; grid-template-columns: minmax(0, 1fr) 120px 120px; gap: 12px; align-items: center; padding: 10px 18px 10px 20px; border-top: 1px solid rgba(255,255,255,.05); }
+.pl-row:first-of-type { border-top: 0; }
+.pl-row.flash { animation: freshRow 1.6s ease; --list-color: var(--c); }
+.pl-desc { display: flex; flex-direction: column; min-width: 0; }
+.pl-t { font-size: 14.5px; font-weight: 600; }
+.pl-t i { font-style: normal; font-weight: 500; color: var(--faint); font-size: 12px; margin-left: 8px; }
+.pl-row .er-part { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pl-in { display: flex; align-items: center; height: 36px; padding: 0 10px; border-radius: 9px; background: #1f1f21; border: 1px solid var(--card-edge); color: var(--dim); font-size: 14px; }
+.pl-in:focus-within { border-color: var(--c); }
+.pl-in input { flex: 1; min-width: 0; width: 100%; background: transparent; border: 0; outline: none; color: var(--ink); font-size: 15px; font-weight: 600; text-align: right; font-variant-numeric: tabular-nums; }
+.pl-in input::placeholder { color: var(--faint); font-weight: 400; }
+.pl-row.empty .pl-in { border-style: dashed; }
+.er-name { display: flex; flex-direction: column; min-width: 0; }
+.er-t { font-size: 14.5px; color: var(--dim); line-height: 1.3; }
+.erow.on .er-t { color: var(--ink); font-weight: 600; }
+.er-part { font-size: 11.5px; color: var(--faint); letter-spacing: .02em; margin-top: 1px; font-variant-numeric: tabular-nums; }
+.er-unit { display: flex; flex-direction: column; font-size: 12.5px; color: var(--dim); font-variant-numeric: tabular-nums; text-align: right; }
+.er-unit i { font-style: normal; color: var(--faint); margin-left: 5px; font-size: 11px; }
+.qty { display: inline-flex; align-items: center; height: 34px; border-radius: 10px; background: #1f1f21; border: 1px solid var(--card-edge); overflow: hidden; }
+.erow.on .qty { border-color: color-mix(in srgb, var(--c) 60%, transparent); }
+.qty button { width: 32px; height: 100%; font-size: 18px; color: var(--dim); display: grid; place-items: center; }
+.qty button:hover { background: rgba(255,255,255,.07); color: var(--ink); }
+.qty-in { width: 46px; height: 100%; text-align: center; background: transparent; border: 0; border-left: 1px solid var(--card-edge); border-right: 1px solid var(--card-edge); color: var(--ink); font-size: 15px; font-weight: 700; font-variant-numeric: tabular-nums; outline: none; }
+.qty-in:focus { background: rgba(255,255,255,.05); }
+.erow:not(.on) .qty-in { color: var(--faint); font-weight: 500; }
+.er-line { text-align: right; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--faint); }
+.erow.on .er-line { color: var(--c); }
+.est-add { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.est-add button { display: flex; align-items: center; justify-content: center; gap: 12px; height: 64px; border-radius: 12px; border: 2px dashed var(--card-edge); color: var(--dim); font-size: 13px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
+.est-add button:hover { border-color: var(--c); color: var(--ink); }
+.est-add .ni { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; background: var(--card); color: var(--c); }
+.est-add .ni svg { width: 18px; height: 18px; }
+.est-empty { display: flex; flex-direction: column; gap: 6px; padding: 22px 22px; border-radius: 12px; background: var(--card); border: 1px solid var(--card-edge); color: var(--dim); line-height: 1.5; }
+.est-empty b { color: var(--ink); font-size: 15px; letter-spacing: .02em; }
+.esum { padding: 20px 20px 16px; }
+.esum-lbl { font-size: 11.5px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--dim); }
+.esum-big { font-size: 38px; font-weight: 800; letter-spacing: .01em; color: var(--c); font-variant-numeric: tabular-nums; margin: 4px 0 14px; line-height: 1.1; }
+.esum-bar { height: 8px; border-radius: 4px; background: #8E8E93; overflow: hidden; }
+.esum-bar i { display: block; height: 100%; background: var(--c); border-radius: 4px 0 0 4px; }
+.esum-split { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; }
+.esum-split > div { display: flex; flex-direction: column; font-size: 12px; color: var(--dim); }
+.esum-split b { font-size: 17px; color: var(--ink); font-variant-numeric: tabular-nums; margin-top: 2px; }
+.esum-split .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; vertical-align: 1px; }
+.dot.mat { background: var(--c); } .dot.lab { background: #8E8E93; }
+.esum-list { margin-top: 16px; border-top: 1px solid var(--card-edge); padding-top: 8px; }
+.esum-row { display: flex; align-items: center; gap: 10px; padding: 7px 0; font-size: 13.5px; }
+.esr-k { width: 20px; height: 20px; border-radius: 5px; display: grid; place-items: center; font-size: 10.5px; font-weight: 800; color: var(--c); border: 1.5px solid var(--c); flex: none; }
+.esr-n { flex: 1; min-width: 0; font-weight: 700; letter-spacing: .05em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.esr-t { font-variant-numeric: tabular-nums; font-weight: 600; }
+.esum-note { margin: 12px 0 0; font-size: 11.5px; color: var(--faint); line-height: 1.4; }
+@media (max-width: 999px) {
+  .est-grid { grid-template-columns: minmax(0, 1fr); }
+  .est-side { position: static; order: -1; }
+}
+@media (max-width: 699px) {
+  .es-head { flex-wrap: wrap; padding: 14px 10px 14px 16px; gap: 8px 10px; }
+  .es-name { font-size: 16px; }
+  .es-sum { order: 5; flex-basis: 100%; flex-direction: row; align-items: baseline; justify-content: space-between; }
+  .es-total { font-size: 19px; }
+  .ec-head { padding: 12px 12px 12px 16px; gap: 10px; }
+  .ec-rows { padding: 0 12px 8px 16px; }
+  .ec-head { flex-wrap: wrap; row-gap: 2px; }
+  .erow { grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "name end" "unit unit" "qty m" "qty l"; gap: 4px 10px; padding: 10px 0; }
+  .erow-h { display: none; }
+  .er-name { grid-area: name; } .er-unit { grid-area: unit; flex-direction: row; gap: 12px; text-align: left; }
+  .er-end { grid-area: end; align-self: start; }
+  .qty { grid-area: qty; justify-self: start; align-self: center; height: 38px; } .qty button { width: 40px; }
+  .er-m { grid-area: m; } .er-l { grid-area: l; } .er-ext i { display: inline; }
+  .ec-m, .ec-l { width: auto; font-size: 13px; }
+  .ec-name .ec-n { display: none; }
+  .es-foot { margin: 6px 12px 8px 16px; padding-left: 0; }
+  .est-add { grid-template-columns: 1fr; }
+  .er-sel { min-width: 0; width: 100%; height: 36px; font-size: 16px; }
+  .er-more { margin-left: 0; }
+  .pl-cols { display: none; }
+  .pl-row { grid-template-columns: 1fr 1fr; padding: 12px 14px; }
+  .pl-desc { grid-column: 1 / -1; }
+  .pl-row .er-part { white-space: normal; }
+  .pl-in input { font-size: 16px; }
+  .pl-in::before { content: attr(data-l); font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--faint); margin-right: auto; padding-right: 6px; }
+  .pl-in input { text-align: right; flex: 0 1 80px; }
+  .esum-big { font-size: 32px; }
+  .stabs .stab { font-size: 11.5px; letter-spacing: .05em; }
+}
 .tab-body .st-sec .home-head { margin-top: 0; }
 .home-head { display: flex; align-items: baseline; gap: 10px; margin: 6px 2px 14px; }
 .home-head h1 { margin: 0; font-size: 24px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
@@ -749,6 +925,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
   <button class="stab" data-tab="home">Campuses</button>
   <button class="stab" data-tab="status">Status</button>
   <button class="stab" data-tab="calendar">Calendar</button>
+  <button class="stab" data-tab="estimator">Estimator</button>
 </nav>
 <main id="view"></main>
 <input type="file" id="importFile" accept="application/json,.json" hidden>
@@ -767,7 +944,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
   const STATUSES = ["Not Started", "In Progress", "Blocked", "Done"];
   const STATUS_CLASS = { "Not Started": "s-ns", "In Progress": "s-ip", "Blocked": "s-blk", "Done": "s-done" };
   const LS_KEY = "pmbridge-v1";
-  const APP_VERSION = "41 (Oct 14)";
+  const APP_VERSION = "45 (Oct 15)";
   const $ = id => document.getElementById(id);
   const uid = () => Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4);
   const pad2 = n => String(n).padStart(2, "0");
@@ -883,7 +1060,37 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
     cards = cards.map(cleanCard).map(c => ({ ...c, sub: ids.has(c.sub) ? c.sub : subs[0].id }));
     subs.forEach(x => { if (!cards.some(c => c.sub === x.id)) cards.push({ ...cleanCard({ title: "TASKS", items: [] }), sub: x.id }); });
     return { id: p.id || uid(), title: String(p.title || "NEW CAMPUS"), desc: String(p.desc || ""), color: safeColor(p.color, PROJECT_COLORS[0]),
-      cards, subs, created: p.created || Date.now(), updated: p.updated || Date.now() };
+      cards, subs, est: cleanEst(p.est), created: p.created || Date.now(), updated: p.updated || Date.now() };
+  }
+  const EST_CATS = [
+    { k: "isp", name: "ISP", icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.7 3.9 5.7 3.9 9s-1.3 6.3-3.9 9c-2.6-2.7-3.9-5.7-3.9-9S9.4 5.7 12 3z"/></svg>' },
+    { k: "net", name: "Network", icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="6" rx="1.5"/><path d="M7 7h.01M11 7h.01M15 7h.01M12 10v4M6 18v-2h12v2"/><rect x="3" y="18" width="6" height="3" rx="1"/><rect x="15" y="18" width="6" height="3" rx="1"/></svg>' },
+    { k: "av", name: "AV Systems", icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="4" width="19" height="12" rx="1.5"/><path d="M8 20h8M12 16v4"/><path d="M10 8.5v4l3.5-2z" fill="currentColor"/></svg>' },
+    { k: "print", name: "Printing", icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M7 8V3h10v5"/><rect x="3" y="8" width="18" height="9" rx="2"/><rect x="7" y="14" width="10" height="7" rx="1"/></svg>' },
+    { k: "ws", name: "Workstations", icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="11" rx="1.5"/><path d="M2 19h20l-2-4H4z"/></svg>' }
+  ];
+  // Catalog from Trailer_Workbook.xlsx: part -> [manufacturer, description, short label]
+  const EST_PARTS = {"C8121-G2-MX": ["Cisco", "12 port Cisco secure router", "C8121-G2-MX · 12-port"], "C8111-G2-MX": ["Cisco", "6 port Cisco secure router", "C8111-G2-MX · 6-port"], "MG52E-HW": ["Cisco", "Meraki MG52E cellular gateway with support for 5G standalone", "Meraki MG52E 5G"], "CW9162I-MR": ["Cisco", "Catalyst 9162I AP (W6E, tri-band 2x2) w/Meraki", "CW9162I · indoor 2x2"], "CW9164I-MR": ["Cisco", "Catalyst 9164I AP (W6E, tri-band 4x4) w/Meraki", "CW9164I · indoor 4x4"], "MR76-HW": ["Cisco", "Meraki MR76 WiFi 6 outdoor AP", "MR76 · outdoor"], "ATS-01122": ["AccelTex", "Antenna patch WiFi 84NP", "AccelTex patch antenna"], "MS130-48P": ["Cisco", "Meraki MS130-48P cloud managed 48GE 740W PoE switch", "MS130-48P"], "MS150-48FP-4G": ["Cisco", "Meraki MS150-48FP-4G L2 stackable cloud managed 48GE 740W PoE switch", "MS150-48FP-4G · stackable"], "MA-PWR-CORD-US-FR": ["Cisco", "Meraki AC power cord (US plug)", "Meraki AC power cord"], "MA-SFP-1GB-TX": ["Cisco", "Meraki 1 GbE SFP copper module", "Meraki 1GbE SFP"], "EWMWG242425": ["Hoffman", "12U network cabinet (24H x 24W x 25D)", "Hoffman 12U enclosed cabinet"], "RK919WALLO": ["StarTech", "2-post 9U heavy-duty wall-mount open frame network rack, 19\"", "StarTech 9U open wall rack"], "EWMF2": ["Hoffman", "Access II 4in fan kit, 115V 100CFM, fits 25in - 30in deep cabinets", "Hoffman fan kit"], "AFLTR4LD": ["Hoffman", "Fan filter and finger guard kit", "Hoffman fan filter"], "AS1032": ["Hoffman", "Rack screws (pack of 20)", "Rack screws (20 pk)"], "AR8600A": ["Schneider", "APC NetShelter horizontal cable manager, 2U, single", "APC 2U cable manager"], "SMT1500RM2UCNC": ["Schneider", "APC Smart-UPS 1500VA LCD RM 2U 120V with network card", "APC 1500VA · 2U"], "SMART750RM1U": ["Tripp Lite", "Eaton Tripp Lite Smart UPS 750VA 600W rackmount AVR 120V 1U", "Tripp Lite 750VA · 1U"], "RM-CI-T24": ["Rackmount.IT", "Rackmount for Meraki MX68 - MX75 series", "RM-CI-T24 · MX68-MX75"], "RM-CI-T30": ["Rackmount.IT", "Rackmount for Cisco 8111-G2-MX", "RM-CI-T30 · C8111"], "ESH1915V": ["Hoffman", "Single-sided shelf, vented, black", "Hoffman vented shelf"], "CABSHELFV1U": ["StarTech", "1U vented cantilever rack shelf, 10\" deep, 44lb", "StarTech 1U shelf"], "CAT6-RUN": ["—", "Cat6 cable run (terminated drop)", "Cat6 cable run"], "86PK640S0UA": ["LG Electronics", "86in LG UHD TV, ATSC / Clear QAM, Global IPTV", "LG 86\" · 86PK"], "86UR640S9UD": ["LG Electronics", "86in LCD TV 3840x2160 UHD, WiFi, 120Hz", "LG 86\" · 86UR"], "75UR640S9UD": ["LG Electronics", "75in UHD TV, HDMI(3), USB, WiFi, RS-232C, RJ45", "LG 75\""], "65UR640S9UD": ["LG Electronics", "65in UHD TV, HDMI(3), USB, WiFi, RS-232C, RJ45", "LG 65\""], "K-50S20M2": ["Sony", "BRAVIA 2 II 50\" class 4K HDR LED Google TV (2025)", "Sony 50\" Google TV"], "K-55S20M2": ["Sony", "BRAVIA 2 II 55\" class 4K HDR LED Google TV (2025)", "Sony 55\" Google TV"], "K-65S20M2": ["Sony", "BRAVIA 2 II 65\" class 4K HDR LED Google TV (2025)", "Sony 65\" Google TV"], "K-75S20M2": ["Sony", "BRAVIA 2 II 75\" class 4K HDR LED Google TV (2025)", "Sony 75\" Google TV"], "LTM1U": ["Chief", "Large Fusion micro-adjustable tilt wall mount, black", "Chief tilt wall mount"], "TS525TU": ["Chief", "Low-profile full-motion wall mount for 42-75\" TVs", "Chief full-motion mount"], "RFCUB": ["Chief", "Fit mobile cart for 55-89\" displays, height adjustable", "Chief mobile cart"], "HDPMM06F": ["Liberty AV", "6ft HDMI cable", "6 ft"], "HDPMM10F": ["Liberty AV", "10ft HDMI premium cable", "10 ft"], "HDMM50": ["StarTech", "50ft (15m) high speed HDMI cable, 4K @ 30Hz", "50 ft"], "ST128HD20": ["StarTech", "HDMI splitter, same image with sound on 8 screens", "StarTech 1x8 HDMI splitter"], "HD-EXT-USB-2000-C": ["Crestron", "4K HDMI & USB over HDBaseT extender", "Crestron HDBaseT extender"], "960-001225": ["Logitech", "Rally Plus Ultra-HD ConferenceCam, black", "Logitech Rally Plus"], "991-000534": ["Logitech", "Logitech Rally Bar", "Logitech Rally Bar"], "MTW405-1000": ["Owl Labs", "Meeting Owl 4+", "Meeting Owl 4+"], "989-000430": ["Logitech", "Rally mic pod, graphite", "Rally mic pod"], "939-001644": ["Logitech", "Rally mounting kit for the Rally Ultra-HD ConferenceCam", "Rally mounting kit"], "952-000044": ["Logitech", "Rally Bar mount", "Rally Bar mount"], "952-000181": ["Logitech", "Rally mic coupler", "Mic coupler"], "939-001799": ["Logitech", "Rally USB cable", "USB cable"], "952-000188": ["Logitech", "Rally connection extension", "Connection extension"], "ACCMTW201-0004": ["Owl Labs", "Owl tripod", "Owl tripod"], "9X481UT#ABA": ["HP", "HP Thunderbolt 4 Ultra 180W G6 dock", "HP TB4 180W dock"], "U436-06N-GB-C": ["Tripp Lite", "USB-C to Gigabit network adapter with 60W USB-C PD charging", "USB-C to Gigabit adapter"], "E-DPM-HDM-06F": ["Liberty AV", "DisplayPort to HDMI 6ft cable", "DP to HDMI 6 ft"], "CS-T10-WM-L-K9=": ["Cisco", "Cisco Room Navigator wall mount, First Light (white)", "Room Navigator · wall mount"], "CS-T10-TS-L-K9=": ["Cisco", "Cisco Room Navigator table stand, First Light (white)", "Room Navigator · table stand"], "PRN-TBD": ["—", "Printer / MFP, model to be selected", "Printer (model TBD)"], "UM.HV7AA.L01": ["Acer", "Acer 27in 3840x2160 IPS display", "Acer 27\" 4K"], "ARMSLMBARDUO": ["StarTech", "Heavy-duty dual monitor desk arm, VESA 75/100, up to 32\"", "StarTech dual arm"], "5TW10AA#ABA": ["HP", "USB-C dock with power supply", "HP USB-C dock"], "VI-SZJ-1": ["Vilong", "Dual layer desk clamp power strip surge protector", "Desk clamp power strip"]};
+  // line types: [id, section, label, [model options]] - the first option is the default
+  const EST_GROUPS = [["rtr", "isp", "Secure router", ["C8121-G2-MX", "C8111-G2-MX"]], ["cell", "isp", "5G cellular gateway", ["MG52E-HW"]], ["ap", "net", "Wi-Fi access point", ["CW9162I-MR", "CW9164I-MR", "MR76-HW"]], ["ant", "net", "AP patch antenna", ["ATS-01122"]], ["sw", "net", "48-port PoE switch", ["MS130-48P", "MS150-48FP-4G"]], ["pwr", "net", "Switch power cord", ["MA-PWR-CORD-US-FR"]], ["sfp", "net", "SFP module", ["MA-SFP-1GB-TX"]], ["rack", "net", "Network rack / cabinet", ["EWMWG242425", "RK919WALLO"]], ["fan", "net", "Cabinet fan kit", ["EWMF2"]], ["filt", "net", "Fan filter & finger guard", ["AFLTR4LD"]], ["scr", "net", "Rack screws", ["AS1032"]], ["cm", "net", "Horizontal cable manager", ["AR8600A"]], ["ups", "net", "Rack UPS", ["SMT1500RM2UCNC", "SMART750RM1U"]], ["rmk", "net", "Router rackmount kit", ["RM-CI-T24", "RM-CI-T30"]], ["shelf", "net", "Rack shelf", ["ESH1915V", "CABSHELFV1U"]], ["cat6", "net", "Cat6 cable run", ["CAT6-RUN"]], ["disp", "av", "Display", ["86PK640S0UA", "86UR640S9UD", "75UR640S9UD", "65UR640S9UD", "K-50S20M2", "K-55S20M2", "K-65S20M2", "K-75S20M2"]], ["mnt", "av", "Display mount / cart", ["LTM1U", "TS525TU", "RFCUB"]], ["hdmi", "av", "HDMI cable", ["HDPMM06F", "HDPMM10F", "HDMM50"]], ["split", "av", "HDMI splitter", ["ST128HD20"]], ["ext", "av", "HDMI / USB extender", ["HD-EXT-USB-2000-C"]], ["cam", "av", "Conference camera", ["960-001225", "991-000534", "MTW405-1000"]], ["mic", "av", "Mic pod", ["989-000430"]], ["rkit", "av", "Rally mounting kit", ["939-001644"]], ["bmnt", "av", "Rally Bar mount", ["952-000044"]], ["mcpl", "av", "Rally mic coupler", ["952-000181"]], ["rusb", "av", "Rally USB cable", ["939-001799"]], ["rext", "av", "Rally connection extension", ["952-000188"]], ["owlt", "av", "Owl tripod", ["ACCMTW201-0004"]], ["rdock", "av", "Room dock", ["9X481UT#ABA"]], ["usbc", "av", "USB-C network adapter", ["U436-06N-GB-C"]], ["rdp", "av", "Room DP to HDMI cable", ["E-DPM-HDM-06F"]], ["nav", "av", "Room scheduler", ["CS-T10-WM-L-K9=", "CS-T10-TS-L-K9="]], ["prn", "print", "Printer", ["PRN-TBD"]], ["mon", "ws", "Monitor", ["UM.HV7AA.L01"]], ["arm", "ws", "Dual monitor arm", ["ARMSLMBARDUO"]], ["dock", "ws", "Docking station", ["5TW10AA#ABA"]], ["strip", "ws", "Desk power strip", ["VI-SZJ-1"]], ["wdp", "ws", "DP to HDMI cable", ["E-DPM-HDM-06F"]]];
+  // starting points from the workbook's trailer tabs: [name, [[line, part, qty]], freight]
+  const EST_TEMPLATES = [["22-WIDE (A-101)", [["cm", "AR8600A", 1], ["ups", "SMART750RM1U", 1], ["rack", "RK919WALLO", 1], ["shelf", "CABSHELFV1U", 2], ["disp", "86PK640S0UA", 5], ["disp", "K-65S20M2", 6], ["mnt", "LTM1U", 11], ["hdmi", "HDPMM06F", 11], ["hdmi", "HDPMM10F", 11], ["mic", "989-000430", 8], ["rkit", "939-001644", 4], ["cam", "960-001225", 4], ["rdock", "9X481UT#ABA", 4], ["nav", "CS-T10-WM-L-K9=", 4]], 950], ["SAFETY 6-WIDE (A-102)", [["cm", "AR8600A", 1], ["ups", "SMART750RM1U", 1], ["rack", "RK919WALLO", 1], ["shelf", "CABSHELFV1U", 1], ["cat6", "CAT6-RUN", 11], ["disp", "86UR640S9UD", 3], ["disp", "K-65S20M2", 9], ["mnt", "LTM1U", 12], ["hdmi", "HDPMM06F", 3], ["hdmi", "HDPMM10F", 3], ["hdmi", "HDMM50", 3], ["split", "ST128HD20", 1], ["mic", "989-000430", 3], ["rkit", "939-001644", 1], ["cam", "960-001225", 1], ["rdock", "9X481UT#ABA", 1]], 0], ["MEETING TRAILER (A-103)", [["rtr", "C8111-G2-MX", 1], ["ap", "CW9162I-MR", 2], ["sw", "MS130-48P", 1], ["cm", "AR8600A", 1], ["ups", "SMART750RM1U", 1], ["rack", "RK919WALLO", 1], ["shelf", "CABSHELFV1U", 1], ["cat6", "CAT6-RUN", 2], ["disp", "86UR640S9UD", 10], ["mnt", "RFCUB", 10], ["hdmi", "HDPMM06F", 2], ["hdmi", "HDPMM10F", 2], ["hdmi", "HDMM50", 12], ["split", "ST128HD20", 2], ["mic", "989-000430", 2], ["rkit", "939-001644", 2], ["cam", "960-001225", 2], ["rdock", "9X481UT#ABA", 2]], 0]];
+  // material unit prices from ePlus quote 23581013 (Aug 3, 2026). Anything typed in the Price list overrides these.
+  const EST_BASE = {"AR8600A": {"mat": 165.53, "lab": 0}, "SMART750RM1U": {"mat": 701.08, "lab": 0}, "86PK640S0UA": {"mat": 1684.19, "lab": 0}, "K-65S20M2": {"mat": 823.52, "lab": 0}, "LTM1U": {"mat": 280.69, "lab": 0}, "HDPMM06F": {"mat": 14.66, "lab": 0}, "HDPMM10F": {"mat": 17.67, "lab": 0}, "989-000430": {"mat": 410.51, "lab": 0}, "939-001644": {"mat": 164.2, "lab": 0}, "960-001225": {"mat": 2553.39, "lab": 0}, "9X481UT#ABA": {"mat": 357.98, "lab": 0}, "RK919WALLO": {"mat": 246.48, "lab": 0}, "CABSHELFV1U": {"mat": 32.0, "lab": 0}, "CS-T10-WM-L-K9=": {"mat": 1070.75, "lab": 0}};
+  const EST_BASE_SRC = "ePlus quote 23581013";
+  const EST_GROUP = Object.fromEntries(EST_GROUPS.map(g => [g[0], g]));
+  function cleanEst(e) {
+    const sites = (e && Array.isArray(e.sites) ? e.sites : []).filter(Boolean).map(x => {
+      const lines = {};
+      Object.entries(x.lines || {}).forEach(([lid, l]) => {
+        const g = EST_GROUP[l && l.g]; if (!g || lid.split("~")[0] !== g[0]) return;
+        const opt = g[3].includes(l.opt) ? l.opt : g[3][0], qty = Math.max(0, Math.min(9999, Math.round(+l.qty || 0)));
+        if (lid === g[0] && !qty && opt === g[3][0]) return;
+        lines[lid] = { g: g[0], opt, qty };
+      });
+      return { id: x.id || uid(), name: String(x.name || "TRAILER"), kind: x.kind === "building" ? "building" : "trailer", lines, freight: Math.max(0, +x.freight || 0), collapsed: !!x.collapsed, shut: { ...(x.shut || {}) } };
+    });
+    return { sites, tax: Math.min(30, Math.max(0, +(e && e.tax) || 0)) };
   }
 
   let saveT, statusT;
@@ -1053,6 +1260,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
     if (m && proj(m[1])) return { name: "project", pid: m[1] };
     if (h === "status") return { name: "status" };
     if (h === "search") return { name: "search" };
+    if (h === "estimator") return { name: "estimator" };
     if (h === "calendar") return { name: "calendar" };
     return { name: "home" };
   }
@@ -1076,6 +1284,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
     else if (route_.name === "calendar") renderGlobalCal();
     else if (route_.name === "status") renderStatusPage();
     else if (route_.name === "search") renderSearch();
+    else if (route_.name === "estimator") renderEst();
     else renderHome();
     const tab = route_.name === "project" ? "home" : route_.name;
     document.querySelectorAll("#tabs .stab").forEach(b => { if (b.dataset.tab === tab) b.setAttribute("aria-current", "page"); else b.removeAttribute("aria-current"); });
@@ -1083,7 +1292,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
   }
   addEventListener("hashchange", route);
   const currentProject = () => (route_.name === "project" ? proj(route_.pid) : null);
-  function rerender() { if (route_.name === "project") { if (!currentProject()) return go("#/"); renderProject(); } else if (route_.name === "calendar") renderGlobalCal(); else if (route_.name === "status") renderStatusPage(); else if (route_.name === "search") renderSearch(); else renderHome(); }
+  function rerender() { if (route_.name === "project") { if (!currentProject()) return go("#/"); renderProject(); } else if (route_.name === "calendar") renderGlobalCal(); else if (route_.name === "status") renderStatusPage(); else if (route_.name === "search") renderSearch(); else if (route_.name === "estimator") renderEst(); else renderHome(); }
 
   /* ================= home: project squares ================= */
   const MAXSUBS = isPhone() ? 3 : 5;
@@ -1616,6 +1825,295 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
     bar.querySelectorAll("[data-sm]").forEach(b => b.addEventListener("click", () => { srch.mode = srch.mode === b.dataset.sm ? "text" : b.dataset.sm; if (srch.mode !== "text") { inp.value = ""; srch.q = ""; } paint(); }));
     if (srch.mode === "text" && !srch.q && !isPhone()) setTimeout(() => inp.focus(), 30);
   }
+
+  /* ================= estimator ================= */
+  const money = n => "$" + Math.round(n).toLocaleString("en-US");
+  const money2 = n => n % 1 ? "$" + n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : money(n);
+  /* ----- price list: one shared list of unit prices by part # ----- */
+  const PRICE_KEY = "pmbridge-prices-v1";
+  function cleanPrices(o) {
+    const out = {};
+    Object.entries(o || {}).forEach(([k, v]) => { if (!EST_PARTS[k] || !v) return; out[k] = { mat: Math.max(0, +v.mat || 0), lab: Math.max(0, +v.lab || 0) }; });
+    return out;
+  }
+  let estPrices = cleanPrices((() => { try { return JSON.parse(localStorage.getItem(PRICE_KEY) || "{}"); } catch (e) { return {}; } })());
+  let priceT = null;
+  const priceOf = part => estPrices[part] || EST_BASE[part] || { mat: 0, lab: 0 };
+  const hasPrice = part => { const pr = priceOf(part); return pr.mat > 0 || pr.lab > 0; };
+  function savePrices() {
+    try { localStorage.setItem(PRICE_KEY, JSON.stringify(estPrices)); } catch (e) {}
+    clearTimeout(priceT); priceT = setTimeout(() => { priceT = null; pushPrices(); }, 600);
+  }
+  function pushPrices() { if (typeof db !== "undefined" && db) db.doc("estimator/prices").set({ items: estPrices }).catch(() => {}); }
+  function watchPrices() {
+    if (typeof db === "undefined" || !db) return;
+    let first = true;
+    db.collection("estimator").onSnapshot(snap => {
+      const d = snap.docs.find(x => x.id === "prices");
+      if (first) { first = false; if (!d) { if (Object.keys(estPrices).length) pushPrices(); return; } }
+      if (!d || priceT || (d.metadata && d.metadata.hasPendingWrites)) return;
+      const np = cleanPrices((d.data() || {}).items);
+      if (JSON.stringify(np) === JSON.stringify(estPrices)) return;
+      estPrices = np; try { localStorage.setItem(PRICE_KEY, JSON.stringify(estPrices)); } catch (e) {}
+      if (route_.name === "estimator" && typeof renderWhenFree === "function") renderWhenFree();
+    }, () => {});
+  }
+  const EST_KEY = "pmbridge-est-campus";
+  let estPid = (() => { try { return localStorage.getItem(EST_KEY); } catch (e) { return null; } })();
+  let estView = "est";
+  const estCampus = () => proj(estPid) || state.projects[0] || null;
+  // every line type shows at least its default row; extra rows (another size / model) have ids like "disp~abc"
+  function siteRows(site, g) {
+    const rows = [[g[0], site.lines[g[0]] || { g: g[0], opt: g[3][0], qty: 0 }]];
+    Object.entries(site.lines).forEach(([lid, l]) => { if (lid !== g[0] && l.g === g[0]) rows.push([lid, l]); });
+    return rows;
+  }
+  // materials and labor are kept apart at every level: line, component, trailer / building, project
+  function siteTotals(site, taxPct) {
+    const t = { mat: 0, lab: 0, cats: {}, unpriced: 0 };
+    Object.values(site.lines).forEach(l => { if (!l.qty) return;
+      const cat = EST_GROUP[l.g][1], pr = priceOf(l.opt), c = t.cats[cat] || (t.cats[cat] = { mat: 0, lab: 0, n: 0 });
+      c.mat += l.qty * pr.mat; c.lab += l.qty * pr.lab; c.n += l.qty; t.mat += l.qty * pr.mat; t.lab += l.qty * pr.lab;
+      if (!hasPrice(l.opt)) t.unpriced++; });
+    t.tax = t.mat * (taxPct || 0) / 100; t.freight = site.freight || 0;
+    t.total = t.mat + t.lab + t.tax + t.freight; return t;
+  }
+  function estTotals(p) {
+    const all = { mat: 0, lab: 0, tax: 0, freight: 0, unpriced: 0, cats: {}, sites: p.est.sites.map(x => ({ x, t: siteTotals(x, p.est.tax) })) };
+    all.sites.forEach(({ t }) => { ["mat", "lab", "tax", "freight", "unpriced"].forEach(k => (all[k] += t[k]));
+      Object.entries(t.cats).forEach(([k, c]) => { const a = all.cats[k] || (all.cats[k] = { mat: 0, lab: 0 }); a.mat += c.mat; a.lab += c.lab; }); });
+    all.total = all.mat + all.lab + all.tax + all.freight; return all;
+  }
+  const ext = (q, v, priced) => q && priced ? money(q * v) : "—";
+  function estRowHtml(site, g, lid, l) {
+    const q = l.qty || 0, info = EST_PARTS[l.opt], pr = priceOf(l.opt), extra = lid !== g[0], ok = hasPrice(l.opt);
+    return `<div class="erow${q ? " on" : ""}" data-lid="${lid}">
+      <div class="er-name"><span class="er-t">${esc(g[2])}</span>
+        ${g[3].length > 1 ? `<select class="sel er-sel" data-ea="opt" aria-label="${esc(g[2])} model">${g[3].map(o => `<option value="${esc(o)}"${o === l.opt ? " selected" : ""}>${esc(EST_PARTS[o][2])}</option>`).join("")}</select>` : `<span class="er-desc">${esc(info[2])}</span>`}
+        <span class="er-part">${esc(l.opt)}${info[0] !== "—" ? " · " + esc(info[0]) : ""}</span></div>
+      <div class="er-unit">${ok ? `<span>${money2(pr.mat)}<i>mat</i></span><span>${money2(pr.lab)}<i>labor</i></span>` : `<button class="er-noprice" data-ea="price" data-part="${esc(l.opt)}">Add price</button>`}</div>
+      <div class="qty"><button data-ea="dec" aria-label="Less">−</button><input class="qty-in" inputmode="numeric" pattern="[0-9]*" value="${q}" aria-label="Quantity of ${esc(g[2])}"><button data-ea="inc" aria-label="More">+</button></div>
+      <div class="er-ext er-m" data-v="lm"><i>Materials</i>${ext(q, pr.mat, ok)}</div>
+      <div class="er-ext er-l" data-v="ll"><i>Labor</i>${ext(q, pr.lab, ok)}</div>
+      <div class="er-end">${extra ? `<button class="er-x" data-ea="rmline" aria-label="Remove this line" title="Remove this line">×</button>` : ""}</div></div>`;
+  }
+  const catSums = ct => `<span class="ec-m" data-v="cm">${ct.n ? money(ct.mat) : "—"}</span><span class="ec-l" data-v="cl">${ct.n ? money(ct.lab) : "—"}</span>`;
+  function estSiteHtml(p, site) {
+    const t = siteTotals(site, p.est.tax);
+    return `<article class="card esite${site.collapsed ? " shut" : ""}" data-site="${site.id}">
+      <header class="es-head">
+        <span class="es-kind">${site.kind === "building" ? "Building" : "Trailer"}</span>
+        <div class="es-name" spellcheck="false" autocapitalize="characters">${esc(site.name)}</div>
+        <div class="es-sum"><span class="es-sub">Materials <b data-v="mat">${money(t.mat)}</b> · Labor <b data-v="lab">${money(t.lab)}</b></span><span class="es-total" data-v="total">${money(t.total)}</span></div>
+        <button class="head-btn more-btn" data-ea="menu" data-pop aria-label="Edit ${site.kind}" title="Edit">${ICON_DOTS}</button>
+        <button class="head-btn toggle" data-ea="fold" aria-label="Collapse or expand">${ICON.chev}</button>
+      </header>
+      <div class="es-body">
+        <div class="erow-h"><span></span><span>Unit price</span><span>Qty</span><span>Materials</span><span>Labor</span><span></span></div>
+        ${EST_CATS.map(c => {
+        const ct = t.cats[c.k] || { mat: 0, lab: 0, n: 0 }, shut = site.shut[c.k] !== false && !(site.shut[c.k] === undefined && ct.n);
+        return `<section class="ecat${shut ? " shut" : ""}" data-cat="${c.k}">
+          <button class="ec-head" data-ea="cat"><span class="ec-ico">${c.icon}</span><span class="ec-name">${c.name}<span class="ec-n" data-v="n">${ct.n ? ct.n + (ct.n === 1 ? " item" : " items") : ""}</span></span>${catSums(ct)}<span class="ec-chev">${ICON.chev}</span></button>
+          <div class="ec-rows">${EST_GROUPS.filter(g => g[1] === c.k).map(g => siteRows(site, g).map(([lid, l]) => estRowHtml(site, g, lid, l)).join("")
+            + (g[3].length > 1 ? `<button class="er-more" data-ea="another" data-g="${g[0]}">${ICON.plus}Add another ${esc(g[2].toLowerCase())}</button>` : "")).join("")}</div></section>`;
+      }).join("")}
+        <div class="es-foot">
+          <div class="es-fl"><span>Materials</span><b data-v="fmat">${money(t.mat)}</b></div>
+          <div class="es-fl"><span>Labor</span><b data-v="flab">${money(t.lab)}</b></div>
+          <div class="es-fl"><span>Tax on materials <i data-v="taxp">${p.est.tax ? p.est.tax + "%" : "(set % in the total panel)"}</i></span><b data-v="ftax">${money(t.tax)}</b></div>
+          <div class="es-fl"><span>Freight / shipping</span><label class="pl-in es-fr"><span>$</span><input class="fr-in" inputmode="decimal" value="${site.freight || ""}" placeholder="0" aria-label="Freight for ${esc(site.name)}"></label></div>
+          <div class="es-fl es-ft"><span>${site.kind === "building" ? "Building" : "Trailer"} total</span><b data-v="ftot">${money(t.total)}</b></div>
+        </div>
+      </div></article>`;
+  }
+  function estSummaryHtml(p) {
+    const T = estTotals(p), pct = T.mat + T.lab ? Math.round(T.mat / (T.mat + T.lab) * 100) : 0;
+    return `<div class="esum-lbl">Project total</div>
+      <div class="esum-big">${money(T.total)}</div>
+      <div class="esum-bar"><i style="width:${pct}%"></i></div>
+      <div class="esum-split"><div><span><span class="dot mat"></span>Materials</span><b>${money(T.mat)}</b></div><div><span><span class="dot lab"></span>Labor</span><b>${money(T.lab)}</b></div>
+        <div><span>Tax${p.est.tax ? " (" + p.est.tax + "%)" : ""}</span><b>${money(T.tax)}</b></div><div><span>Freight</span><b>${money(T.freight)}</b></div></div>
+      <div class="esum-tbl"><div class="et-h"><span>By component</span><span>Materials</span><span>Labor</span></div>
+        ${EST_CATS.map(c => { const a = T.cats[c.k]; return `<div class="et-r${a ? "" : " zero"}"><span>${c.name}</span><span>${a ? money(a.mat) : "—"}</span><span>${a ? money(a.lab) : "—"}</span></div>`; }).join("")}</div>
+      ${T.sites.length ? `<div class="esum-tbl"><div class="et-h"><span>By trailer / building</span><span>Materials</span><span>Labor</span></div>
+        ${T.sites.map(({ x, t }) => `<div class="et-r"><span><span class="esr-k">${x.kind === "building" ? "B" : "T"}</span>${esc(x.name)}</span><span>${money(t.mat)}</span><span>${money(t.lab)}</span></div>`).join("")}</div>` : ""}
+      ${T.unpriced ? `<button class="esum-warn" data-ea="view" data-v="prices">${T.unpriced} selected ${T.unpriced === 1 ? "line has" : "lines have"} no price yet. Open the price list</button>` : ""}`;
+  }
+  function priceListHtml() {
+    const seen = new Set(), all = Object.keys(EST_PARTS), missing = all.filter(k => !hasPrice(k)).length;
+    return `<p class="pl-intro">Unit prices for every part in the catalog. Enter them once and every trailer and building uses them. Material prices tagged <span class="pl-tag">Quote</span> came from ${EST_BASE_SRC} (Aug 3, 2026, expired Sep 30, 2026); type over any of them to update. ${missing ? `<b>${missing} of ${all.length}</b> parts don't have a price yet.` : "Every part has a price."}</p>
+      ${EST_CATS.map(c => {
+        const parts = []; EST_GROUPS.filter(g => g[1] === c.k).forEach(g => g[3].forEach(o => { if (!seen.has(o)) { seen.add(o); parts.push([o, g[2]]); } }));
+        return `<section class="card pl-sec"><header class="pl-head"><span class="ec-ico">${c.icon}</span><span class="ec-name">${c.name}</span><span class="pl-cols"><span>Material / unit</span><span>Labor / unit</span></span></header>
+          ${parts.map(([o, gl]) => { const pr = priceOf(o), quoted = !estPrices[o] && EST_BASE[o]; return `<div class="pl-row${hasPrice(o) ? "" : " empty"}" data-part="${esc(o)}">
+            <div class="pl-desc"><span class="pl-t">${esc(EST_PARTS[o][2])}<i>${esc(gl)}</i>${quoted ? `<span class="pl-tag">Quote</span>` : ""}</span><span class="er-part">${esc(o)}${EST_PARTS[o][0] !== "—" ? " · " + esc(EST_PARTS[o][0]) : ""} — ${esc(EST_PARTS[o][1])}</span></div>
+            <label class="pl-in" data-l="Material"><span>$</span><input inputmode="decimal" data-k="mat" value="${pr.mat || ""}" placeholder="0" aria-label="Material price for ${esc(o)}"></label>
+            <label class="pl-in" data-l="Labor"><span>$</span><input inputmode="decimal" data-k="lab" value="${pr.lab || ""}" placeholder="0" aria-label="Labor price for ${esc(o)}"></label></div>`; }).join("")}</section>`;
+      }).join("")}`;
+  }
+  function renderEst() {
+    const p = estCampus();
+    const seg = `<div class="est-seg" role="group" aria-label="View"><button data-ea="view" data-v="est" aria-pressed="${estView === "est"}">Estimate</button><button data-ea="view" data-v="prices" aria-pressed="${estView === "prices"}">Price list</button></div>`;
+    if (estView === "prices") {
+      view.innerHTML = `<div class="page-body tab-body est" style="--c:${p ? p.color : "var(--accent)"}"><div class="est-top">${seg}</div><div class="pl">${priceListHtml()}</div></div>`;
+      return;
+    }
+    if (!p) { view.innerHTML = `<div class="page-body tab-body est"><div class="est-top">${seg}</div><p class="home-empty">Create a campus first, then build its technology estimate here.</p></div>`; return; }
+    estPid = p.id;
+    view.innerHTML = `<div class="page-body tab-body est" style="--c:${p.color}">
+      <div class="est-top">${seg}<div class="est-camps" role="group" aria-label="Campus">${state.projects.map(x => `<button class="est-camp" data-ea="camp" data-pid="${x.id}" aria-pressed="${x === p}" style="--cc:${x.color}"><i></i>${esc(x.title)}</button>`).join("")}</div></div>
+      <div class="est-grid">
+        <div class="est-main">${p.est.sites.map(x => estSiteHtml(p, x)).join("")}
+          ${p.est.sites.length ? "" : `<div class="est-empty"><b>Start the ${esc(p.title)} estimate</b><span>Add each jobsite trailer or building. Start blank, or from one of the trailers in your workbook (A-101, A-102, A-103), then adjust quantities and models.</span></div>`}
+          <div class="est-add"><button data-ea="add" data-kind="trailer" data-pop><span class="ni">${ICON.plus}</span>Add trailer</button><button data-ea="add" data-kind="building"><span class="ni">${ICON.plus}</span>Add building</button></div>
+        </div>
+        <aside class="est-side"><div class="card esum">${estSummaryHtml(p)}</div>
+          <div class="card eset"><label class="eset-row"><span>Sales tax on materials</span><span class="pl-in eset-in"><input class="tax-in" inputmode="decimal" value="${p.est.tax || ""}" placeholder="0" aria-label="Sales tax percent on materials"><span>%</span></span></label>
+          <p>Applied to every trailer and building in this campus. Freight is entered at the bottom of each trailer or building.</p></div></aside>
+      </div></div>`;
+  }
+  // update numbers in place so typing never loses focus
+  function estRefresh(p, site) {
+    const sites = site ? [site] : p.est.sites;
+    sites.forEach(site => {
+      const el = view.querySelector(`.esite[data-site="${site.id}"]`); if (!el) return;
+      const t = siteTotals(site, p.est.tax), set = (k, v) => { const n = el.querySelector(`[data-v="${k}"]`); if (n) n.textContent = v; };
+      set("mat", money(t.mat)); set("lab", money(t.lab)); set("total", money(t.total));
+      set("fmat", money(t.mat)); set("flab", money(t.lab)); set("ftax", money(t.tax)); set("ftot", money(t.total));
+      set("taxp", p.est.tax ? p.est.tax + "%" : "(set % in the total panel)");
+      el.querySelectorAll(".ecat").forEach(sec => { const ct = t.cats[sec.dataset.cat] || { n: 0, mat: 0, lab: 0 };
+        sec.querySelector('[data-v="n"]').textContent = ct.n ? ct.n + (ct.n === 1 ? " item" : " items") : "";
+        sec.querySelector('[data-v="cm"]').textContent = ct.n ? money(ct.mat) : "—";
+        sec.querySelector('[data-v="cl"]').textContent = ct.n ? money(ct.lab) : "—"; });
+      el.querySelectorAll(".erow").forEach(row => {
+        const lid = row.dataset.lid, g = EST_GROUP[lid.split("~")[0]], l = site.lines[lid] || { opt: g[3][0], qty: 0 }, q = l.qty || 0, pr = priceOf(l.opt), ok = hasPrice(l.opt);
+        row.classList.toggle("on", !!q);
+        row.querySelector('[data-v="lm"]').innerHTML = `<i>Materials</i>${ext(q, pr.mat, ok)}`;
+        row.querySelector('[data-v="ll"]').innerHTML = `<i>Labor</i>${ext(q, pr.lab, ok)}`;
+        const inp = row.querySelector(".qty-in"); if (document.activeElement !== inp) inp.value = q; });
+    });
+    const side = view.querySelector(".esum"); if (side) side.innerHTML = estSummaryHtml(p);
+  }
+  function estLine(site, lid) { const g = EST_GROUP[lid.split("~")[0]]; return site.lines[lid] || (site.lines[lid] = { g: g[0], opt: g[3][0], qty: 0 }); }
+  function setQty(p, site, lid, n) {
+    const l = estLine(site, lid);
+    l.qty = Math.max(0, Math.min(9999, Math.round(+n || 0)));
+    save(p); estRefresh(p, site);
+  }
+  function newSite(p, kind, tpl) {
+    const n = p.est.sites.filter(x => x.kind === kind).length + 1, lines = {};
+    (tpl ? tpl[1] : []).forEach(([g, opt, qty]) => { const lid = lines[g] ? g + "~" + uid() : g; lines[lid] = { g, opt, qty }; });
+    const x = cleanEst({ sites: [{ name: tpl ? tpl[0] : (kind === "building" ? "BUILDING " : "TRAILER ") + n, kind, lines, freight: tpl ? tpl[2] : 0 }] }).sites[0];
+    p.est.sites.push(x); save(p); renderEst();
+    const el = view.querySelector(`.esite[data-site="${x.id}"]`); if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+  function estSiteMenu(anchor, p, site) {
+    const i = p.est.sites.indexOf(site), other = site.kind === "building" ? "trailer" : "building";
+    openEditMenu(anchor, {
+      actions: [
+        { icon: ICON.pencil, text: "Rename", run: () => { const n = view.querySelector(`.esite[data-site="${site.id}"] .es-name`); n.contentEditable = "true"; n.focus(); const rg = document.createRange(); rg.selectNodeContents(n); const sl = getSelection(); sl.removeAllRanges(); sl.addRange(rg); } },
+        { icon: ICON.dup, text: "Duplicate with quantities", run: () => { const c = cleanEst({ sites: [{ ...JSON.parse(JSON.stringify(site)), id: uid(), name: site.name + " COPY" }] }).sites[0]; p.est.sites.splice(i + 1, 0, c); save(p); renderEst(); } },
+        { icon: ICON.folder, text: "Change to " + other, run: () => { site.kind = other; save(p); renderEst(); } },
+        { icon: ICON.up, text: "Move up", disabled: i <= 0, run: () => { [p.est.sites[i - 1], p.est.sites[i]] = [p.est.sites[i], p.est.sites[i - 1]]; save(p); renderEst(); } },
+        { icon: ICON.down, text: "Move down", disabled: i >= p.est.sites.length - 1, run: () => { [p.est.sites[i + 1], p.est.sites[i]] = [p.est.sites[i], p.est.sites[i + 1]]; save(p); renderEst(); } },
+        { icon: ICON.sweep, text: "Reset quantities to zero", run: () => { const snap = snapshot(); site.lines = {}; save(p); renderEst(); showUndo("Quantities cleared", () => restore(snap)); } }
+      ],
+      del: { text: "Delete " + site.kind, ask: `Delete ${site.name} and its quantities?`, run: () => { const snap = snapshot(); p.est.sites = p.est.sites.filter(x => x !== site); save(p); renderEst(); showUndo("Deleted", () => restore(snap)); } }
+    });
+  }
+  function showPrice(part) {
+    estView = "prices"; renderEst();
+    const row = view.querySelector(`.pl-row[data-part="${CSS.escape(part)}"]`);
+    if (row) { row.scrollIntoView({ block: "center" }); row.classList.add("flash"); const inp = row.querySelector("input"); setTimeout(() => inp.focus({ preventScroll: true }), 50); }
+  }
+  view.addEventListener("click", e => {
+    if (route_.name !== "estimator") return;
+    const a = e.target.closest("[data-ea]"); if (!a) return;
+    const act = a.dataset.ea;
+    if (act === "view") { estView = a.dataset.v; renderEst(); scrollTo(0, 0); return; }
+    if (act === "price") { showPrice(a.dataset.part); return; }
+    if (act === "opt") return;
+    const p = estCampus(); if (!p) return;
+    const sEl = a.closest(".esite"), site = sEl && p.est.sites.find(x => x.id === sEl.dataset.site);
+    if (act === "camp") { estPid = a.dataset.pid; try { localStorage.setItem(EST_KEY, estPid); } catch (err) {} renderEst(); return; }
+    if (act === "add") {
+      if (a.dataset.kind === "building") { newSite(p, "building"); return; }
+      openEditMenu(a, { actions: [{ icon: ICON.plus, text: "Blank trailer", run: () => newSite(p, "trailer") }]
+        .concat(EST_TEMPLATES.map(t => ({ icon: ICON.dup, text: "Like " + t[0].toLowerCase().replace(/(^|[\s(-])\w/g, m => m.toUpperCase()).replace(/\(a-/i, "(A-"), run: () => newSite(p, "trailer", t) }))) });
+      return;
+    }
+    if (!site) return;
+    if (act === "fold") { site.collapsed = !site.collapsed; save(p); sEl.classList.toggle("shut", site.collapsed); return; }
+    if (act === "cat") { const sec = a.closest(".ecat"), k = sec.dataset.cat, open = sec.classList.contains("shut"); site.shut[k] = !open; save(p); sec.classList.toggle("shut", !open); return; }
+    if (act === "menu") { estSiteMenu(a, p, site); return; }
+    if (act === "another") {
+      const g = EST_GROUP[a.dataset.g], used = siteRows(site, g).map(([, l]) => l.opt), lid = g[0] + "~" + uid();
+      site.lines[lid] = { g: g[0], opt: g[3].find(o => !used.includes(o)) || g[3][0], qty: 0 }; save(p); renderEst();
+      const sel = view.querySelector(`.erow[data-lid="${lid}"] select`); if (sel) sel.focus();
+      return;
+    }
+    const row = a.closest(".erow"); if (!row) return;
+    const lid = row.dataset.lid;
+    if (act === "rmline") { delete site.lines[lid]; save(p); renderEst(); return; }
+    const q = (site.lines[lid] || {}).qty || 0;
+    if (act === "inc") setQty(p, site, lid, q + 1);
+    if (act === "dec") setQty(p, site, lid, q - 1);
+  });
+  view.addEventListener("change", e => {
+    if (route_.name !== "estimator" || !e.target.classList.contains("er-sel")) return;
+    const p = estCampus(), sEl = e.target.closest(".esite"), site = p && p.est.sites.find(x => x.id === sEl.dataset.site); if (!site) return;
+    const row = e.target.closest(".erow"), lid = row.dataset.lid, g = EST_GROUP[lid.split("~")[0]], l = estLine(site, lid);
+    l.opt = e.target.value; save(p);
+    const tmp = document.createElement("div"); tmp.innerHTML = estRowHtml(site, g, lid, l); row.replaceWith(tmp.firstElementChild);
+    estRefresh(p, site);
+  });
+  view.addEventListener("input", e => {
+    if (route_.name !== "estimator") return;
+    const t = e.target;
+    if (t.closest && t.closest(".pl-row")) {
+      const row = t.closest(".pl-row"), part = row.dataset.part, cur = { ...priceOf(part) };
+      t.value = t.value.replace(/[^\d.]/g, "").replace(/(\..*)\./g, "$1");
+      cur[t.dataset.k] = Math.max(0, parseFloat(t.value) || 0);
+      const boxes = [...row.querySelectorAll("input")];
+      if (EST_BASE[part] && boxes.every(b => b.value === "")) delete estPrices[part]; else estPrices[part] = cur;
+      row.classList.toggle("empty", !hasPrice(part));
+      const tag = row.querySelector(".pl-tag"); if (tag && estPrices[part]) tag.remove();
+      savePrices(); return;
+    }
+    if (t.classList.contains("tax-in") || t.classList.contains("fr-in")) {
+      const p = estCampus(); if (!p) return;
+      t.value = t.value.replace(/[^\d.]/g, "").replace(/(\..*)\./g, "$1");
+      if (t.classList.contains("tax-in")) { p.est.tax = Math.min(30, Math.max(0, parseFloat(t.value) || 0)); save(p); estRefresh(p); }
+      else { const site = p.est.sites.find(x => x.id === t.closest(".esite").dataset.site); if (!site) return; site.freight = Math.max(0, parseFloat(t.value) || 0); save(p); estRefresh(p, site); }
+      return;
+    }
+    if (!t.classList.contains("qty-in")) return;
+    const p = estCampus(), sEl = t.closest(".esite"), site = p && p.est.sites.find(x => x.id === sEl.dataset.site); if (!site) return;
+    t.value = t.value.replace(/\D/g, "").slice(0, 4);
+    setQty(p, site, t.closest(".erow").dataset.lid, t.value);
+  });
+  view.addEventListener("focusin", e => { if (e.target.classList && e.target.classList.contains("qty-in")) e.target.select(); });
+  view.addEventListener("mouseup", e => { if (e.target.classList && e.target.classList.contains("qty-in")) e.preventDefault(); });
+  view.addEventListener("focusout", e => {
+    const t = e.target;
+    if (t.classList && t.classList.contains("qty-in")) { if (t.value === "") t.value = "0"; return; }
+    if (!(t.classList && t.classList.contains("es-name"))) return;
+    const p = estCampus(), site = p && p.est.sites.find(x => x.id === t.closest(".esite").dataset.site); if (!site) return;
+    t.contentEditable = "false";
+    const v = t.textContent.replace(/\s+/g, " ").trim().toUpperCase();
+    if (v && v !== site.name) { site.name = v; save(p); const side = view.querySelector(".esum"); if (side) side.innerHTML = estSummaryHtml(p); }
+    t.textContent = site.name;
+  });
+  view.addEventListener("keydown", e => {
+    const t = e.target;
+    if (t.closest && t.closest(".pl-row") && e.key === "Enter") { e.preventDefault(); const ins = [...view.querySelectorAll(".pl-row input")], i = ins.indexOf(t); if (ins[i + 1]) ins[i + 1].focus(); else t.blur(); return; }
+    if (t.classList && (t.classList.contains("es-name") || t.classList.contains("qty-in") || t.classList.contains("tax-in") || t.classList.contains("fr-in")) && (e.key === "Enter" || e.key === "Escape")) { e.preventDefault(); t.blur(); }
+    if (t.classList && t.classList.contains("qty-in") && (e.key === "ArrowUp" || e.key === "ArrowDown")) {
+      e.preventDefault(); const p = estCampus(), site = p.est.sites.find(x => x.id === t.closest(".esite").dataset.site), lid = t.closest(".erow").dataset.lid;
+      setQty(p, site, lid, ((site.lines[lid] || {}).qty || 0) + (e.key === "ArrowUp" ? 1 : -1)); t.value = (site.lines[lid] || {}).qty || 0; t.select();
+    }
+  });
+  view.addEventListener("dblclick", e => { const n = e.target.closest(".es-name"); if (n && route_.name === "estimator") { n.contentEditable = "true"; n.focus(); } });
 
   /* ----- day sheet ----- */
   let dayOpen = null;
@@ -2223,7 +2721,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
   });
   function exportData() {
     writeNow();
-    const blob = new Blob([JSON.stringify({ app: "PMBridge", v: 1, exported: new Date().toISOString(), projects: state.projects }, null, 2)], { type: "application/json" });
+    const blob = new Blob([JSON.stringify({ app: "PMBridge", v: 1, exported: new Date().toISOString(), projects: state.projects, prices: estPrices }, null, 2)], { type: "application/json" });
     const a = document.createElement("a");
     a.href = URL.createObjectURL(blob); a.download = "pmbridge-backup-" + todayIso() + ".json";
     document.body.appendChild(a); a.click(); a.remove();
@@ -2237,7 +2735,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
       const d = JSON.parse(await f.text());
       if (!d || !Array.isArray(d.projects)) throw new Error("bad");
       const snap = snapshot();
-      state.projects = d.projects.map(cleanProject); writeNow(); go("#/");
+      state.projects = d.projects.map(cleanProject); if (d.prices) { estPrices = cleanPrices(d.prices); savePrices(); } writeNow(); go("#/");
       showUndo(`Restored ${state.projects.length} campus${state.projects.length === 1 ? "" : "es"}`, () => restore(snap));
     } catch (err) { showMsg("That file isn't a PMBridge backup."); }
   });
