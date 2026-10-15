@@ -76,7 +76,10 @@ input, textarea, select { font: inherit; color: inherit; }
 /* ---------- cards ---------- */
 .card { position: relative; background: var(--card); border: 1px solid var(--card-edge); border-radius: 10px; padding: 14px 16px 12px 20px; box-shadow: 0 6px 20px rgba(0,0,0,.5); min-width: 0; }
 /* Critical Path stands out with a thick border in the campus color */
-.psec .sched-card { border: 3px solid var(--list-color); padding: 12px 14px 10px 18px; }
+.psec .sched-card:not(.idle) { border: 3px solid var(--list-color); padding: 12px 14px 10px 18px; }
+/* Critical Path / Blockers before they have anything in them */
+.psec .card.idle { opacity: .4; filter: grayscale(1); transition: opacity .15s; }
+.psec .card.idle:hover, .psec .card.idle:focus-within { opacity: .7; }
 .card-head { display: flex; align-items: center; gap: 8px; padding-bottom: 8px; border-bottom: 3px solid currentColor; }
 .title { flex: 1; min-width: 0; font-weight: 700; font-size: 17px; letter-spacing: .05em; text-transform: uppercase; line-height: 1.3; overflow-wrap: anywhere; padding-top: 2px; }
 .title[contenteditable="true"] { cursor: text; outline: none; }
@@ -764,7 +767,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
   const STATUSES = ["Not Started", "In Progress", "Blocked", "Done"];
   const STATUS_CLASS = { "Not Started": "s-ns", "In Progress": "s-ip", "Blocked": "s-blk", "Done": "s-done" };
   const LS_KEY = "pmbridge-v1";
-  const APP_VERSION = "40 (Oct 14)";
+  const APP_VERSION = "41 (Oct 14)";
   const $ = id => document.getElementById(id);
   const uid = () => Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4);
   const pad2 = n => String(n).padStart(2, "0");
@@ -917,6 +920,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
     const used = state.projects.map(p => p.color);
     const color = PROJECT_COLORS.find(c => !used.includes(c)) || PROJECT_COLORS[state.projects.length % PROJECT_COLORS.length];
     const p = cleanProject({ title: title || "NEW CAMPUS", color, cards: [] });
+    p.subs.forEach(x => freshSub(p, x));
     state.projects.push(p); save(p);
     return p;
   }
@@ -1054,8 +1058,9 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
   }
   function go(hash) { if (location.hash !== hash) location.hash = hash; else route(); }
   // opening a campus starts with every card folded up so the page looks clean
+  let skipCollapse = null;
   function collapseAll(p) {
-    if (!p) return; let changed = false;
+    if (!p) return; if (skipCollapse === p.id) { skipCollapse = null; return; } let changed = false;
     p.cards.forEach(c => { if (!c.collapsed) { c.collapsed = true; changed = true; } });
     p.subs.forEach(x => { const v = x.sched; if (!v) return; v.xc = v.xc || {};
       if (!v.collapsed) { v.collapsed = true; changed = true; }
@@ -1197,6 +1202,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
     const keep = captureFocus();
     if (qaEntry.pid !== p.id) { qaEntry.pid = p.id; qaEntry.date = null; qaEntry.color = null; qaEntry.cid = null; }
     if (!p.cards.find(c => c.id === qaEntry.cid)) qaEntry.cid = p.cards[0] ? p.cards[0].id : null;
+    p.subs.forEach(x => wake(p, x));
     view.innerHTML = `
       <nav class="proj-head">
         <button class="nav-btn" data-act="go-home" aria-label="All campuses" title="All campuses">${ICON.back}</button>
@@ -1210,6 +1216,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
     p.cards.forEach(c => fillCardText(p, c));
     fillSchedText(p);
     fillBlkText(p);
+
     renderCal();
     restoreFocus(keep);
   }
@@ -1219,8 +1226,35 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
   function subHtml(p, x) {
     return `<section class="psec" data-sid="${x.id}">
       <header class="psec-head"><div class="psec-title">${esc(x.title)}</div><button class="head-btn more-btn" data-act="sub-menu" data-sid="${x.id}" data-pop aria-label="Edit project" title="Edit project">${ICON_DOTS}</button></header>
-      <div class="col">${schedHtml(p, x)}${subCards(p, x.id).map(c => cardHtml(p, c)).join("")}${blkHtml(p, x)}${X_CARDS.map(([k, t]) => xCardHtml(p, x, k, t)).join("")}</div>
+      <div class="col">${colHtml(p, x)}</div>
       </section>`;
+  }
+  // Critical Path wakes up once a task has a date; Blockers once a task is flagged.
+  // Awake cards sit at the top of the column; sleeping ones are greyed at the bottom.
+  const cpActive = (p, x) => datedItems(p, x.id).length > 0;
+  const blkActive = (p, x) => blockedItems(p, x.id).length > 0;
+  function colHtml(p, x) {
+    const cp = schedHtml(p, x), bk = blkHtml(p, x), ca = cpActive(p, x), ba = blkActive(p, x);
+    const mid = subCards(p, x.id).map(c => cardHtml(p, c)).join("") + X_CARDS.map(([k, t]) => xCardHtml(p, x, k, t)).join("");
+    return (ca ? cp : "") + (ba ? bk : "") + mid + (ca ? "" : cp) + (ba ? "" : bk);
+  }
+  const wasActive = {};
+  // a card that just woke up opens itself so the new date / blocker is visible
+  function wake(p, x) {
+    const ca = cpActive(p, x), ba = blkActive(p, x), was = wasActive[x.id]; let opened = false;
+    if (was && ca && !was.cp && x.sched.collapsed) { x.sched.collapsed = false; opened = true; }
+    if (was && ba && !was.bk && x.sched.blkCollapsed) { x.sched.blkCollapsed = false; opened = true; }
+    wasActive[x.id] = { cp: ca, bk: ba };
+    if (opened) save(p);
+    return opened;
+  }
+  function arrangeCol(p, x) {
+    const col = view.querySelector(`.psec[data-sid="${x.id}"] .col`); if (!col) return;
+    const cpEl = col.querySelector(":scope > .sched-card"), bkEl = col.querySelector(":scope > .blk-card");
+    const ca = cpActive(p, x), ba = blkActive(p, x);
+    if (wake(p, x)) { cpEl && cpEl.classList.toggle("collapsed", x.sched.collapsed); bkEl && bkEl.classList.toggle("collapsed", x.sched.blkCollapsed); }
+    if (bkEl) { if (ba) col.prepend(bkEl); else col.append(bkEl); }
+    if (cpEl) { if (ca) col.prepend(cpEl); else col.insertBefore(cpEl, ba ? null : bkEl); }
   }
   // placeholder cards for each project (filled in later)
   const X_CARDS = [["contacts", "Contacts"], ["docs", "Documents"]];
@@ -1330,7 +1364,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
   }
   function schedHtml(p, sb) {
     const v = { ...sb.sched, color: p.color }, rows = datedItems(p, sb.id).filter(x => !(v.hideDone && x.it.done));
-    return `<article class="card sched-card${v.collapsed ? " collapsed" : ""}" data-sid="${sb.id}" style="--list-color:${v.color}">
+    return `<article class="card sched-card${v.collapsed ? " collapsed" : ""}${datedItems(p, sb.id).length ? "" : " idle"}" data-sid="${sb.id}" style="--list-color:${v.color}">
       <header class="card-head" style="color:${v.color}"><div class="title">${esc(v.title)}</div>
         <button class="head-btn more-btn" data-act="sched-menu" data-pop aria-label="Edit card" title="Edit card">${ICON_DOTS}</button>
         <button class="head-btn toggle" data-act="sched-collapse" aria-label="Collapse or expand" title="Collapse or expand">${ICON.chev}</button></header>
@@ -1342,7 +1376,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
   function blockedItems(p, sid) { const out = []; p.cards.forEach(c => { if (sid && c.sub !== sid) return; c.items.forEach(it => { if (it.kind !== "phase" && it.status === "Blocked") out.push({ c, it }); }); }); return out; }
   function blkHtml(p, sb) {
     const rows = blockedItems(p, sb.id), v = sb.sched;
-    return `<article class="card blk-card${v.blkCollapsed ? " collapsed" : ""}" data-sid="${sb.id}" style="--list-color:${p.color}">
+    return `<article class="card blk-card${v.blkCollapsed ? " collapsed" : ""}${rows.length ? "" : " idle"}" data-sid="${sb.id}" style="--list-color:${p.color}">
       <header class="card-head" style="color:${p.color}"><div class="title">Blockers</div>${rows.length ? `<span class="dates-count" style="color:${p.color};font-weight:800">${rows.length}</span>` : ""}
         <button class="head-btn toggle" data-act="blk-collapse" aria-label="Collapse or expand" title="Collapse or expand">${ICON.chev}</button></header>
       <div class="card-body">
@@ -1401,6 +1435,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
       if (be) { const tmp = document.createElement("div"); tmp.innerHTML = blkHtml(p, sb); be.replaceWith(tmp.firstElementChild); }
     });
     fillSchedText(p); fillBlkText(p);
+    p.subs.forEach(sb => arrangeCol(p, sb));
     const st = $("phStats"); if (st) st.innerHTML = statsHtml(p);
     renderCalSoon();
     if (focusIid) focusText(focusIid, atStart); else restoreFocus(keep);
@@ -2032,11 +2067,14 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
   /* ================= EDIT menus ================= */
   function editTitle(el) { const t = el.querySelector(".title"); t.setAttribute("contenteditable", "true"); t.focus(); const r = document.createRange(); r.selectNodeContents(t); const s = getSelection(); s.removeAllRanges(); s.addRange(r); }
   function editSubTitle(sec) { const t = sec.querySelector(".psec-title"); t.setAttribute("contenteditable", "true"); t.focus(); const r = document.createRange(); r.selectNodeContents(t); const s = getSelection(); s.removeAllRanges(); s.addRange(r); }
-  function addSub(p) {
-    const x = newSub(p);
-    // a new project starts tidy: everything folded up except Tasks, which is open and ready for items
+  // a new project starts tidy: everything folded up except Tasks, which is open and ready for items
+  function freshSub(p, x) {
     x.sched.collapsed = true; x.sched.blkCollapsed = true; x.sched.xc = {}; X_CARDS.forEach(([k]) => { x.sched.xc[k] = true; });
     p.cards.filter(c => c.sub === x.id).forEach(c => { c.collapsed = false; });
+  }
+  function addSub(p) {
+    const x = newSub(p);
+    freshSub(p, x);
     save(p); renderProject();
     const sec = view.querySelector(`.psec[data-sid="${x.id}"]`);
     if (sec) { sec.scrollIntoView({ behavior: "smooth", block: "start" }); editSubTitle(sec); }
@@ -2135,7 +2173,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
       const t = m.querySelector(".pj-title").value.replace(/\s+/g, " ").trim().toUpperCase();
       p.title = t || (isNew ? "NEW CAMPUS" : p.title); p.desc = ta.value.replace(/\s+$/, "");
       save(p); closeModal();
-      if (open) go("#/p/" + p.id); else rerender();
+      if (open) { skipCollapse = p.id; go("#/p/" + p.id); } else rerender();
     };
     m.addEventListener("click", e => {
       if (e.target === m || e.target.closest(".ev-x")) return finish(false);
