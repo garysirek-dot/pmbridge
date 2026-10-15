@@ -764,7 +764,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
   const STATUSES = ["Not Started", "In Progress", "Blocked", "Done"];
   const STATUS_CLASS = { "Not Started": "s-ns", "In Progress": "s-ip", "Blocked": "s-blk", "Done": "s-done" };
   const LS_KEY = "pmbridge-v1";
-  const APP_VERSION = "39 (Oct 14)";
+  const APP_VERSION = "40 (Oct 14)";
   const $ = id => document.getElementById(id);
   const uid = () => Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4);
   const pad2 = n => String(n).padStart(2, "0");
@@ -1128,7 +1128,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
 
   /* ----- status table: Campus · Project · Item · Update · Blocker · Owner ----- */
   const TBL_KEY = "pmbridge-tbl-mode";
-  let tblMode = (() => { try { const m = localStorage.getItem(TBL_KEY); return ["cp", "open", "blk"].includes(m) ? m : "cp"; } catch (e) { return "cp"; } })();
+  let tblMode = (() => { try { const m = localStorage.getItem(TBL_KEY); return m === "blk" ? "blk" : "cp"; } catch (e) { return "cp"; } })();
   function tableRows() {
     const out = [];
     state.projects.forEach(p => p.subs.forEach(x => {
@@ -1137,7 +1137,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
         if (it.kind === "phase" || it.done || !it.text.trim()) return;
         const blocked = it.status === "Blocked";
         if (tblMode === "blk" && !blocked) return;
-        if (tblMode === "cp" && !blocked && !it.star) return;
+        if (tblMode === "cp" && !it.star) return;
         rows.push({ p, s: x, c, it });
       }));
       rows.sort((a, b) => (a.it.date || "9999").localeCompare(b.it.date || "9999"));
@@ -1147,9 +1147,9 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
   }
   function tableHtml() {
     const rows = tableRows();
-    const empty = { cp: "Nothing starred or blocked yet. Tap the star on a task to show it here.", open: "No open tasks yet.", blk: "Nothing is blocked." }[tblMode];
+    const empty = { cp: "Nothing starred yet. Tap the star on a task to show it here.", blk: "Nothing is blocked. Tap the circle on a task to mark it as a blocker." }[tblMode];
     return `<div class="st-sec"><div class="home-head"><span>${rows.length} ${rows.length === 1 ? "item" : "items"}</span>
-        <div class="seg st-seg" role="group" aria-label="Show">${[["cp", "Starred & blockers"], ["open", "All open"], ["blk", "Blockers"]].map(([k, l]) => `<button data-act="tbl-mode" data-m="${k}" aria-pressed="${tblMode === k}">${l}</button>`).join("")}</div></div>
+        <div class="seg st-seg" role="group" aria-label="Show">${[["cp", "Starred"], ["blk", "Blockers"]].map(([k, l]) => `<button data-act="tbl-mode" data-m="${k}" aria-pressed="${tblMode === k}">${l}</button>`).join("")}</div></div>
       <section class="card st-card" aria-label="Status"><div class="st-wrap"><table class="st"><thead><tr><th>Campus</th><th>Project</th><th>Item</th><th>Update</th><th>Blocker</th><th>Owner</th></tr></thead>
       <tbody>${rows.length ? rows.map(r => { const ref = r.p.id + "|" + r.c.id + "|" + r.it.id, blk = r.it.status === "Blocked"; return `<tr data-ref="${ref}">
         <td><span class="st-camp" style="--c:${r.p.color}"><i></i>${esc(r.p.title)}</span></td>
