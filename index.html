@@ -94,7 +94,16 @@ input, textarea, select { font: inherit; color: inherit; }
 .add-task svg { width: 18px; height: 18px; }
 
 /* ---------- home: project squares ---------- */
-.home { padding: 6px 20px 60px; }
+.home { padding: 26px 20px 60px; }
+/* section tabs under the header */
+.stabs { display: flex; gap: 34px; margin: 26px 20px 0; border-bottom: 1px solid var(--card-edge); }
+.stab { position: relative; padding: 8px 2px 12px; font-size: 16px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--dim); transition: color .15s; }
+.stab:hover { color: var(--ink); }
+.stab::after { content: ""; position: absolute; left: 0; right: 0; bottom: -1px; height: 3px; border-radius: 2px; background: transparent; }
+.stab[aria-current="page"] { color: var(--accent); }
+.stab[aria-current="page"]::after { background: var(--accent); }
+.page-body.tab-body { padding-top: 26px; }
+.tab-body .st-sec .home-head { margin-top: 0; }
 .home-head { display: flex; align-items: baseline; gap: 10px; margin: 6px 2px 14px; }
 .home-head h1 { margin: 0; font-size: 24px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
 .home-head.home-first { margin-top: 34px; }
@@ -187,6 +196,11 @@ input, textarea, select { font: inherit; color: inherit; }
 .psec-title { flex: 1; min-width: 0; font-weight: 800; font-size: 19px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink); outline: none; overflow-wrap: anywhere; }
 .psec-title[contenteditable="true"] { cursor: text; }
 .psec-head .edit-btn { color: var(--c); }
+/* ⋯ menu buttons on project headers and cards */
+.more-btn { width: 30px; height: 30px; border-radius: 50%; color: var(--dim); }
+.more-btn svg { width: 18px; height: 18px; }
+.more-btn:hover, .more-btn.open { color: var(--ink); background: rgba(255,255,255,.09); }
+.psec-head .more-btn { width: 34px; height: 34px; }
 .add-proj { display: flex; align-items: center; justify-content: center; gap: 10px; min-height: 56px; border: 2px dashed var(--card-edge); border-radius: 12px; color: var(--dim); font-weight: 700; letter-spacing: .06em; text-transform: uppercase; font-size: 13px; transition: border-color .15s, color .15s; }
 .add-proj:hover { border-color: var(--c, var(--accent)); color: var(--ink); }
 .add-proj svg { width: 18px; height: 18px; }
@@ -279,7 +293,7 @@ table.st.sr { min-width: 640px; }
 .sr-donetag { font-size: 10.5px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); margin-left: 4px; }
 @media (max-width: 699px) { .st-edit { font-size: 16px; } .st-sec { margin-top: 30px; } }
 /* project header (title only; the description lives on the Projects tab) */
-.proj-head { display: flex; align-items: center; gap: 14px; padding: 2px 20px 16px; margin-top: 34px; }
+.proj-head { display: flex; align-items: center; gap: 14px; padding: 2px 20px 34px; margin-top: 26px; }
 .ph-main { flex: 1; min-width: 0; }
 .ph-crumb { display: inline-block; font-size: 11.5px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--dim); cursor: pointer; }
 .ph-crumb:hover { color: var(--ink); }
@@ -649,7 +663,10 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
   .round-btn svg { width: 18px; height: 18px; }
   .tabs { order: 3; flex-basis: 100%; margin-right: 0; }
   .tab { flex: 1; justify-content: center; padding: 8px 6px; gap: 6px; font-size: 13px; }
-  .home { padding: 4px 12px 40px; }
+  .home { padding: 18px 12px 40px; }
+  .stabs { margin: 16px 12px 0; gap: 0; }
+  .stab { flex: 1; text-align: center; font-size: 14px; padding: 8px 0 11px; }
+  .page-body.tab-body { padding-top: 18px; }
   .home-head h1 { font-size: 19px; }
   .home-head.home-first { margin-top: 24px; }
   .home-cal { margin-top: 28px; }
@@ -676,7 +693,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
   .p-meta { font-size: 11px; }
   .new-tile { border-radius: 12px; font-size: 12px; aspect-ratio: auto; grid-column: 1 / -1; flex-direction: row; min-height: 64px; }
   .new-tile .ni { width: 36px; height: 36px; }
-  .proj-head { padding: 0 12px 12px; gap: 10px; margin-top: 24px; }
+  .proj-head { padding: 0 12px 20px; gap: 10px; margin-top: 18px; }
   .sched-card .bic { width: 46px; }
   .item .bic { width: 56px; }
   .sched-card .ms-end { gap: 4px; }
@@ -725,6 +742,11 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
   </div>
 </header>
 
+<nav class="stabs" id="tabs" aria-label="Sections">
+  <button class="stab" data-tab="home">Campuses</button>
+  <button class="stab" data-tab="status">Status</button>
+  <button class="stab" data-tab="calendar">Calendar</button>
+</nav>
 <main id="view"></main>
 <input type="file" id="importFile" accept="application/json,.json" hidden>
 <div class="toast" id="toast" hidden><span id="toastMsg"></span><button id="toastUndo">Undo</button></div>
@@ -742,7 +764,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
   const STATUSES = ["Not Started", "In Progress", "Blocked", "Done"];
   const STATUS_CLASS = { "Not Started": "s-ns", "In Progress": "s-ip", "Blocked": "s-blk", "Done": "s-done" };
   const LS_KEY = "pmbridge-v1";
-  const APP_VERSION = "37 (Oct 14)";
+  const APP_VERSION = "39 (Oct 14)";
   const $ = id => document.getElementById(id);
   const uid = () => Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4);
   const pad2 = n => String(n).padStart(2, "0");
@@ -828,6 +850,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
   function setStatus(it, s) { it.stAt = Date.now(); if ((s === "Done" || s === "Blocked") && it.status !== s && it.status !== "Done" && it.status !== "Blocked") it.prev = it.status; it.status = s; it.done = s === "Done"; }
   function toggleBlocked(it) { if (it.status === "Blocked") setStatus(it, it.prev && it.prev !== "Blocked" && it.prev !== "Done" ? it.prev : "Not Started"); else setStatus(it, "Blocked"); }
   const ICON_STAR = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.8l2.8 5.9 6.4.8-4.7 4.4 1.2 6.4L12 17.2l-5.7 3.1 1.2-6.4-4.7-4.4 6.4-.8z"/></svg>', ICON_STAR_O = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2.8l2.8 5.9 6.4.8-4.7 4.4 1.2 6.4L12 17.2l-5.7 3.1 1.2-6.4-4.7-4.4 6.4-.8z"/></svg>';
+  const ICON_DOTS = '<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5.5" cy="12" r="1.9"/><circle cx="12" cy="12" r="1.9"/><circle cx="18.5" cy="12" r="1.9"/></svg>';
   const ICON_BLOCK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M6 6l12 12"/></svg>';
   function toggleDone(it) { if (it.done) setStatus(it, it.prev && it.prev !== "Done" ? it.prev : "Not Started"); else setStatus(it, "Done"); }
   const cleanCard = c => ({ id: c.id || uid(), kind: "task", title: String(c.title || "TASKS"), color: safeColor(c.color, "#5FD68A"), collapsed: !!c.collapsed, showDates: c.showDates !== false, showOwners: c.showOwners !== false, sub: String(c.sub || ""),
@@ -1049,6 +1072,8 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
     else if (route_.name === "status") renderStatusPage();
     else if (route_.name === "search") renderSearch();
     else renderHome();
+    const tab = route_.name === "project" ? "home" : route_.name;
+    document.querySelectorAll("#tabs .stab").forEach(b => { if (b.dataset.tab === tab) b.setAttribute("aria-current", "page"); else b.removeAttribute("aria-current"); });
     if (prev.name !== route_.name || prev.pid !== route_.pid) scrollTo(0, 0);
   }
   addEventListener("hashchange", route);
@@ -1071,12 +1096,10 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
   function renderHome() {
     const n = state.projects.length;
     view.innerHTML = `<section class="home">
-      <div class="home-head home-first"><h1>Campuses</h1><span>${n ? n + (n === 1 ? " campus" : " campuses") : ""}</span></div>
       ${n ? "" : `<p class="home-empty">Each campus is a card. Give it a name and describe the work there, then open it to add projects, tasks and dates.</p>`}
       <div class="pgrid">${state.projects.map(tileHtml).join("")}
         <button class="new-tile" data-act="new-project"><span class="ni">${ICON.plus}</span>New campus</button>
       </div>
-      ${n ? `<div class="ov-sec"><div class="home-head"><h1>Overview</h1></div><div class="pgrid">${statusTileHtml()}${calTileHtml()}</div></div>` : ""}
       </section>`;
   }
   function statusTileHtml() {
@@ -1195,7 +1218,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
   const canIndent = (c, it) => { const i = c.items.indexOf(it); return it.kind !== "phase" && i > 0 && c.items[i - 1].kind !== "phase"; };
   function subHtml(p, x) {
     return `<section class="psec" data-sid="${x.id}">
-      <header class="psec-head"><div class="psec-title">${esc(x.title)}</div><button class="head-btn edit-btn" data-act="sub-menu" data-sid="${x.id}" data-pop aria-label="Edit project">EDIT</button></header>
+      <header class="psec-head"><div class="psec-title">${esc(x.title)}</div><button class="head-btn more-btn" data-act="sub-menu" data-sid="${x.id}" data-pop aria-label="Edit project" title="Edit project">${ICON_DOTS}</button></header>
       <div class="col">${schedHtml(p, x)}${subCards(p, x.id).map(c => cardHtml(p, c)).join("")}${blkHtml(p, x)}${X_CARDS.map(([k, t]) => xCardHtml(p, x, k, t)).join("")}</div>
       </section>`;
   }
@@ -1276,7 +1299,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
     normalizeCard(c);
     return `<article class="card task-card${c.collapsed ? " collapsed" : ""}${c.showDates ? "" : " no-dates"}${c.showOwners ? "" : " no-owners"}" data-cid="${c.id}" style="--list-color:${p.color}">
       <header class="card-head" style="color:${p.color}"><div class="title">${esc(c.title)}</div>
-        <button class="head-btn edit-btn" data-act="card-menu" data-pop aria-label="Edit card">EDIT</button>
+        <button class="head-btn more-btn" data-act="card-menu" data-pop aria-label="Edit card" title="Edit card">${ICON_DOTS}</button>
         <button class="head-btn toggle" data-act="collapse" aria-label="Collapse or expand" title="Collapse or expand">${ICON.chev}</button></header>
       <div class="card-body">
         <ul class="items">${c.items.map(it => taskHtml(p, c, it)).join("")}</ul>
@@ -1309,7 +1332,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
     const v = { ...sb.sched, color: p.color }, rows = datedItems(p, sb.id).filter(x => !(v.hideDone && x.it.done));
     return `<article class="card sched-card${v.collapsed ? " collapsed" : ""}" data-sid="${sb.id}" style="--list-color:${v.color}">
       <header class="card-head" style="color:${v.color}"><div class="title">${esc(v.title)}</div>
-        <button class="head-btn edit-btn" data-act="sched-menu" data-pop aria-label="Edit schedule">EDIT</button>
+        <button class="head-btn more-btn" data-act="sched-menu" data-pop aria-label="Edit card" title="Edit card">${ICON_DOTS}</button>
         <button class="head-btn toggle" data-act="sched-collapse" aria-label="Collapse or expand" title="Collapse or expand">${ICON.chev}</button></header>
       <div class="card-body">
         ${rows.length ? `<ul class="items srows">${rows.map(x => srowHtml(p, x.c, x.it)).join("")}</ul>` : `<p class="sched-empty">${datedItems(p, sb.id).length ? "All dated tasks are done. Turn on Show completed in EDIT to see them." : "Give a task a date and it shows up here and on the calendar."}</p>`}
@@ -1506,11 +1529,11 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
         <button class="nav-btn" data-act="go-home" aria-label="All campuses" title="All campuses">${ICON.back}</button>
         <div class="ph-main"><span class="ph-crumb" data-act="go-home">All campuses</span><h1 class="ph-title" style="color:${color}">${title}</h1></div></nav>`;
   function renderGlobalCal() {
-    view.innerHTML = pageHead("All projects calendar", "var(--accent)") + `<div class="page-body"><section class="cal" id="cal"></section></div>`;
+    view.innerHTML = `<div class="page-body tab-body"><section class="cal" id="cal"></section></div>`;
     renderCal();
   }
   function renderStatusPage() {
-    view.innerHTML = pageHead("Status", "var(--accent)") + `<div class="page-body">${tableHtml()}</div>`;
+    view.innerHTML = `<div class="page-body tab-body">${tableHtml()}</div>`;
     fillTable();
   }
 
@@ -2126,6 +2149,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
   function startNewProject() { const p = newProject(); renderHome(); openProjectForm(p, true); }
 
   /* ================= header buttons ================= */
+  $("tabs").addEventListener("click", e => { const b = e.target.closest(".stab"); if (!b) return; closePops(); closeModal(); go(b.dataset.tab === "home" ? "#/" : "#/" + b.dataset.tab); });
   $("searchBtn").addEventListener("click", () => { closePops(); closeModal(); go("#/search"); });
   $("addBtn").addEventListener("click", e => {
     const b = e.currentTarget;
