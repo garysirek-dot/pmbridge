@@ -375,6 +375,346 @@ input, textarea, select { font: inherit; color: inherit; }
 .psec-title { flex: 1; min-width: 0; font-weight: 800; font-size: 19px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink); outline: none; overflow-wrap: anywhere; }
 .psec-title[contenteditable="true"] { cursor: text; }
 .psec-head .edit-btn { color: var(--c); }
+/* ===== Canvas note card (from Canvas v25) ===== */
+.note-blocks {
+  margin-top: 12px; min-height: 96px; display: flex; flex-direction: column; gap: 8px; line-height: 1.45; white-space: pre-wrap; overflow-wrap: anywhere; outline: none; cursor: text;
+  padding: 10px 12px; margin-left: -4px; margin-right: -4px; border-radius: 8px; background: #232325; border: 1px solid transparent; transition: border-color .15s;
+}
+.note-blocks:focus-within { border-color: var(--card-edge); }
+.note-blocks { cursor: default; white-space: normal; }
+.nb { position: relative; }
+.nb-edit { outline: none; cursor: text; white-space: pre-wrap; overflow-wrap: anywhere; min-width: 0; }
+.nb-edit:empty::before { content: attr(data-ph); color: var(--faint); }
+.nb-text:not(.nb-first):empty::before { content: ""; }
+.nb-text:not(.nb-first):empty:focus::before { content: attr(data-ph); }
+.nb-text.nb-first { min-height: 1.45em; }
+.nb-x { position: absolute; top: -4px; right: -6px; width: 22px; height: 22px; border-radius: 6px; color: var(--faint); font-size: 16px; line-height: 1; opacity: 0; transition: opacity .12s; z-index: 1; }
+.nb:hover > .nb-x, .nb:focus-within > .nb-x { opacity: 1; }
+.nb-x:hover { background: rgba(255,255,255,.1); color: var(--ink); }
+.nb-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; }
+.nb-list li { display: flex; align-items: baseline; gap: 8px; padding-left: 4px; }
+.nb-list li::before { content: ""; flex: none; width: 6px; height: 6px; border-radius: 50%; background: var(--list-color); transform: translateY(-2px); }
+.nb-item { flex: 1; }
+.note-actions { margin: 12px -4px 0; }
+.note-actions[hidden] { display: none; }
+.note-actions.row-hit { border-radius: 8px; }
+.nbw-actions { padding: 10px 12px 8px; border-radius: 10px; background: #232325; border: 1.5px solid var(--list-color); }
+.nbw-actions > .nb-x { top: 4px; right: 4px; }
+.nbw-actions .nb-list li { align-items: flex-start; padding-left: 0; }
+.nbw-actions .nb-list li::before { display: none; }
+.nb-check { flex: none; width: 17px; height: 17px; margin-top: 2.5px; border-radius: 5px; border: 1.6px solid var(--list-color); display: grid; place-items: center; color: #000; transition: background .12s; }
+.nb-check svg { width: 12px; height: 12px; opacity: 0; }
+.nb-check[aria-checked="true"] { background: var(--list-color); }
+.nb-check[aria-checked="true"] svg { opacity: 1; }
+.nbw-actions li.done .nb-item { text-decoration: line-through; opacity: .5; }
+.nbw-actions li.done .nb-who { opacity: .5; }
+.nb-act-foot { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 4px; }
+.nb-act-foot .nb-more { margin-top: 0; }
+.act-send { display: inline-flex; align-items: center; gap: 6px; padding: 5px 10px; border-radius: 8px; font-size: 12.5px; font-weight: 700; color: var(--list-color); background: color-mix(in srgb, var(--list-color) 14%, transparent); }
+.act-send:hover { background: color-mix(in srgb, var(--list-color) 24%, transparent); }
+.act-send svg { width: 15px; height: 15px; flex: none; }
+.act-send:disabled { opacity: .4; cursor: default; }
+.act-send[data-mode="open"] { background: transparent; color: var(--dim); font-weight: 600; }
+.act-send[data-mode="open"]:hover { color: var(--ink); background: rgba(255,255,255,.06); }
+.nb-act-title { font-weight: 700; font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--list-color); margin-bottom: 6px; padding-right: 18px; }
+.nbw-actions .nb-list li::before { border-radius: 2px; width: 7px; height: 7px; }
+.nb-who { flex: none; width: 84px; font-size: 13px; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; border-bottom: 1px dashed transparent; }
+.nb-who:focus { border-bottom-color: var(--faint); text-overflow: clip; }
+.nb-more { display: inline-flex; align-items: center; gap: 6px; margin-top: 6px; font-size: 13px; color: var(--dim); }
+.nb-more svg { width: 14px; height: 14px; }
+.nb-more:hover { color: var(--ink); }
+.nb-table { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--card-edge); border-radius: 8px; overflow: hidden; margin-right: 14px; }
+.nb-cell { padding: 6px 8px; font-size: 14px; border-top: 1px solid var(--card-edge); min-height: 1.45em; }
+.nb-cell[data-f="a"] { border-right: 1px solid var(--card-edge); }
+.nb-cell.nb-head { border-top: 0; font-weight: 700; background: color-mix(in srgb, var(--list-color) 14%, transparent); }
+.nb-link { display: inline-flex; align-items: center; gap: 7px; max-width: calc(100% - 60px); color: var(--list-color); font-weight: 600; text-decoration: none; padding: 5px 10px 5px 8px; border-radius: 8px; background: color-mix(in srgb, var(--list-color) 12%, transparent); }
+.nb-link span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-decoration: underline; text-underline-offset: 2px; }
+.nb-link svg { width: 15px; height: 15px; flex: none; }
+.nb-link-edit { width: 26px; height: 26px; border-radius: 6px; color: var(--dim); display: inline-grid; place-items: center; vertical-align: middle; margin-left: 4px; }
+.nb-link-edit svg { width: 14px; height: 14px; }
+.nb-link-edit:hover { background: rgba(255,255,255,.08); color: var(--ink); }
+.nb-linkform { display: flex; flex-wrap: wrap; gap: 6px; margin-right: 18px; }
+.nb-linkform input { flex: 1 1 140px; min-width: 0; background: #2a2a2c; border: 1px solid var(--card-edge); border-radius: 7px; padding: 6px 8px; color: var(--ink); font: inherit; font-size: 14px; }
+.nb-linkform input:focus { outline: none; border-color: var(--list-color); }
+.nb-linkform button { padding: 6px 12px; border-radius: 7px; background: var(--list-color); color: #000; font-weight: 700; font-size: 13px; }
+.note-tools { position: relative; display: flex; flex-wrap: wrap; align-items: center; gap: 2px; margin-top: 8px; opacity: 0; transition: opacity .15s; }
+.nt-group { display: inline-flex; gap: 1px; }
+.note-tools .ico { padding: 5px 6px; }
+.note-tools .ico span { display: none; }
+.note-tools .nt-act { margin-left: auto; color: var(--list-color); }
+.note-tools .nt-act:hover { color: var(--list-color); }
+.nt-sep { width: 1px; height: 18px; margin: 0 5px; background: var(--card-edge); }
+.note-tools .fmt { justify-content: center; min-width: 28px; padding: 4px 6px; font-size: 14px; line-height: 1; }
+.note-tools .fmt b, .note-tools .fmt i, .note-tools .fmt u { font-size: 15px; font-family: inherit; }
+.note-tools .fmt i { font-family: Georgia, "Times New Roman", serif; font-weight: 700; }
+.note-tools .fmt-style { gap: 1px; padding-right: 3px; font-weight: 700; }
+.note-tools .fmt-style svg { width: 12px; height: 12px; }
+.note-tools .fmt[aria-pressed="true"] { background: color-mix(in srgb, var(--list-color) 26%, transparent); color: var(--ink); }
+.note-tools .fmt[aria-expanded="true"] { background: rgba(255,255,255,.09); color: var(--ink); }
+.fmt-pop { top: calc(100% + 6px); left: 0; right: auto; width: 252px; z-index: 30; }
+.fmt-pop .fmt-gap { margin-top: 12px; }
+.fmt-sizes { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; }
+.note-tools .fmt-sizes button { justify-content: center; padding: 7px 2px; border-radius: 7px; background: rgba(255,255,255,.05); color: var(--ink); font-weight: 600; line-height: 1.1; }
+.fmt-colors { display: grid; grid-template-columns: repeat(8, 1fr); gap: 6px; }
+.note-tools .fmt-colors button { aspect-ratio: 1; width: 100%; padding: 0; border-radius: 50%; background: var(--c); }
+.note-tools .fmt-colors button:hover { background: var(--c); box-shadow: 0 0 0 2px var(--pop), 0 0 0 3.5px var(--ink); }
+.note-tools .fmt-colors button.is-default { background: linear-gradient(135deg, transparent 44%, var(--ink) 44% 56%, transparent 56%); box-shadow: inset 0 0 0 1.5px var(--ink); }
+.nb-rich b { font-weight: 700; }
+.idea-card:hover .note-tools, .idea-card:focus-within .note-tools { opacity: 1; }
+.note-tools button { display: inline-flex; align-items: center; gap: 5px; padding: 4px 8px; border-radius: 7px; font-size: 12px; font-weight: 600; color: var(--dim); }
+.note-tools button:hover { background: rgba(255,255,255,.07); color: var(--ink); }
+.note-tools svg { width: 15px; height: 15px; }
+@media (hover: none) { .note-tools { opacity: 1; } .nb-x { opacity: .6; } }
+
+.nb-rich b { font-weight: 700; }
+.nb-edit:focus-visible, .ntitle:focus-visible { outline: none; }
+.note-tools .fmt-pop { position: absolute; top: calc(100% + 6px); left: 0; right: auto; width: 252px; z-index: 30; }
+.note-tools .fmt-sizes { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+.note-tools .fmt-colors { display: grid; grid-template-columns: repeat(8, 1fr); gap: 8px; }
+.act-hint { display: inline-flex; align-items: center; gap: 5px; font-size: 11.5px; font-weight: 600; color: var(--faint); }
+.act-hint svg { width: 13px; height: 13px; color: var(--list-color); }
+.idea-card .nedit { width: auto; height: 24px; padding: 0 7px; border: 1.5px solid currentColor; border-radius: 6px; color: var(--dim); }
+.idea-card .nedit:hover { color: var(--ink); background: rgba(255,255,255,.06); }
+.edit-lbl { font-size: 10.5px; font-weight: 800; letter-spacing: .12em; line-height: 1; padding-top: 1px; }
+@media (max-width: 699px) {
+  .nb-edit, .nb-linkform input { font-size: 16px; }
+  .nb-who { width: 76px; }
+  .note-tools button span { display: none; }
+  .note-tools .fmt { min-width: 32px; }
+  .note-tools button, .note-tools .ico { padding: 6px 9px; }
+  .nt-sep { margin: 0 3px; }
+  .note-tools .fmt-pop { width: min(280px, calc(100vw - 72px)); }
+  .note-tools .fmt-sizes button { padding: 9px 2px; }
+  .note-tools svg { width: 18px; height: 18px; }
+}
+/* campus header links */
+.ph-row { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 18px; }
+.ph-links { display: flex; gap: 8px; }
+.ph-link { display: inline-flex; align-items: center; gap: 7px; height: 32px; padding: 0 12px 0 10px; border-radius: 16px; background: var(--card); border: 1px solid var(--card-edge); color: var(--ink); font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+.ph-link svg { width: 16px; height: 16px; color: var(--c); }
+.ph-link b { min-width: 0; font-weight: 800; color: var(--c); }
+.ph-link b:empty { display: none; }
+.ph-link:hover { border-color: var(--c); }
+.cl-title { display: flex; align-items: center; gap: 10px; }
+.cl-title svg { width: 20px; height: 20px; }
+.cl-modal .xlist { margin: 4px 0 6px; }
+/* campus page: projects on the left, notes on the right */
+.camp-body { display: grid; grid-template-columns: minmax(0, 1fr); align-items: start; }
+.camp-body.has-side { grid-template-columns: 340px minmax(0, 1fr); padding-left: 20px; }
+@media (min-width: 900px) and (max-width: 1299px) { .camp-body.has-side { grid-template-columns: 360px minmax(0, 1fr) !important; } }
+.camp-body.has-side > .pcols { padding-left: 24px; }
+.cnotes { position: relative; padding: 0 24px 60px 0; border-right: 3px dashed rgba(255,255,255,.6); min-width: 0; display: flex; flex-direction: column; gap: 16px; align-self: stretch; }
+.cnotes .cn-head { margin-bottom: -4px; }
+.cnotes .cn-title { color: var(--ink); }
+.cnotes .cn-head .more-btn { width: 34px; height: 34px; }
+.act-maker .am-row { padding: 2px 0 4px; }
+.act-maker .am-title { width: 100%; height: 38px; padding: 0 12px; border-radius: 9px; border: 1px solid var(--card-edge); background: rgba(255,255,255,.04); color: var(--ink); font: inherit; font-size: 15px; outline: none; }
+.act-maker .am-title:focus { border-color: var(--list-color); }
+.act-card .ntitle { cursor: text; outline: none; }
+/* Action Register */
+.camp-body.has-side { grid-template-columns: 520px minmax(0, 1fr); }
+@media (min-width: 900px) { .camp-body.has-side .pcols { grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); } }
+.cnotes > .regc { margin: 0; }
+.reg-card .card-head .act-count { margin-left: auto; }
+.rg-cols, .rg-row { display: grid; grid-template-columns: 24px 84px minmax(0, 1fr) 84px 20px; column-gap: 8px; align-items: start; }
+.rg-cols { padding: 4px 0 6px; font-size: 10.5px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--faint); border-bottom: 1px solid var(--card-edge); }
+.rg-list { list-style: none; margin: 0; padding: 0; }
+.rg-row { padding: 7px 0; border-bottom: 1px solid rgba(255,255,255,.06); grid-template-areas: "chk cat text own x" ". . from . ."; }
+.rg-check { grid-area: chk; width: 22px; height: 22px; margin-top: 2px; border-radius: 6px; border: 2px solid var(--faint); display: grid; place-items: center; color: transparent; }
+.rg-check svg { width: 14px; height: 14px; }
+.rg-row.done .rg-check { background: var(--list-color); border-color: var(--list-color); color: #000; }
+.rg-cat { grid-area: cat; } .rg-text { grid-area: text; } .rg-owner { grid-area: own; }
+.rg-cat, .rg-text, .rg-owner { min-width: 0; width: 100%; border: 0; border-radius: 6px; background: transparent; color: var(--ink); font: inherit; font-size: 14.5px; line-height: 1.35; padding: 3px 4px; outline: none; }
+.rg-cat { font-size: 12.5px; font-weight: 700; color: var(--list-color); padding-top: 4px; }
+.rg-owner { font-size: 13px; color: var(--dim); padding-top: 4px; }
+.rg-text { resize: none; overflow: hidden; display: block; height: 26px; }
+.rg-cat:focus, .rg-text:focus, .rg-owner:focus { background: rgba(255,255,255,.06); }
+.rg-cat::placeholder, .rg-text::placeholder, .rg-owner::placeholder { color: var(--faint); font-weight: 500; }
+.rg-x { grid-area: x; color: var(--faint); font-size: 18px; line-height: 1; padding-top: 3px; opacity: 0; }
+.rg-row:hover .rg-x, .rg-row:focus-within .rg-x { opacity: 1; }
+@media (hover: none) { .rg-x { opacity: .7; } }
+.rg-from { grid-area: from; justify-self: start; font-size: 11.5px; color: var(--faint); padding: 0 4px; text-align: left; }
+.rg-from:hover { color: var(--list-color); }
+.rg-row.done .rg-text, .rg-row.done .rg-cat, .rg-row.done .rg-owner { text-decoration: line-through; color: var(--faint); }
+.rg-row.done { opacity: .6; }
+.rg-donelist { margin-top: 6px; border-top: 1px dashed var(--card-edge); }
+.rg-showdone { margin-top: 8px; font-size: 12.5px; color: var(--dim); font-weight: 700; }
+@container (max-width: 380px) {
+  .rg-cols { display: none; }
+  .rg-row { grid-template-columns: 24px minmax(0, 1fr) minmax(0, 1fr) 20px; grid-template-areas: "chk text text x" ". cat own ." ". from from ."; row-gap: 2px; }
+}
+.cnotes .cn-acts:empty { display: none; }
+.cn-head { display: flex; align-items: center; gap: 12px; border-left: 4px solid var(--c); padding-left: 12px; min-height: 34px; }
+.cn-title { flex: 1; margin: 0; font-size: 19px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+.cn-new { display: inline-flex; align-items: center; gap: 6px; height: 34px; padding: 0 14px 0 10px; border-radius: 17px; background: var(--c); color: #000; font-size: 12.5px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; }
+.cn-new svg { width: 16px; height: 16px; }
+.cn-new.ghost { background: var(--card); color: var(--ink); border: 1px solid var(--card-edge); }
+.cn-new.ghost svg { color: var(--c); }
+/* Notepad window */
+.np-modal { padding: 28px; }
+.np-win { width: min(1240px, 100%); height: min(860px, calc(100vh - 56px)); display: flex; flex-direction: column; background: #0b0b0c; border: 1px solid var(--card-edge); border-radius: 16px; box-shadow: 0 30px 80px rgba(0,0,0,.8); overflow: hidden; animation: popIn .16s ease; }
+.np-head { display: flex; align-items: center; gap: 12px; padding: 16px 16px 14px 22px; border-bottom: 3px solid var(--c); background: var(--card); }
+.np-ttl { flex: 1; min-width: 0; display: flex; align-items: center; gap: 12px; }
+.np-ttl > svg { width: 26px; height: 26px; color: var(--c); flex: none; }
+.np-ttl div { display: flex; flex-direction: column; min-width: 0; }
+.np-camp { font-size: 11.5px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--c); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.np-ttl b { font-size: 22px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+.np-head .ev-x { margin: 0; }
+.np-body { flex: 1; overflow-y: auto; padding: 18px 22px 30px; overscroll-behavior: contain; }
+.np-sec { margin-bottom: 26px; }
+.np-h { display: flex; align-items: center; gap: 8px; margin: 0 0 12px 2px; font-size: 13px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--ink); }
+.np-h .tchip-dot { width: 10px; height: 10px; }
+.np-h b { font-size: 12px; color: var(--dim); letter-spacing: 0; margin-left: 2px; }
+.np-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; align-items: start; }
+.np-empty { text-align: center; color: var(--dim); max-width: 40ch; margin: 60px auto 30px; line-height: 1.5; }
+.np-empty b { display: block; color: var(--ink); font-size: 20px; letter-spacing: .06em; text-transform: uppercase; margin: 10px 0 4px; }
+.np-empty p { margin: 0; }
+.np-empty-ic { width: 56px; height: 56px; margin: 0 auto; border-radius: 50%; background: var(--card); border: 1px solid var(--card-edge); display: grid; place-items: center; color: var(--c); }
+.np-empty-ic svg { width: 28px; height: 28px; }
+.np-layout { display: grid; grid-template-columns: minmax(0, 1fr) 250px; gap: 24px; align-items: start; }
+.np-main { min-width: 0; }
+.np-side { position: sticky; top: 0; }
+/* the note box: a rounded square on the right */
+.np-boxsq { margin: 0; min-height: 250px; border-radius: 26px; display: flex; flex-direction: column; }
+.np-boxsq .cn-box-head { flex-direction: column; gap: 6px; padding: 30px 16px 6px; text-align: center; position: relative; }
+.np-boxsq .cn-box-head > svg { width: 52px; height: 52px; padding: 12px; border-radius: 18px; background: color-mix(in srgb, var(--c) 14%, transparent); }
+.np-boxsq .cn-box-t { flex: none; font-size: 14px; }
+.np-boxsq .cn-box-n { font-size: 12.5px; }
+.np-boxsq .ec-chev { position: absolute; top: 14px; right: 14px; }
+.np-boxsq .cn-box-hint { margin: 4px 18px 18px; text-align: center; line-height: 1.4; }
+.np-boxsq.hot { transform: scale(1.03); transition: transform .15s, border-color .15s, background .15s; }
+.np-boxsq .cn-box-list { padding: 0 10px 12px; }
+.np-boxsq .cnb-row { flex-wrap: wrap; }
+.np-boxsq .cnb-main { flex: 1 1 120px; }
+.idea-card .card-head { gap: 8px; }
+.nc-dot { width: 14px; height: 14px; border-radius: 50%; background: var(--list-color); box-shadow: 0 0 0 2px rgba(255,255,255,.14); }
+.n-addact { margin-left: auto; display: inline-flex; align-items: center; gap: 5px; padding: 4px 9px 4px 6px; border-radius: 999px; border: 1px dashed var(--faint); color: var(--dim); font-size: 12.5px; font-weight: 600; }
+.n-addact svg { width: 13px; height: 13px; }
+.n-addact:hover { color: var(--ink); border-color: var(--list-color); }
+.note-pop .custom { display: flex; align-items: center; gap: 8px; margin-top: 10px; font-size: 13px; color: var(--dim); cursor: pointer; }
+.note-pop .custom input { width: 28px; height: 28px; border: 0; padding: 0; background: none; }
+.note-pop hr { border: 0; border-top: 1px solid var(--card-edge); margin: 12px 0 6px; }
+.note-pop .del-row { margin-top: 4px; }
+.cn-list, .cn-acts { display: flex; flex-direction: column; gap: 14px; }
+.cn-empty { margin: 0; color: var(--dim); font-size: 13.5px; line-height: 1.5; }
+.cn-sub { margin-top: 6px; font-size: 11.5px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--dim); }
+.cn-card .card-head { gap: 8px; }
+.cn-grip { width: 18px; height: 26px; margin-left: -12px; display: grid; place-items: center; color: var(--faint); cursor: grab; touch-action: none; flex: none; }
+.cn-grip svg { width: 16px; height: 16px; }
+.cn-drag { cursor: grab; }
+.cn-hd { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+.n-pill { align-self: flex-start; font-size: 10px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; padding: 2px 7px; border-radius: 5px; color: var(--ink); background: rgba(255,255,255,.08); }
+.np-project { color: #000; background: var(--c); }
+.np-person { color: #B18CFF; background: rgba(177,140,255,.14); }
+.n-scope { display: flex; align-items: center; gap: 8px; margin-top: 12px; flex-wrap: wrap; padding-top: 10px; border-top: 1px solid rgba(255,255,255,.06); }
+.n-lbl { font-size: 11px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--dim); }
+.n-for { height: 32px; font-size: 13px; min-width: 0; max-width: 100%; }
+input.n-person { flex: 1 1 120px; min-width: 0; height: 32px; padding: 0 10px; border-radius: 8px; background: #232325; border: 1px solid var(--card-edge); color: var(--ink); font-size: 14px; outline: none; }
+input.n-person:focus { border-color: #B18CFF; }
+.n-actsugg:empty { display: none; }
+.n-mkact { display: inline-flex; align-items: center; gap: 6px; margin-top: 8px; padding: 6px 12px 6px 9px; border-radius: 8px; background: color-mix(in srgb, var(--c) 18%, transparent); border: 1px solid color-mix(in srgb, var(--c) 55%, transparent); color: var(--ink); font-size: 13px; font-weight: 700; }
+.n-mkact svg { width: 14px; height: 14px; color: var(--c); }
+.act-from { font-size: 12px; color: var(--dim); font-weight: 600; letter-spacing: .02em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.act-count { font-size: 12px; font-weight: 800; color: var(--dim); font-variant-numeric: tabular-nums; }
+.act-list { list-style: none; margin: 10px 0 6px; padding: 0; display: flex; flex-direction: column; gap: 2px; }
+.act-row { display: flex; align-items: center; gap: 8px; padding: 3px 0; }
+.act-check { width: 20px; height: 20px; border-radius: 5px; border: 2px solid var(--faint); display: grid; place-items: center; flex: none; color: transparent; }
+.act-check svg { width: 13px; height: 13px; }
+.act-row.done .act-check { background: var(--c); border-color: var(--c); color: #000; }
+.act-text { flex: 1; min-width: 0; background: transparent; border: 0; border-bottom: 1px dashed transparent; outline: none; color: var(--ink); font-size: 15px; padding: 4px 0; }
+.act-text:focus, .act-owner:focus { border-bottom-color: var(--faint); }
+.act-row.done .act-text { text-decoration: line-through; color: var(--dim); }
+.act-owner { width: 90px; flex: none; background: transparent; border: 0; border-bottom: 1px dashed transparent; outline: none; color: var(--dim); font-size: 13px; padding: 4px 0; text-align: right; }
+.act-x { width: 22px; height: 22px; border-radius: 6px; color: var(--faint); font-size: 16px; flex: none; opacity: 0; }
+.act-row:hover .act-x, .act-row:focus-within .act-x { opacity: 1; }
+.act-x:hover { color: var(--danger); background: rgba(255,255,255,.07); }
+.cn-box { margin-top: 10px; border: 2px dashed var(--card-edge); border-radius: 12px; background: rgba(255,255,255,.015); transition: border-color .15s, background .15s; }
+.cn-box.hot { border-color: var(--c); background: color-mix(in srgb, var(--c) 10%, transparent); }
+.cn-box-head { width: 100%; display: flex; align-items: center; gap: 10px; padding: 14px 16px; text-align: left; }
+.cn-box-head > svg { width: 20px; height: 20px; color: var(--c); flex: none; }
+.cn-box-t { flex: 1; font-size: 13.5px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+.cn-box-n { font-size: 12px; color: var(--dim); }
+.cn-box .ec-chev svg { transform: rotate(-90deg); transition: transform .2s; }
+.cn-box.open .ec-chev svg { transform: none; }
+.cn-box-hint { margin: -6px 16px 12px 46px; font-size: 12px; color: var(--faint); }
+.cn-box-list { display: none; padding: 0 12px 10px; }
+.cn-box.open .cn-box-list { display: block; }
+.cnb-row { display: flex; align-items: center; gap: 10px; padding: 9px 4px; border-top: 1px solid rgba(255,255,255,.06); }
+.cnb-k { width: 26px; height: 26px; border-radius: 7px; display: grid; place-items: center; background: rgba(255,255,255,.06); color: var(--dim); flex: none; }
+.cnb-k svg { width: 14px; height: 14px; }
+.cnb-main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.cnb-main b { font-size: 13.5px; letter-spacing: .03em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cnb-main span { font-size: 12px; color: var(--dim); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cnb-out { flex: none; height: 28px; padding: 0 10px; border-radius: 7px; border: 1px solid var(--card-edge); color: var(--dim); font-size: 12px; font-weight: 700; }
+.cnb-out:hover { color: var(--ink); border-color: var(--c); }
+.cn-src { opacity: .35; }
+body.cn-dragging, body.cn-dragging * { user-select: none !important; -webkit-user-select: none !important; cursor: grabbing !important; }
+.cn-drag { user-select: none; -webkit-user-select: none; }
+.cn-ghost { position: fixed; z-index: 40000; pointer-events: none; box-shadow: 0 24px 50px rgba(0,0,0,.7); opacity: .95; margin: 0; }
+@media (max-width: 899px) {
+  .camp-body, .camp-body.has-side { grid-template-columns: minmax(0, 1fr); padding-left: 0; }
+  .camp-body.has-side > .pcols { padding-left: 20px; }
+  .cnotes { border-right: 0; padding: 0 0 26px; border-bottom: 3px dashed rgba(255,255,255,.6); margin: 0 20px 26px; max-width: 640px; }
+}
+@media (max-width: 699px) {
+  .np-modal { padding: 0; place-items: stretch; }
+  .np-win { height: 100%; width: 100%; border-radius: 0; border: 0; }
+  .np-head { padding: 12px 12px 12px 16px; padding-top: calc(12px + env(safe-area-inset-top, 0px)); }
+  .np-ttl b { font-size: 18px; }
+  .np-body { padding: 14px 12px 40px; }
+  .np-grid { grid-template-columns: minmax(0, 1fr); }
+  .np-layout { grid-template-columns: minmax(0, 1fr); }
+  .np-side { position: static; }
+  .np-boxsq { min-height: 0; }
+  .cnotes { margin: 0 12px 0; padding-bottom: 26px; border-bottom: 0; max-width: none; }
+  .camp-body.has-side > .pcols { padding-left: 12px; }
+  .ph-links { width: 100%; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+  .ph-link { position: relative; flex-direction: column; justify-content: center; height: auto; padding: 7px 4px 6px; gap: 3px; font-size: 10px; letter-spacing: .06em; border-radius: 12px; min-width: 0; }
+  .ph-link span { overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+  .ph-link svg { width: 18px; height: 18px; }
+  .ph-link b { position: absolute; top: 4px; right: 8px; font-size: 11px; }
+  .act-x { opacity: 1; }
+  .act-text, .act-owner, input.n-person { font-size: 16px; }
+}
+/* note cards (from Canvas) */
+.ntitle { flex: 1; min-width: 0; font-weight: 700; font-size: 17px; letter-spacing: .05em; text-transform: uppercase; line-height: 1.3; overflow-wrap: anywhere; padding-top: 2px; cursor: text; outline: none; }
+.ntitle[contenteditable="true"] { box-shadow: 0 0 0 2px color-mix(in srgb, var(--list-color) 45%, transparent); border-radius: 4px; padding: 2px 4px 0; }
+.note-text { display: block; width: calc(100% + 8px); margin: 12px -4px 0; min-height: 84px; resize: none; overflow: hidden; line-height: 1.45; font: inherit; font-size: 15px; color: var(--ink);
+  padding: 10px 12px; border-radius: 8px; background: #232325; border: 1px solid transparent; outline: none; transition: border-color .15s; }
+.note-text:focus { border-color: var(--card-edge); }
+.note-text::placeholder { color: var(--faint); }
+.idea-meta { margin-top: 8px; font-size: 12px; color: var(--faint); font-variant-numeric: tabular-nums; }
+.suggest { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 8px; }
+.suggest:empty { display: none; }
+.suggest-label { font-size: 12px; color: var(--dim); margin-right: 2px; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.tchip { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px 4px 8px; border-radius: 999px; font-size: 13px; font-weight: 600;
+  background: color-mix(in srgb, var(--chip) 16%, transparent); color: var(--ink); border: 1px solid color-mix(in srgb, var(--chip) 45%, transparent); }
+.tchip:hover { background: color-mix(in srgb, var(--chip) 28%, transparent); }
+.tchip[aria-pressed="true"] { background: var(--chip); color: #000; }
+.tchip[aria-pressed="true"] .tchip-dot { background: #000; }
+.tchip-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--chip); }
+.note-tags { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 12px; }
+.tchip.on { padding-right: 4px; cursor: default; }
+.tchip-x { width: 18px; height: 18px; border-radius: 50%; display: grid; place-items: center; font-size: 14px; line-height: 1; color: var(--dim); margin-left: 1px; }
+.tchip-x:hover { background: rgba(255,255,255,.12); color: var(--ink); }
+.add-tag-chip { --chip: #8e8e93; background: transparent; border-style: dashed; color: var(--dim); font-weight: 600; padding: 4px 10px 4px 8px; }
+.add-tag-chip svg { width: 13px; height: 13px; }
+.add-tag-chip:hover { color: var(--ink); background: rgba(255,255,255,.05); }
+.tchip.sugg { background: transparent; border-style: dashed; }
+.pop-hint { text-transform: none; letter-spacing: 0; color: var(--faint); font-weight: 400; }
+.tag-pop { width: 280px; max-width: calc(100vw - 32px); }
+.tag-pop hr { border: 0; border-top: 1px solid var(--card-edge); margin: 12px 0; }
+.tag-done { display: block; width: 100%; margin-top: 12px; padding: 7px; border-radius: 8px; background: var(--card-edge); font-weight: 700; font-size: 14px; }
+.tag-done:hover { background: #45454a; }
+.new-tag { display: flex; gap: 6px; }
+.new-tag input { flex: 1; min-width: 0; background: #2a2a2c; border: 1px solid var(--card-edge); border-radius: 7px; padding: 6px 8px; color: var(--ink); font: inherit; font-size: 14px; }
+.new-tag input:focus { outline: none; border-color: #5aa9ff; }
+.new-tag button { padding: 6px 12px; border-radius: 7px; background: var(--card-edge); font-size: 13px; font-weight: 700; }
+.note-add-old { display: flex; align-items: center; justify-content: center; gap: 8px; height: 44px; border-radius: 10px; border: 1.5px dashed var(--card-edge); color: var(--dim); font-size: 12.5px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
+.note-add svg { width: 15px; height: 15px; color: var(--c); }
+.note-add:hover { border-color: var(--c); color: var(--ink); }
+@media (max-width: 699px) { .note-text, .new-tag input { font-size: 16px; } }
 /* ⋯ menu buttons on project headers and cards */
 .more-btn { width: 30px; height: 30px; border-radius: 50%; color: var(--dim); }
 .more-btn svg { width: 18px; height: 18px; }
@@ -584,6 +924,7 @@ body.row-drag, body.row-drag * { cursor: grabbing !important; user-select: none;
 .item.important:not(.done) .text { font-weight: 700; color: var(--list-color); }
 .text { flex: 1; min-width: 0; line-height: 1.35; outline: none; overflow-wrap: anywhere; cursor: text; }
 .text:empty::before { content: "Task"; color: var(--faint); }
+.regc .text:empty::before { content: "Action item"; }
 .item.sub .text { font-size: 14px; font-style: italic; }
 .item.done { opacity: .5; }
 .item.done .text { text-decoration: line-through; text-decoration-color: var(--dim); text-decoration-thickness: 1.5px; }
@@ -944,7 +1285,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
   const STATUSES = ["Not Started", "In Progress", "Blocked", "Done"];
   const STATUS_CLASS = { "Not Started": "s-ns", "In Progress": "s-ip", "Blocked": "s-blk", "Done": "s-done" };
   const LS_KEY = "pmbridge-v1";
-  const APP_VERSION = "45 (Oct 15)";
+  const APP_VERSION = "54 (Oct 15)";
   const $ = id => document.getElementById(id);
   const uid = () => Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4);
   const pad2 = n => String(n).padStart(2, "0");
@@ -1019,7 +1360,8 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
       links: (Array.isArray(r.links) ? r.links : []).map(l => ({ id: l.id || uid(), label: String(l.label || ""), url: String(l.url || "") })),
       blockReason: String(r.blockReason || ""), update: String(r.update || ""), star: !!r.star, stAt: +r.stAt || 0,
       comments: (Array.isArray(r.comments) ? r.comments : []).map(c => ({ id: c.id || uid(), text: String(c.text || ""), at: c.at || 0 })),
-      created: r.created || Date.now()
+      created: r.created || Date.now(),
+      ...(r.ref && r.ref.aid ? { ref: { nid: String(r.ref.nid || ""), aid: String(r.ref.aid), sig: String(r.ref.sig || "") } } : {})
     };
     if (r.done && it.status !== "Done") { it.prev = it.status; it.status = "Done"; }
     it.done = it.status === "Done";
@@ -1037,10 +1379,41 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
     items: (Array.isArray(c.items) ? c.items : []).map(cleanItem) });
   const cleanSchedView = v => ({ title: String(v && v.title && v.title !== "SCHEDULE" ? v.title : "CRITICAL PATH"), color: safeColor(v && v.color, "#5AA9FF"), collapsed: !!(v && v.collapsed), hideDone: !!(v && v.hideDone), blkCollapsed: !!(v && v.blkCollapsed), xc: { ...((v && v.xc) || {}) } });
   const cleanContact = c => ({ id: c.id || uid(), name: String(c.name || ""), company: String(c.company || ""), role: String(c.role || ""), phone: String(c.phone || "") });
+  // campus notes: a note can be general, for one project, or for a person; it can carry action items
+  // a Canvas note body: text (rich), bullet lists, 2-column tables and links
+  function cleanBlocks(bl, text) {
+    const out = (Array.isArray(bl) ? bl : []).filter(b => b && ["text", "bullets", "table", "link"].includes(b.type)).map(b => {
+      const c = { id: String(b.id || uid()), type: b.type };
+      if (b.type === "text") { c.text = String(b.text || ""); if (typeof b.html === "string") c.html = b.html; }
+      if (b.type === "bullets") c.items = (Array.isArray(b.items) ? b.items : []).filter(Boolean).map(i => { const o = { id: String(i.id || uid()), text: String(i.text || "") }; if (typeof i.html === "string") o.html = i.html; return o; });
+      if (b.type === "table") c.rows = (Array.isArray(b.rows) ? b.rows : []).filter(Boolean).map(x => ({ id: String(x.id || uid()), a: String(x.a || ""), b: String(x.b || "") }));
+      if (b.type === "link") { c.label = String(b.label || ""); c.url = String(b.url || ""); }
+      return c;
+    }).filter(b => (b.type !== "bullets" || b.items.length) && (b.type !== "table" || b.rows.length));
+    return out.length ? out : [{ id: uid(), type: "text", text: String(text || "") }];
+  }
+  const cleanAct = a => ({ id: a.id || uid(), text: String(a.text || ""), owner: String(a.owner || ""), done: !!a.done, doneAt: Number(a.doneAt) || 0, src: String(a.src || "") });
+  // the campus Action Register: typed rows, plus rows that point at a note's action items (nid/aid)
+  const cleanReg = r => ({ id: r.id || uid(), nid: String(r.nid || ""), aid: String(r.aid || ""), cat: String(r.cat || ""), text: String(r.text || ""), owner: String(r.owner || ""), done: !!r.done, doneAt: Number(r.doneAt) || 0 });
+  const cleanNote = n => {
+    const sc = n.scope || {};
+    return { id: n.id || uid(), title: String(n.title || "NOTE"), text: String(n.text || ""), tags: (Array.isArray(n.tags) ? n.tags : []).map(String).filter(Boolean).slice(0, 12),
+      created: n.created || Date.now(), updated: n.updated || n.created || Date.now(), collapsed: !!n.collapsed, filed: !!n.filed, color: /^#[0-9a-f]{6}$/i.test(n.color || "") ? n.color : "",
+      scope: { type: ["project", "person"].includes(sc.type) ? sc.type : "general", sid: String(sc.sid || ""), person: String(sc.person || "") },
+      actions: (Array.isArray(n.actions) ? n.actions : n.actions && Array.isArray(n.actions.items) ? n.actions.items.map(a => ({ ...a, owner: a.owner || a.who })) : []).filter(Boolean).map(cleanAct),
+      actTitle: String(n.actTitle || "ACTION ITEMS"), actFiled: !!n.actFiled, actCollapsed: !!n.actCollapsed, actOnly: !!n.actOnly, blocks: cleanBlocks(n.blocks, n.text) };
+  };
   const cleanDoc = d => ({ id: d.id || uid(), desc: String(d.desc || ""), link1: String(d.link1 || ""), link2: String(d.link2 || "") });
-  const cleanSub = x => ({ id: x.id || uid(), title: String(x.title || "NEW PROJECT"), sched: cleanSchedView(x.sched),
-    contacts: (Array.isArray(x.contacts) ? x.contacts : []).filter(Boolean).map(cleanContact),
-    docs: (Array.isArray(x.docs) ? x.docs : []).filter(Boolean).map(cleanDoc) });
+  const cleanSub = x => ({ id: x.id || uid(), title: String(x.title || "NEW PROJECT"), sched: cleanSchedView(x.sched) });
+  // contacts, documents and notes belong to the campus; older versions kept them on each project, so gather those up
+  function campusLists(p) {
+    const raw = (Array.isArray(p.subs) ? p.subs : []).filter(Boolean), uniq = arr => { const seen = new Set(); return arr.filter(x => x && !seen.has(x.id) && seen.add(x.id)); };
+    return {
+      contacts: uniq([...(p.contacts || []), ...raw.flatMap(x => x.contacts || [])].filter(Boolean).map(cleanContact)),
+      docs: uniq([...(p.docs || []), ...raw.flatMap(x => x.docs || [])].filter(Boolean).map(cleanDoc)),
+      notes: uniq([...(p.notes || []), ...raw.flatMap(x => (x.notes || []).map(n => ({ ...n, scope: n.scope || { type: "project", sid: x.id } })))].filter(Boolean).map(cleanNote))
+    };
+  }
   function cleanProject(p) {
     let cards = (Array.isArray(p.cards) ? p.cards : []).filter(Boolean);
     let sched = p.sched;
@@ -1057,10 +1430,19 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
     let subs = (Array.isArray(p.subs) ? p.subs : []).filter(Boolean).map(cleanSub);
     if (!subs.length) subs = [cleanSub({ title: "PROJECT 1", sched })];
     const ids = new Set(subs.map(x => x.id));
-    cards = cards.map(cleanCard).map(c => ({ ...c, sub: ids.has(c.sub) ? c.sub : subs[0].id }));
+    cards = cards.map(cleanCard).map(c => ({ ...c, sub: c.sub === "__reg" ? "__reg" : ids.has(c.sub) ? c.sub : subs[0].id }));
+    if (!cards.some(c => c.sub === "__reg")) {
+      const items = [], cats = [];
+      (Array.isArray(p.register) ? p.register : []).filter(r => r && !r.aid && String(r.text || "").trim()).forEach(r => { const k = String(r.cat || "").trim(); let g = cats.find(x => x.k.toLowerCase() === k.toLowerCase()); if (!g) cats.push(g = { k, rows: [] }); g.rows.push(r); });
+      cats.sort((a, b) => (a.k ? 1 : 0) - (b.k ? 1 : 0)).forEach(g => { if (g.k) items.push({ kind: "phase", text: g.k }); g.rows.forEach(r => items.push({ text: r.text, bic: r.owner, done: r.done })); });
+      cards.push({ ...cleanCard({ title: "ACTION REGISTER", items }), sub: "__reg" });
+    }
     subs.forEach(x => { if (!cards.some(c => c.sub === x.id)) cards.push({ ...cleanCard({ title: "TASKS", items: [] }), sub: x.id }); });
+    const lists = campusLists(p), register = (Array.isArray(p.register) ? p.register : []).filter(Boolean).map(cleanReg);
+    // v52 stand-alone action cards fold into the register; the card's name becomes the category
+    lists.notes = lists.notes.filter(n => { if (!n.actOnly) return true; n.actions.filter(a => a.text.trim()).forEach(a => register.push(cleanReg({ ...a, id: "", cat: n.title === "ACTION ITEMS" ? "" : n.title }))); return false; });
     return { id: p.id || uid(), title: String(p.title || "NEW CAMPUS"), desc: String(p.desc || ""), color: safeColor(p.color, PROJECT_COLORS[0]),
-      cards, subs, est: cleanEst(p.est), created: p.created || Date.now(), updated: p.updated || Date.now() };
+      cards, subs, ...lists, regSeen: (Array.isArray(p.regSeen) ? p.regSeen : []).map(String), est: cleanEst(p.est), created: p.created || Date.now(), updated: p.updated || Date.now() };
   }
   const EST_CATS = [
     { k: "isp", name: "ISP", icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.7 3.9 5.7 3.9 9s-1.3 6.3-3.9 9c-2.6-2.7-3.9-5.7-3.9-9S9.4 5.7 12 3z"/></svg>' },
@@ -1141,7 +1523,9 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
     }));
     return { done, all, dated, next, pct: all ? Math.round(done / all * 100) : 0 };
   }
-  const subOf = (p, c) => p.subs.find(x => x.id === c.sub) || p.subs[0];
+  const REG = "__reg";   // the campus Action Register is a task card that belongs to no project
+  const subOf = (p, c) => (c.sub === REG ? { id: REG, title: "ACTION REGISTER", sched: {} } : p.subs.find(x => x.id === c.sub) || p.subs[0]);
+  const regCard = p => p.cards.find(c => c.sub === REG);
   const subById = (p, sid) => p.subs.find(x => x.id === sid);
   const subCards = (p, sid) => p.cards.filter(c => c.sub === sid);
   function newSub(p, title) {
@@ -1269,11 +1653,14 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
   let skipCollapse = null;
   function collapseAll(p) {
     if (!p) return; if (skipCollapse === p.id) { skipCollapse = null; return; } let changed = false;
-    p.cards.forEach(c => { if (!c.collapsed) { c.collapsed = true; changed = true; } });
+    const emptySub = sid => p.cards.every(c => c.sub !== sid || !c.items.length);
+    p.cards.forEach(c => { const want = c.sub === REG ? false : !emptySub(c.sub); if (c.collapsed !== want) { c.collapsed = want; changed = true; } });
     p.subs.forEach(x => { const v = x.sched; if (!v) return; v.xc = v.xc || {};
       if (!v.collapsed) { v.collapsed = true; changed = true; }
       if (!v.blkCollapsed) { v.blkCollapsed = true; changed = true; }
-      X_CARDS.forEach(([k]) => { if (!v.xc[k]) { v.xc[k] = true; changed = true; } }); });
+      X_CARDS.forEach(([k]) => { if (!v.xc[k]) { v.xc[k] = true; changed = true; } });
+ });
+
     if (changed) save(p);
   }
   function route() {
@@ -1412,19 +1799,22 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
     if (qaEntry.pid !== p.id) { qaEntry.pid = p.id; qaEntry.date = null; qaEntry.color = null; qaEntry.cid = null; }
     if (!p.cards.find(c => c.id === qaEntry.cid)) qaEntry.cid = p.cards[0] ? p.cards[0].id : null;
     p.subs.forEach(x => wake(p, x));
+    regSync(p);
     view.innerHTML = `
       <nav class="proj-head">
         <button class="nav-btn" data-act="go-home" aria-label="All campuses" title="All campuses">${ICON.back}</button>
-        <div class="ph-main"><span class="ph-crumb" data-act="go-home">All campuses</span><h1 class="ph-title ph-camp" style="color:${p.color}">${esc(p.title)}</h1></div>
+        <div class="ph-main"><span class="ph-crumb" data-act="go-home">All campuses</span><div class="ph-row"><h1 class="ph-title ph-camp" style="color:${p.color}">${esc(p.title)}</h1>
+          <div class="ph-links" style="--c:${p.color}"><button class="ph-link" data-cl="contacts" title="Campus contacts">${ICON.user}<span>Contacts</span><b>${p.contacts.length || ""}</b></button><button class="ph-link" data-cl="docs" title="Campus documents">${ICON.link}<span>Documents</span><b>${p.docs.length || ""}</b></button><button class="ph-link" data-cl="notes" title="Campus notepad">${ICON.notes}<span>Notepad</span><b class="np-count">${p.notes.filter(n => !n.filed && !n.actOnly).length || ""}</b></button></div></div></div>
         <div class="ph-stats" id="phStats">${statsHtml(p)}</div>
         <button class="head-btn edit-btn" style="color:${p.color}" data-act="project-menu" data-pid="${p.id}" data-pop aria-label="Edit campus">EDIT</button>
       </nav>
-      <div class="pcols" style="--c:${p.color}">${p.subs.map(x => subHtml(p, x)).join("")}
+      <div class="camp-body has-side"><aside class="cnotes" style="--c:${p.color};--list-color:${p.color}">${regColHtml(p)}</aside><div class="pcols" style="--c:${p.color}">${p.subs.map(x => subHtml(p, x)).join("")}
         <button class="add-col" data-act="add-sub"><span class="ni">${ICON.plus}</span>Add project</button>
-      </div>`;
+      </div></div>`;
     p.cards.forEach(c => fillCardText(p, c));
     fillSchedText(p);
     fillBlkText(p);
+    view.querySelectorAll(".note-text").forEach(sizeNote);
 
     renderCal();
     restoreFocus(keep);
@@ -1444,7 +1834,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
   const blkActive = (p, x) => blockedItems(p, x.id).length > 0;
   function colHtml(p, x) {
     const cp = schedHtml(p, x), bk = blkHtml(p, x), ca = cpActive(p, x), ba = blkActive(p, x);
-    const mid = subCards(p, x.id).map(c => cardHtml(p, c)).join("") + X_CARDS.map(([k, t]) => xCardHtml(p, x, k, t)).join("");
+    const mid = subCards(p, x.id).map(c => cardHtml(p, c)).join("");
     return (ca ? cp : "") + (ba ? bk : "") + mid + (ca ? "" : cp) + (ba ? "" : bk);
   }
   const wasActive = {};
@@ -1465,8 +1855,871 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
     if (bkEl) { if (ba) col.prepend(bkEl); else col.append(bkEl); }
     if (cpEl) { if (ca) col.prepend(cpEl); else col.insertBefore(cpEl, ba ? null : bkEl); }
   }
+  /* ----- note cards (from Canvas): title, free text, tags with suggestions ----- */
+  const PRESET_TAGS = [
+    { name: "Idea", color: "#FFD84D", words: ["idea", "what if", "could we", "maybe", "concept", "brainstorm", "someday"] },
+    { name: "Note", color: "#F2F2F2", words: ["note", "remember", "fyi", "reminder", "don't forget", "jot"] },
+    { name: "Meeting", color: "#8C9EFF", words: ["meeting", "call", "agenda", "discussed", "action items", "follow up", "follow-up", "attendees", "teams", "zoom", "oac", "notes from"] },
+    { name: "Decision", color: "#5FD68A", words: ["decided", "decision", "approved", "agreed", "go with", "sign off", "signed off", "confirmed"] },
+    { name: "Issue", color: "#FF6B6B", words: ["issue", "problem", "broken", "down", "outage", "delay", "late", "risk", "concern", "blocked", "damage", "missing"] },
+    { name: "Vendor", color: "#5AA9FF", words: ["vendor", "quote", "eplus", "cdw", "supplier", "order", "po ", "purchase", "invoice", "lead time", "shipping", "freight"] },
+    { name: "Site", color: "#FFA24C", words: ["trailer", "site", "field", "walk", "install", "jobsite", "building", "room", "rack", "cable", "drop"] },
+    { name: "Research", color: "#4FD1C5", words: ["research", "look into", "find out", "learn", "compare", "investigate", "options", "spec"] },
+    { name: "Follow-up", color: "#B18CFF", words: ["follow up", "follow-up", "check back", "circle back", "waiting on", "ask", "remind", "next week"] }
+  ];
+  const TAG_COLORS = ["#FF9F80", "#C3E88D", "#80DEEA", "#F48FB1", "#FFCC80", "#A5D6A7", "#90CAF9", "#CE93D8", "#E6EE9C", "#BCAAA4"];
+  // custom tags are any tag a note uses that isn't built in; their color comes from the name
+  function allTags() {
+    const out = [...PRESET_TAGS], seen = new Set(out.map(t => t.name.toLowerCase()));
+    state.projects.forEach(p => p.notes.forEach(n => n.tags.forEach(name => {
+      if (seen.has(name.toLowerCase())) return; seen.add(name.toLowerCase());
+      let h = 0; for (const ch of name.toLowerCase()) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
+      out.push({ name, color: TAG_COLORS[h % TAG_COLORS.length] });
+    })));
+    return out;
+  }
+  const tagByName = n => allTags().find(t => t.name.toLowerCase() === String(n || "").toLowerCase());
+  const tagColor = name => (tagByName(name) || {}).color || "#8e8e93";
+  function suggestTags(text) {
+    const t = " " + (text || "").toLowerCase() + " ";
+    if (!t.trim()) return [];
+    return allTags().map(tag => {
+      let score = 0;
+      (tag.words || [tag.name.toLowerCase()]).forEach(w => {
+        const m = t.match(new RegExp("(^|[^a-z])" + w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "g"));
+        if (m) score += m.length * (w.includes(" ") ? 2 : 1);
+      });
+      return { tag, score };
+    }).filter(x => x.score > 0).sort((a, b) => b.score - a.score).slice(0, 3).map(x => x.tag);
+  }
+  const fmtWhen = ts => { try { return new Date(ts).toLocaleString([], { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }); } catch (e) { return ""; } };
+  const noteTagsHtml = n => n.tags.map(name => `<span class="tchip on" style="--chip:${tagColor(name)}"><span class="tchip-dot"></span>${esc(name)}<button class="tchip-x" data-na="untag" data-tag="${esc(name)}" aria-label="Remove tag ${esc(name)}">×</button></span>`).join("")
+    + `<button class="tchip add-tag-chip" data-na="tags" aria-haspopup="true">${ICON.plus}${n.tags.length ? "Tag" : "Add tags"}</button>`;
+  function noteSuggestHtml(n) {
+    const sugg = suggestTags(n.text).filter(t => !n.tags.some(x => x.toLowerCase() === t.name.toLowerCase()));
+    return sugg.length ? `<span class="suggest-label">Suggested:</span>` + sugg.map(t => `<button class="tchip sugg" data-na="tag" data-tag="${esc(t.name)}" style="--chip:${t.color}"><span class="tchip-dot"></span>${esc(t.name)}</button>`).join("") : "";
+  }
+  const ICON_GRIP = '<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.6"/><circle cx="15" cy="6" r="1.6"/><circle cx="9" cy="12" r="1.6"/><circle cx="15" cy="12" r="1.6"/><circle cx="9" cy="18" r="1.6"/><circle cx="15" cy="18" r="1.6"/></svg>';
+  const ICON_BOX = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h18v13a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"/><path d="M1.5 3.5h21V7h-21z"/><path d="M10 11h4"/></svg>';
+  function scopeLabel(p, n) {
+    if (n.scope.type === "project") { const x = subById(p, n.scope.sid); return x ? x.title : "PROJECT"; }
+    if (n.scope.type === "person") return n.scope.person ? "@ " + n.scope.person : "@ PERSON";
+    return "GENERAL";
+  }
+  const scopePill = (p, n) => `<span class="n-pill np-${n.scope.type}">${esc(scopeLabel(p, n))}</span>`;
+  const noteColor = (p, n) => n.color || p.color;
+
+  /* ================= Canvas note cards (from Canvas v25): rich text, bullets, tables, links, action items ================= */
+  const NB_TYPES = { bullets: "Bullets", table: "Table", actions: "Action items", link: "Link" };
+  const actionsText = n => n.actions.length ? [n.actTitle || "Action items", ...n.actions.map(i => (i.text || "") + " " + (i.owner || ""))].join("\n") : "";
+  function blocksText(n) {
+    return (n.blocks || []).map(b => {
+      if (b.type === "text") return b.text || "";
+      if (b.type === "bullets") return (b.items || []).map(i => i.text).join("\n");
+      if (b.type === "table") return (b.rows || []).map(r => (r.a || "") + " " + (r.b || "")).join("\n");
+      if (b.type === "link") return (b.label || "") + " " + (b.url || "");
+      return "";
+    }).join("\n").trim();
+  }
+  const noteText = n => [blocksText(n), actionsText(n)].filter(Boolean).join("\n").trim();
+  const actBlock = n => (n.actions.length ? { id: n.id + "-act", type: "actions", title: n.actTitle, items: n.actions } : null);
+  /* rich text: bold, italic, underline, color, size (only these survive saving) */
+  const RICH_COLORS = [["Default", ""], ["Red", "#FF6B6B"], ["Orange", "#FFA94D"], ["Yellow", "#FFD84D"], ["Green", "#5FD68A"], ["Blue", "#5AA9FF"], ["Purple", "#B197FC"], ["Grey", "#8E8E93"]];
+  const RICH_SIZES = [["Small", 2, ".85em"], ["Normal", 3, ""], ["Large", 4, "1.2em"], ["Huge", 5, "1.5em"]];
+  const DEFAULT_MARK = "#010203";
+  const cssColor = c => { const d = document.createElement("span"); d.style.color = ""; d.style.color = c || ""; return d.style.color.replace(/\s+/g, ""); };
+  let richRgb = null;
+  const paletteColor = c => { if (!c) return ""; if (!richRgb) richRgb = new Map(RICH_COLORS.filter(x => x[1]).map(x => [cssColor(x[1]), x[1]])); return richRgb.get(cssColor(c)) || ""; };
+  const FONT_SIZE_ATTR = { 1: ".85em", 2: ".85em", 3: "", 4: "1.2em", 5: "1.5em", 6: "1.5em", 7: "1.5em" };
+  const richSize = v => {
+    v = String(v || "").trim().toLowerCase();
+    if (v === "x-small" || v === "small" || v === "0.85em" || v === ".85em" || v === "smaller") return ".85em";
+    if (v === "large" || v === "1.2em" || v === "larger") return "1.2em";
+    if (v === "x-large" || v === "xx-large" || v === "xxx-large" || v === "1.5em") return "1.5em";
+    return "";
+  };
+  function richStyle(nd) {
+    const d = document.createElement("span");
+    d.setAttribute("style", nd.getAttribute("style") || "");
+    const isFont = nd.tagName === "FONT", parts = [];
+    const color = paletteColor(d.style.color || (isFont ? nd.getAttribute("color") : ""));
+    if (color) parts.push("color:" + color);
+    const size = d.style.fontSize ? richSize(d.style.fontSize) : (isFont && nd.getAttribute("size") ? FONT_SIZE_ATTR[nd.getAttribute("size")] || "" : "");
+    if (size) parts.push("font-size:" + size);
+    const fw = d.style.fontWeight; if (fw === "bold" || fw === "bolder" || +fw >= 600) parts.push("font-weight:700");
+    if (d.style.fontStyle === "italic") parts.push("font-style:italic");
+    if (/underline/.test(d.style.textDecorationLine || d.style.textDecoration || "")) parts.push("text-decoration:underline");
+    return parts.join(";");
+  }
+  function cleanRich(html) {
+    const tpl = document.createElement("template");
+    tpl.innerHTML = html || "";
+    const out = document.createElement("div");
+    const walk = (src, dst) => src.childNodes.forEach(nd => {
+      if (nd.nodeType === 3) { dst.appendChild(document.createTextNode(nd.data)); return; }
+      if (nd.nodeType !== 1) return;
+      const tag = nd.tagName;
+      if (tag === "BR") { dst.appendChild(document.createElement("br")); return; }
+      if (tag === "SCRIPT" || tag === "STYLE" || tag === "TEMPLATE") return;
+      let el = null;
+      if (tag === "B" || tag === "STRONG") el = document.createElement("b");
+      else if (tag === "I" || tag === "EM") el = document.createElement("i");
+      else if (tag === "U") el = document.createElement("u");
+      else if (tag === "DIV" || tag === "P") el = document.createElement("div");
+      else if (tag === "SPAN" || tag === "FONT") { const st = richStyle(nd); if (st) { el = document.createElement("span"); el.setAttribute("style", st); } }
+      if (el) { walk(nd, el); dst.appendChild(el); } else walk(nd, dst);
+    });
+    walk(tpl.content, out);
+    const h = out.innerHTML;
+    return h === "<br>" || h === "<div><br></div>" ? "" : h;
+  }
+  function normRichDom(el) {
+    el.querySelectorAll("span[style], font").forEach(nd => {
+      const st = richStyle(nd);
+      if (st) nd.setAttribute("style", st); else nd.removeAttribute("style");
+      nd.removeAttribute("color"); nd.removeAttribute("size"); nd.removeAttribute("face");
+    });
+  }
+  const makeRich = el => { el.contentEditable = "true"; el.spellcheck = true; el.classList.add("nb-rich"); return el; };
+  const fillRich = (el, html, text) => { if (html != null && html !== "") el.innerHTML = cleanRich(html); else el.textContent = text || ""; };
+  const makeEditable = el => { try { el.contentEditable = "plaintext-only"; } catch (e) {} if (el.contentEditable !== "plaintext-only") el.contentEditable = "true"; el.spellcheck = true; return el; };
+  function caretOffset(el) {
+    const s = getSelection();
+    if (!s.rangeCount || !el.contains(s.anchorNode)) return el.textContent.length;
+    const r = s.getRangeAt(0), pre = r.cloneRange();
+    pre.selectNodeContents(el); pre.setEnd(r.endContainer, r.endOffset);
+    return pre.toString().length;
+  }
+  function setCaretAt(el, pos) {
+    el.focus();
+    const s = getSelection(), r = document.createRange();
+    const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+    let node, left = pos, placed = false;
+    while ((node = walker.nextNode())) { if (left <= node.length) { r.setStart(node, left); placed = true; break; } left -= node.length; }
+    if (!placed) { r.selectNodeContents(el); r.collapse(false); } else r.collapse(true);
+    s.removeAllRanges(); s.addRange(r);
+  }
+  function capFirst(el) {
+    const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+    let node;
+    while ((node = walker.nextNode())) {
+      const i = node.data.search(/\S/); if (i < 0) continue;
+      const ch = node.data[i], up = ch.toUpperCase();
+      if (ch === up || !/\p{Ll}/u.test(ch)) return;
+      const pos = caretOffset(el);
+      node.data = node.data.slice(0, i) + up + node.data.slice(i + 1);
+      if (document.activeElement === el) setCaretAt(el, pos);
+      return;
+    }
+  }
+  function buildList(w, b) {
+    const isAct = b.type === "actions";
+    if (isAct) { const h = makeEditable(document.createElement("div")); h.className = "nb-edit nb-act-title"; h.dataset.f = "title"; h.textContent = b.title || "ACTION ITEMS"; w.appendChild(h); }
+    const ul = document.createElement("ul");
+    ul.className = "nb-list";
+    (b.items || []).forEach(it => {
+      const li = document.createElement("li");
+      li.dataset.iid = it.id;
+      if (isAct) {
+        li.classList.toggle("done", !!it.done);
+        const ck = document.createElement("button");
+        ck.className = "nb-check"; ck.setAttribute("role", "checkbox"); ck.setAttribute("aria-checked", String(!!it.done)); ck.setAttribute("aria-label", "Action done");
+        ck.innerHTML = ICON.check; li.appendChild(ck);
+      }
+      const t = isAct ? makeEditable(document.createElement("div")) : makeRich(document.createElement("div"));
+      t.classList.add("nb-edit", "nb-item"); t.dataset.f = "text"; t.dataset.ph = isAct ? "Action" : "List item";
+      t.setAttribute("autocapitalize", "sentences");
+      if (isAct) t.textContent = it.text || ""; else fillRich(t, it.html, it.text);
+      li.appendChild(t);
+      if (isAct) {
+        const o = makeEditable(document.createElement("div"));
+        o.className = "nb-edit nb-who"; o.dataset.f = "owner"; o.dataset.ph = "Owner"; o.spellcheck = false;
+        o.setAttribute("autocapitalize", "words"); o.textContent = it.owner || "";
+        li.appendChild(o);
+      }
+      ul.appendChild(li);
+    });
+    w.appendChild(ul);
+    if (isAct) { const add = document.createElement("button"); add.className = "nb-more nb-additem"; add.innerHTML = ICON.plus + "Action"; w.appendChild(add); }
+  }
+  const nbRemoveBtn = label => { const x = document.createElement("button"); x.className = "nb-x"; x.title = "Remove " + label; x.setAttribute("aria-label", x.title); x.textContent = "×"; return x; };
+  function renderNoteBlocks(card, n) {
+    const box = card.querySelector(".note-blocks");
+    box.textContent = "";
+    n.blocks.forEach((b, bi) => {
+      const w = document.createElement("div");
+      w.className = "nb nbw-" + b.type; w.dataset.bid = b.id;
+      if (b.type !== "text") w.appendChild(nbRemoveBtn(NB_TYPES[b.type].toLowerCase()));
+      if (b.type === "text") {
+        const t = makeRich(document.createElement("div"));
+        t.classList.add("nb-edit", "nb-text"); t.dataset.f = "text"; t.setAttribute("autocapitalize", "sentences");
+        t.dataset.ph = bi === 0 ? "Type, paste, or tap the mic on your keyboard…" : "Keep typing…";
+        if (bi === 0) t.classList.add("nb-first");
+        fillRich(t, b.html, b.text); w.appendChild(t);
+      } else if (b.type === "bullets") buildList(w, b);
+      else if (b.type === "table") {
+        const tb = document.createElement("div"); tb.className = "nb-table";
+        (b.rows || []).forEach((r, ri) => ["a", "b"].forEach(f => {
+          const c = makeEditable(document.createElement("div"));
+          c.className = "nb-edit nb-cell" + (ri === 0 ? " nb-head" : ""); c.dataset.f = f; c.dataset.rid = r.id; c.dataset.ph = ri === 0 ? "Heading" : "";
+          c.textContent = r[f] || ""; tb.appendChild(c);
+        }));
+        w.appendChild(tb);
+        const add = document.createElement("button"); add.className = "nb-more nb-addrow"; add.innerHTML = ICON.plus + "Row"; w.appendChild(add);
+      } else if (b.type === "link") {
+        if (b.editing || !b.url) {
+          const f = document.createElement("form"); f.className = "nb-linkform";
+          f.innerHTML = `<input class="nb-link-label" placeholder="Link text (optional)" autocomplete="off"><input class="nb-link-url" placeholder="Paste a web address" inputmode="url" autocomplete="off" autocapitalize="off" spellcheck="false"><button type="submit">Save</button>`;
+          f.querySelector(".nb-link-label").value = b.label || ""; f.querySelector(".nb-link-url").value = b.url || "";
+          w.appendChild(f);
+        } else {
+          const a = document.createElement("a");
+          a.className = "nb-link"; a.href = safeHref(b.url); a.target = "_blank"; a.rel = "noopener noreferrer";
+          a.innerHTML = ICON.link + "<span></span>"; a.querySelector("span").textContent = b.label || b.url.replace(/^https?:\/\//i, ""); a.title = b.url;
+          const e = document.createElement("button"); e.className = "nb-link-edit"; e.title = "Edit link"; e.setAttribute("aria-label", "Edit link"); e.innerHTML = ICON.pencil;
+          w.appendChild(a); w.appendChild(e);
+        }
+      }
+      box.appendChild(w);
+    });
+  }
+  // action items sit in their own section under the note; on PMBridge they also show as a card on the campus page
+  function renderNoteActions(card, n) {
+    const box = card.querySelector(".note-actions");
+    box.textContent = "";
+    const b = actBlock(n);
+    box.hidden = !b; if (!b) return;
+    const w = document.createElement("div");
+    w.className = "nb nbw-actions"; w.dataset.bid = b.id;
+    w.appendChild(nbRemoveBtn("action items"));
+    buildList(w, b);
+    const add = w.querySelector(".nb-additem"), foot = document.createElement("div"); foot.className = "nb-act-foot";
+    add.replaceWith(foot); foot.appendChild(add);
+    const hint = document.createElement("span"); hint.className = "act-hint"; hint.innerHTML = ICON.check + "<span>Goes to the Action Register</span>"; foot.appendChild(hint);
+    box.appendChild(w);
+  }
+  document.addEventListener("selectionchange", () => { const a = document.activeElement, c = a && a.closest && a.closest(".idea-card"); if (c && c._updateFmt) c._updateFmt(); });
+  const NOTE_TOOLS = `<div class="note-tools" aria-label="Add to note">
+      <span class="nt-group" role="group" aria-label="Text style">
+      <button class="fmt" data-fmt="bold" title="Bold (Ctrl+B)" aria-pressed="false"><b>B</b></button>
+      <button class="fmt" data-fmt="italic" title="Italic (Ctrl+I)" aria-pressed="false"><i>I</i></button>
+      <button class="fmt" data-fmt="underline" title="Underline (Ctrl+U)" aria-pressed="false"><u>U</u></button>
+      <button class="fmt fmt-style" data-fmt="style" data-pop title="Text color and size" aria-haspopup="true" aria-expanded="false">Aa<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M7 10l5 5 5-5"/></svg></button>
+      </span><span class="nt-sep" aria-hidden="true"></span>
+      <button class="ico" data-insert="bullets" title="Add a bullet list"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="5" cy="7" r="1.3" fill="currentColor"/><circle cx="5" cy="12" r="1.3" fill="currentColor"/><circle cx="5" cy="17" r="1.3" fill="currentColor"/><path d="M10 7h10M10 12h10M10 17h10"/></svg><span>Bullets</span></button>
+      <button class="ico" data-insert="table" title="Add a 2-column table"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="14" rx="2.5"/><path d="M3.5 10h17M12 5v14"/></svg><span>Table</span></button>
+      <button class="ico" data-insert="link" title="Add a link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13.5a4.5 4.5 0 0 0 6.4.4l3-3a4.5 4.5 0 0 0-6.4-6.4l-1.2 1.2"/><path d="M14 10.5a4.5 4.5 0 0 0-6.4-.4l-3 3a4.5 4.5 0 0 0 6.4 6.4l1.2-1.2"/></svg><span>Link</span></button>
+      <button class="nt-act" data-insert="actions" title="Add action items below the note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7l2 2 3.5-3.5M4 15l2 2 3.5-3.5M13 7.5h7M13 15.5h7"/></svg><span>Action items</span></button>
+    </div>`;
+  // build one note card element and wire its editor
+  function makeNoteCard(p, n) {
+    const c = noteColor(p, n), card = document.createElement("article");
+    card.className = "card cn-card note-card idea-card" + (n.collapsed ? " collapsed" : "");
+    card.dataset.nid = n.id; card.style.setProperty("--list-color", c);
+    card.innerHTML = `<header class="card-head cn-drag" style="color:${c}"><span class="cn-grip" title="Drag into the note box">${ICON_GRIP}</span><div class="ntitle" role="heading" aria-level="2" spellcheck="false" autocapitalize="characters">${esc(n.title)}</div>
+        <button class="head-btn color-btn edit-btn nedit" data-na="opts" data-pop aria-label="Edit note: color, duplicate, move to box, delete" title="Edit note"><span class="edit-lbl">EDIT</span></button>
+        <button class="head-btn toggle" data-na="fold" aria-label="Collapse note" title="Collapse or expand">${ICON.chev}</button></header>
+      <div class="card-body">
+        <div class="note-blocks"></div>
+        ${NOTE_TOOLS}
+        <div class="note-actions" hidden></div>
+        <div class="note-tags">${noteTagsHtml(n)}</div>
+        <div class="suggest">${noteSuggestHtml({ ...n, text: noteText(n) })}</div>
+        <div class="n-scope"><span class="n-lbl">For</span>
+          <select class="sel n-for" aria-label="Who or what this note is for"><option value="general"${n.scope.type === "general" ? " selected" : ""}>General note</option>
+            ${p.subs.map(x => `<option value="p:${x.id}"${n.scope.type === "project" && n.scope.sid === x.id ? " selected" : ""}>Project: ${esc(x.title)}</option>`).join("")}
+            <option value="person"${n.scope.type === "person" ? " selected" : ""}>A person…</option></select>
+          ${n.scope.type === "person" ? `<input class="n-person" list="cn-people" value="${esc(n.scope.person)}" placeholder="Name" autocomplete="off" autocapitalize="words" aria-label="Person">` : ""}</div>
+        <div class="idea-meta">${fmtWhen(n.created)}</div>
+      </div>`;
+    renderNoteBlocks(card, n); renderNoteActions(card, n);
+    wireNoteBlocks(p, card, n);
+    return card;
+  }
+  function wireNoteBlocks(p, card, n0) {
+    const N = () => p.notes.find(x => x.id === n0.id) || n0;
+    const box = card.querySelector(".note-blocks"), actBox = card.querySelector(".note-actions"), root = card.querySelector(".card-body"), tools = card.querySelector(".note-tools");
+    let lastBid = null, lastRich = null, suggT;
+    const inNote = el => !!el && (box.contains(el) || actBox.contains(el));
+    const blockOf = el => {
+      const w = el.closest(".nb"); if (!w || !inNote(w)) return null;
+      const n = N(); if (w.dataset.bid === n.id + "-act") return actBlock(n);
+      return n.blocks.find(b => b.id === w.dataset.bid) || null;
+    };
+    const changed = () => {
+      const n = N(); n.updated = Date.now(); save(p);
+      clearTimeout(suggT);
+      suggT = setTimeout(() => { const sg = card.querySelector(".suggest"); if (sg) sg.innerHTML = noteSuggestHtml({ ...n, text: noteText(n) }); paintSide(p); }, 400);
+    };
+    const rerender = () => { const n = N(); renderNoteBlocks(card, n); renderNoteActions(card, n); };
+    const focusEl = (sel, atStart) => { const el = root.querySelector(sel); if (el) setCaretAt(el, atStart ? 0 : el.textContent.length); return el; };
+    const focusBlockEnd = b => {
+      if (!b) return;
+      const w = `.nb[data-bid="${b.id}"]`;
+      if (b.type === "text") focusEl(`${w} .nb-text`);
+      else if (b.type === "table") { const cells = root.querySelectorAll(`${w} .nb-cell`); const c = cells[cells.length - 1]; if (c) setCaretAt(c, c.textContent.length); }
+      else if (b.type === "link") { const u = root.querySelector(`${w} .nb-link-url`); if (u) u.focus(); }
+      else { const items = root.querySelectorAll(`${w} .nb-item`); const c = items[items.length - 1]; if (c) setCaretAt(c, c.textContent.length); }
+    };
+    const lastTextEnd = () => focusBlockEnd([...N().blocks].reverse().find(b => b.type === "text"));
+    const ensureTextAfter = idx => { const n = N(); if (!n.blocks[idx + 1] || n.blocks[idx + 1].type !== "text") n.blocks.splice(idx + 1, 0, { id: uid(), type: "text", text: "" }); return n.blocks[idx + 1]; };
+    const isRich = el => !!el && !!el.classList && el.classList.contains("nb-rich") && box.contains(el);
+    function syncField(el, ev) {
+      const b = blockOf(el); if (!b) return;
+      const f = el.dataset.f, rich = el.classList.contains("nb-rich");
+      if (rich) { if (!el.textContent && ev && /^delete/.test(ev.inputType || "") && el.innerHTML !== "") el.innerHTML = ""; normRichDom(el); }
+      const v = el.innerText.replace(/\n$/, "");
+      if (b.type === "text") { b.text = v; if (rich) b.html = cleanRich(el.innerHTML); }
+      else if (b.type === "actions" && f === "title") N().actTitle = v || "ACTION ITEMS";
+      else if (b.type === "table") { const r = b.rows.find(x => x.id === el.dataset.rid); if (r) r[f] = v.replace(/\n/g, " "); }
+      else { const li = el.closest("li"), it = li && b.items.find(x => x.id === li.dataset.iid); if (it) { it[f] = v.replace(/\n/g, " "); if (rich && f === "text") it.html = cleanRich(el.innerHTML); } }
+      changed();
+    }
+    function richTarget() {
+      const a = document.activeElement;
+      if (isRich(a)) return a;
+      let el = isRich(lastRich) ? lastRich : null;
+      if (!el) { const t = [...N().blocks].reverse().find(b => b.type === "text"); el = t ? box.querySelector(`.nb[data-bid="${t.id}"] .nb-text`) : null; }
+      if (el) setCaretAt(el, el.textContent.length);
+      return el;
+    }
+    function applyFormat(cmd, val) {
+      if (N().collapsed) return;
+      const el = richTarget(); if (!el) return;
+      const css = cmd === "foreColor" || cmd === "fontSize";
+      try { document.execCommand("styleWithCSS", false, css); } catch (e) {}
+      try { document.execCommand(cmd, false, val == null ? null : String(val)); } catch (e) {}
+      try { document.execCommand("styleWithCSS", false, false); } catch (e) {}
+      syncField(el); updateFmt();
+    }
+    function updateFmt() {
+      const on = isRich(document.activeElement);
+      tools.classList.toggle("fmt-live", on);
+      ["bold", "italic", "underline"].forEach(c => { let st = false; if (on) { try { st = document.queryCommandState(c); } catch (e) {} } const b = tools.querySelector(`[data-fmt="${c}"]`); if (b) b.setAttribute("aria-pressed", st ? "true" : "false"); });
+    }
+    card._updateFmt = updateFmt;
+    const closeStylePop = () => { const pp = tools.querySelector(".fmt-pop"); if (!pp) return false; pp.remove(); tools.querySelector('[data-fmt="style"]').setAttribute("aria-expanded", "false"); return true; };
+    function toggleStylePop(btn) {
+      if (closeStylePop()) return;
+      const pop = document.createElement("div");
+      pop.className = "pop fmt-pop";
+      pop.innerHTML = `<div class="pop-label">Size</div><div class="fmt-sizes">` +
+        RICH_SIZES.map(([l, v, em]) => `<button type="button" data-size="${v}" style="font-size:calc(13px * ${em ? em.replace("em", "") : 1})">${l}</button>`).join("") +
+        `</div><div class="pop-label fmt-gap">Color</div><div class="fmt-colors">` +
+        RICH_COLORS.map(([l, c]) => `<button type="button" data-color="${c}" title="${l}" aria-label="${l}"${c ? ` style="--c:${c}"` : ` class="is-default"`}></button>`).join("") + `</div>`;
+      tools.appendChild(pop); btn.setAttribute("aria-expanded", "true");
+    }
+    function addAction() {
+      const n = N(), it = cleanAct({});
+      n.actions.push(it); n.actFiled = false;
+      if (n.collapsed) { n.collapsed = false; card.classList.remove("collapsed"); }
+      rerender(); changed(); paintSide(p);
+      focusEl(`.note-actions li[data-iid="${it.id}"] .nb-item`, true);
+    }
+    root.addEventListener("focusin", e => { const w = e.target.closest(".nb"); if (w && box.contains(w)) lastBid = w.dataset.bid; if (isRich(e.target)) lastRich = e.target; updateFmt(); });
+    root.addEventListener("focusout", () => setTimeout(updateFmt, 0));
+    root.addEventListener("input", e => {
+      const el = e.target;
+      if (!el.classList || !el.classList.contains("nb-edit") || !inNote(el)) return;
+      const f = el.dataset.f;
+      if ((f === "text" || f === "title") && !e.isComposing && !el.classList.contains("nb-cell") && (!e.inputType || /^insert/.test(e.inputType))) capFirst(el);
+      syncField(el, e);
+    });
+    root.addEventListener("paste", e => {
+      const el = e.target.closest && e.target.closest(".nb-edit"); if (!el || !inNote(el)) return;
+      e.preventDefault(); e.stopPropagation();
+      let txt = (e.clipboardData || window.clipboardData).getData("text/plain");
+      if (el.contentEditable === "plaintext-only" || !el.classList.contains("nb-rich")) txt = el.classList.contains("nb-text") ? txt : txt.replace(/\s*\n\s*/g, " ");
+      document.execCommand("insertText", false, txt);
+    }, true);
+    root.addEventListener("keydown", e => {
+      const el = e.target.closest && e.target.closest(".nb-edit"); if (!el || !inNote(el) || e.isComposing) return;
+      const n = N(), b = blockOf(el); if (!b) return;
+      if ((e.ctrlKey || e.metaKey) && !e.altKey && isRich(el)) { const cmd = { b: "bold", i: "italic", u: "underline" }[e.key.toLowerCase()]; if (cmd) { e.preventDefault(); applyFormat(cmd); return; } }
+      const bi = n.blocks.indexOf(b), f = el.dataset.f, empty = !el.textContent.trim();
+      if (b.type === "text") { if (e.key === "Backspace" && empty && bi > 0 && caretOffset(el) === 0) { e.preventDefault(); n.blocks.splice(bi, 1); rerender(); changed(); focusBlockEnd(n.blocks[bi - 1]); } return; }
+      if (b.type === "actions" && f === "title") { if (e.key === "Enter") { e.preventDefault(); focusEl(`.nb[data-bid="${b.id}"] .nb-item`); } return; }
+      if (b.type === "table") {
+        const r = b.rows.find(x => x.id === el.dataset.rid), ri = b.rows.indexOf(r), lastCell = ri === b.rows.length - 1 && f === "b";
+        if (e.key === "Enter" || (e.key === "Tab" && !e.shiftKey && lastCell)) { e.preventDefault(); if (ri === b.rows.length - 1) { b.rows.push({ id: uid(), a: "", b: "" }); rerender(); changed(); } focusEl(`.nb[data-bid="${b.id}"] .nb-cell[data-rid="${b.rows[ri + 1].id}"][data-f="a"]`, true); }
+        else if (e.key === "Tab" && !e.shiftKey && f === "a") { e.preventDefault(); focusEl(`.nb[data-bid="${b.id}"] .nb-cell[data-rid="${r.id}"][data-f="b"]`, true); }
+        else if (e.key === "Backspace" && f === "a" && caretOffset(el) === 0 && ri > 0 && !r.a && !r.b) { e.preventDefault(); b.rows.splice(ri, 1); rerender(); changed(); focusEl(`.nb[data-bid="${b.id}"] .nb-cell[data-rid="${b.rows[ri - 1].id}"][data-f="b"]`); }
+        return;
+      }
+      const li = el.closest("li"); if (!li) return;
+      const it = b.items.find(x => x.id === li.dataset.iid), ii = b.items.indexOf(it), isAct = b.type === "actions";
+      if (e.key === "Enter") {
+        e.preventDefault();
+        if (f === "text" && empty && !(it.owner || "").trim()) {
+          if (isAct) { if (b.items.length > 1) { b.items.splice(ii, 1); rerender(); changed(); paintSide(p); } if (document.activeElement) document.activeElement.blur(); return; }
+          b.items.splice(ii, 1);
+          if (!b.items.length) { n.blocks.splice(bi, 1); const t = n.blocks[bi] && n.blocks[bi].type === "text" ? n.blocks[bi] : (n.blocks.splice(bi, 0, { id: uid(), type: "text", text: "" }), n.blocks[bi]); rerender(); changed(); focusBlockEnd(t); return; }
+          const t = ensureTextAfter(bi); rerender(); changed(); focusEl(`.nb[data-bid="${t.id}"] .nb-text`, true); return;
+        }
+        const nu = isAct ? cleanAct({}) : { id: uid(), text: "" };
+        b.items.splice(ii + 1, 0, nu); rerender(); changed(); if (isAct) paintSide(p);
+        focusEl(`.nb[data-bid="${b.id}"] li[data-iid="${nu.id}"] .nb-item`, true);
+      } else if (e.key === "Backspace" && f === "text" && caretOffset(el) === 0 && empty && !(it.owner || "").trim()) {
+        e.preventDefault();
+        b.items.splice(ii, 1);
+        if (!b.items.length) {
+          if (!isAct) { n.blocks.splice(bi, 1); if (!n.blocks.length) n.blocks.push({ id: uid(), type: "text", text: "" }); }
+          rerender(); changed(); if (isAct) paintSide(p);
+          if (isAct) lastTextEnd(); else focusBlockEnd(n.blocks[Math.max(0, bi - 1)]);
+          return;
+        }
+        rerender(); changed(); if (isAct) paintSide(p);
+        const prev = b.items[Math.max(0, ii - 1)]; focusEl(`.nb[data-bid="${b.id}"] li[data-iid="${prev.id}"] .nb-item`);
+      }
+    });
+    root.addEventListener("click", e => {
+      const n = N();
+      const x = e.target.closest(".nb-x");
+      if (x && inNote(x)) {
+        const b = blockOf(x); if (!b) return;
+        if (b.type === "actions") {
+          const snap = JSON.parse(JSON.stringify(n.actions));
+          n.actions.splice(0); rerender(); changed(); paintSide(p);
+          showUndo("Action items removed", () => { const cur = N(); cur.actions.push(...snap); renderNoteActions(card, cur); save(p); paintSide(p); });
+          return;
+        }
+        const bi = n.blocks.indexOf(b), snap = JSON.parse(JSON.stringify(n.blocks));
+        n.blocks.splice(bi, 1);
+        if (n.blocks[bi - 1] && n.blocks[bi] && n.blocks[bi - 1].type === "text" && n.blocks[bi].type === "text") {
+          const a = n.blocks[bi - 1], c = n.blocks[bi];
+          const ah = a.html != null ? a.html : esc(a.text || ""), ch = c.html != null ? c.html : esc(c.text || "");
+          a.text = [a.text, c.text].filter(Boolean).join("\n"); a.html = [ah, ch].filter(Boolean).join("<br>");
+          n.blocks.splice(bi, 1);
+        }
+        if (!n.blocks.length) n.blocks.push({ id: uid(), type: "text", text: "" });
+        rerender(); changed();
+        showUndo(NB_TYPES[b.type] + " removed", () => { const cur = N(); cur.blocks = snap; renderNoteBlocks(card, cur); save(p); });
+        return;
+      }
+      if (!inNote(e.target)) return;
+      const ck = e.target.closest(".nb-check");
+      if (ck) { const b = blockOf(ck), li = ck.closest("li"), it = b && b.items.find(x => x.id === li.dataset.iid); if (!it) return; it.done = !it.done; it.doneAt = it.done ? Date.now() : 0; li.classList.toggle("done", it.done); ck.setAttribute("aria-checked", String(it.done)); changed(); paintSide(p); return; }
+      if (e.target.closest(".nb-addrow")) { const b = blockOf(e.target); const r = { id: uid(), a: "", b: "" }; b.rows.push(r); rerender(); changed(); focusEl(`.nb[data-bid="${b.id}"] .nb-cell[data-rid="${r.id}"][data-f="a"]`, true); return; }
+      if (e.target.closest(".nb-additem")) { const b = blockOf(e.target); const it = b.type === "actions" ? cleanAct({}) : { id: uid(), text: "" }; b.items.push(it); rerender(); changed(); if (b.type === "actions") paintSide(p); focusEl(`.nb[data-bid="${b.id}"] li[data-iid="${it.id}"] .nb-item`, true); return; }
+      if (e.target.closest(".nb-link-edit")) { const b = blockOf(e.target); b.editing = true; rerender(); const u = root.querySelector(`.nb[data-bid="${b.id}"] .nb-link-url`); if (u) { u.focus(); u.select(); } return; }
+    });
+    root.addEventListener("submit", e => {
+      const form = e.target.closest(".nb-linkform"); if (!form) return;
+      e.preventDefault();
+      const n = N(), b = blockOf(form), bi = n.blocks.indexOf(b);
+      const url = normUrl(form.querySelector(".nb-link-url").value);
+      if (!url) { form.querySelector(".nb-link-url").focus(); return; }
+      b.url = url; b.label = form.querySelector(".nb-link-label").value.trim(); delete b.editing;
+      const t = ensureTextAfter(bi); rerender(); changed();
+      focusEl(`.nb[data-bid="${t.id}"] .nb-text`, true);
+    });
+    root.addEventListener("keydown", e => { if (e.key === "Escape" && e.target.closest && e.target.closest(".nb-linkform")) { e.stopPropagation(); const b = blockOf(e.target); if (b && b.url) { delete b.editing; rerender(); } } }, true);
+    tools.addEventListener("pointerdown", e => { if (e.target.closest("button")) e.preventDefault(); });
+    tools.addEventListener("click", e => {
+      e.stopPropagation();
+      const fb = e.target.closest("[data-fmt]");
+      if (fb) { if (fb.dataset.fmt === "style") toggleStylePop(fb); else applyFormat(fb.dataset.fmt); return; }
+      const sz = e.target.closest("[data-size]"); if (sz) { applyFormat("fontSize", sz.dataset.size); closeStylePop(); return; }
+      const co = e.target.closest("[data-color]"); if (co) { applyFormat("foreColor", co.dataset.color || DEFAULT_MARK); closeStylePop(); return; }
+      const btn = e.target.closest("button[data-insert]"); if (!btn) return;
+      const n = N(), type = btn.dataset.insert;
+      if (type === "actions") { addAction(); return; }
+      let at = n.blocks.findIndex(b => b.id === lastBid); if (at < 0) at = n.blocks.length - 1;
+      const cur = n.blocks[at];
+      let nb;
+      if (type === "bullets") nb = { id: uid(), type, items: [{ id: uid(), text: "" }] };
+      if (type === "table") nb = { id: uid(), type, rows: [{ id: uid(), a: "", b: "" }, { id: uid(), a: "", b: "" }] };
+      if (type === "link") nb = { id: uid(), type, label: "", url: "", editing: true };
+      if (cur && cur.type === "text" && !cur.text.trim() && n.blocks.length > 1 && at > 0) n.blocks.splice(at, 1, nb); else n.blocks.splice(at + 1, 0, nb);
+      const ni = n.blocks.indexOf(nb);
+      if (type !== "link") ensureTextAfter(ni);
+      if (n.collapsed) { n.collapsed = false; card.classList.remove("collapsed"); }
+      rerender(); changed();
+      const w = `.nb[data-bid="${nb.id}"]`;
+      if (type === "bullets") focusEl(`${w} .nb-item`, true);
+      else if (type === "table") focusEl(`${w} .nb-cell`, true);
+      else { const u = root.querySelector(`${w} .nb-link-url`); if (u) u.focus(); }
+    });
+  }
+  // keep the campus page's action cards and the Notepad count in step while typing in a note
+  function paintSide(p) {
+    if (route_.name !== "project" || currentProject() !== p) return;
+    const side = view.querySelector(".cnotes"); if (!side || side.contains(document.activeElement)) return;
+    paintRegCol(p);
+  }
+  function actCardHtml(p, n) {
+    const done = n.actions.filter(a => a.done).length;
+    return `<article class="card cn-card act-card${n.actCollapsed ? " collapsed" : ""}" data-nid="${n.id}" data-kind="act">
+      <header class="card-head cn-drag" style="color:${p.color}"><span class="cn-grip" title="Drag into the box">${ICON_GRIP}</span><div class="cn-hd">${n.actOnly ? `<div class="title ntitle" title="Tap to rename">${esc(n.title)}</div>` : `<div class="title">ACTION ITEMS</div><span class="act-from">from ${esc(n.title)}</span>${scopePill(p, n)}`}</div>
+        <span class="act-count">${done}/${n.actions.length}</span>
+        <button class="head-btn more-btn" data-na="actmenu" data-pop aria-label="Action card options" title="Options">${ICON_DOTS}</button>
+        <button class="head-btn toggle" data-na="actfold" aria-label="Collapse or expand" title="Collapse or expand">${ICON.chev}</button></header>
+      <div class="card-body"><ul class="act-list">${n.actions.map(a => `<li class="act-row${a.done ? " done" : ""}" data-aid="${a.id}">
+          <button class="act-check" data-na="actdone" aria-pressed="${a.done}" aria-label="${a.done ? "Done" : "Mark done"}">${ICON.check}</button>
+          <input class="act-text" value="${esc(a.text)}" placeholder="Action item" aria-label="Action item">
+          <input class="act-owner" value="${esc(a.owner)}" placeholder="Owner" list="cn-people" autocapitalize="words" aria-label="Owner">
+          <button class="act-x" data-na="actdel" aria-label="Remove action item" title="Remove">×</button></li>`).join("")}</ul>
+        <div class="add-btns"><button class="add-task" data-na="actadd">${ICON.plus}Add action item</button></div></div></article>`;
+  }
+  const peopleList = p => `<datalist id="cn-people">${[...new Set([...p.contacts.map(c => c.name).filter(Boolean), ...p.notes.map(n => n.scope.person).filter(Boolean)])].map(n => `<option value="${esc(n)}">`).join("")}</datalist>`;
+  function boxHtml(p, items, label, hint, open) {
+    return `<section class="cn-box${open ? " open" : ""}" data-drop="box">
+        <button class="cn-box-head" data-na="box">${ICON_BOX}<span class="cn-box-t">${label}</span><span class="cn-box-n">${items.length ? items.length + " filed" : "empty"}</span><span class="ec-chev">${ICON.chev}</span></button>
+        <div class="cn-box-hint">${hint}</div>
+        <div class="cn-box-list">${items.map(({ n, a }) => `<div class="cnb-row" data-nid="${n.id}">
+            <span class="cnb-k" style="color:${a ? p.color : noteColor(p, n)}">${a ? ICON.check : ICON.notes}</span><div class="cnb-main"><b>${a ? "Action items · " : ""}${esc(n.title)}</b><span>${esc(scopeLabel(p, n))} · ${a ? `${n.actions.filter(x => x.done).length}/${n.actions.length} done` : esc((noteText(n).split("\n")[0] || "").slice(0, 70)) || "No text"}</span></div>
+            <button class="cnb-out" data-na="${a ? "unfileact" : "unfile"}">Take out</button></div>`).join("") || `<p class="cn-empty">Nothing filed yet.</p>`}</div>
+      </section>`;
+  }
+  // right side of the campus page: action item cards from notes
+  function actionsPanelHtml(p) { return regColHtml(p); }
+  function oldActionsPanelHtml(p) {
+    const hasAct = n => n.actOnly || n.actions.length;
+    const acts = p.notes.filter(n => hasAct(n) && !n.actFiled), filed = p.notes.filter(n => hasAct(n) && n.actFiled).map(n => ({ n, a: true }));
+    return `${peopleList(p)}<header class="cn-head"><h2 class="cn-title">Action items</h2><button class="head-btn more-btn" data-na="colmenu" data-pop aria-label="Action items options" title="Options">${ICON_DOTS}</button></header>
+      <article class="card task-card act-maker" style="--list-color:${p.color}">
+        <header class="card-head" style="color:${p.color}"><div class="title">NEW ACTION ITEM CARD</div></header>
+        <div class="card-body"><div class="am-row"><input class="am-title" placeholder="Name it, e.g. Network cutover" aria-label="New action item card name" autocapitalize="words" enterkeyhint="done"></div>
+          <div class="add-btns"><button class="add-task" data-na="mkact">${ICON.plus}Create action item card</button></div></div></article>
+      <div class="cn-acts">${acts.map(n => actCardHtml(p, n)).join("")}</div>
+      ${boxHtml(p, filed, "Done box", "Drag a finished action card here", cnActBoxOpen)}`;
+  }
+  // the Notepad window: note cards grouped by their first tag, like categories
+  function notepadBodyHtml(p) {
+    const active = p.notes.filter(n => !n.filed && !n.actOnly), groups = new Map();
+    active.forEach(n => { const k = n.tags[0] ? (tagByName(n.tags[0]) || { name: n.tags[0] }).name : ""; if (!groups.has(k)) groups.set(k, []); groups.get(k).push(n); });
+    const order = allTags().map(t => t.name).filter(k => groups.has(k)); if (groups.has("")) order.push("");
+    const filed = p.notes.filter(n => n.filed && !n.actOnly).map(n => ({ n, a: false }));
+    return `${peopleList(p)}<div class="np-layout"><div class="np-main">${active.length ? order.map(k => `<section class="np-sec"><h3 class="np-h" style="--chip:${k ? tagColor(k) : "#8e8e93"}"><span class="tchip-dot"></span>${k ? esc(k) : "Untagged"}<b>${groups.get(k).length}</b></h3>
+        <div class="np-grid" data-ids="${groups.get(k).map(n => n.id).join(",")}"></div></section>`).join("")
+      : `<div class="np-empty"><div class="np-empty-ic">${ICON.notes}</div><b>Notepad</b><p>Tap New note to capture a note for ${esc(p.title)}. Type it, paste it, or tap the microphone on your keyboard to say it. Tag it and it files itself under that tag.</p></div>`}
+      </div><aside class="np-side">${boxHtml(p, filed, "Note box", "Drag a finished note here", npBoxOpen).replace('class="cn-box', 'class="cn-box np-boxsq')}</aside></div>`;
+  }
+  function fillNotepad(p, body) {
+    regSync(p);
+    body.innerHTML = notepadBodyHtml(p);
+    body.querySelectorAll(".np-grid").forEach(g => g.dataset.ids.split(",").forEach(id => { const n = p.notes.find(x => x.id === id); if (n) g.appendChild(makeNoteCard(p, n)); }));
+  }
+  let cnActBoxOpen = false, npBoxOpen = false, npPid = null;
+  function openNotepad(p, focusNid) {
+    closeModal();
+    npPid = p.id;
+    const m = document.createElement("div");
+    m.className = "modal np-modal";
+    m.innerHTML = `<div class="np-win" role="dialog" aria-label="Notepad" style="--c:${p.color};--list-color:${p.color}">
+      <header class="np-head"><div class="np-ttl">${ICON.notes}<div><span class="np-camp">${esc(p.title)}</span><b>Notepad</b></div></div>
+        <button class="cn-new" data-na="new">${ICON.plus}New note</button><button class="ev-x" data-na="npclose" aria-label="Close">×</button></header>
+      <div class="np-body"></div></div>`;
+    document.body.appendChild(m);
+    fillNotepad(p, m.querySelector(".np-body"));
+    if (focusNid) focusNoteText(focusNid);
+    m.addEventListener("pointerdown", e => { if (e.target === m) m.dataset.down = "1"; });
+    m.addEventListener("click", e => { if (e.target === m && m.dataset.down) closeModal(); delete m.dataset.down; });
+  }
+  const npCampus = () => state.projects.find(x => x.id === npPid) || null;
+  // which campus a note control belongs to: the open Notepad, or the campus page
+  const notesCampus = el => (el.closest(".np-modal") ? npCampus() : currentProject());
+  let cnBoxOpen = false;
+  const noteFind = (p, el) => { const card = el.closest("[data-nid]"); if (!card || !p) return {}; const n = p.notes.find(y => y.id === card.dataset.nid); return { card, n }; };
+  const sizeNote = t => { t.style.height = "auto"; t.style.height = Math.max(84, t.scrollHeight + 2) + "px"; };
+  function paintNotes(p, focusSel) {
+    const m = document.querySelector(".np-modal");
+    if (m && npPid === p.id) { const b = m.querySelector(".np-body"), st = b.scrollTop; fillNotepad(p, b); b.scrollTop = st; }
+    if (route_.name === "project" && currentProject() === p) {
+      const side = view.querySelector(".cnotes");
+      if (side && !side.contains(document.activeElement)) paintRegCol(p);
+      const cnt = view.querySelector(".np-count"); if (cnt) cnt.textContent = p.notes.filter(n => !n.filed && !n.actOnly).length || "";
+    }
+    if (focusSel) { const f = document.querySelector(focusSel); if (f) { f.focus(); if (f.select) f.select(); } }
+  }
+  function paintNoteTags(card, n) { card.querySelector(".note-tags").innerHTML = noteTagsHtml(n); card.querySelector(".suggest").innerHTML = noteSuggestHtml({ ...n, text: noteText(n) }); }
+  function focusNoteText(nid) {
+    const t = document.querySelector(`.np-modal .note-card[data-nid="${nid}"] .nb-text`); if (!t) return;
+    t.scrollIntoView({ block: "center" }); setTimeout(() => setCaretAt(t, t.textContent.length), 40);
+  }
+  function setNoteTag(p, card, n, name, on) {
+    const t = tagByName(name) || { name };
+    const has = n.tags.some(x => x.toLowerCase() === t.name.toLowerCase()), want = on === undefined ? !has : on;
+    if (want && !has) n.tags.push(t.name);
+    if (!want && has) n.tags = n.tags.filter(x => x.toLowerCase() !== t.name.toLowerCase());
+    n.updated = Date.now(); save(p); paintNoteTags(card, n);
+    if (!document.querySelector(".tag-pop")) paintNotes(p);  // regroup under the new first tag
+  }
+  function openTagPicker(p, card, n, anchor) {
+    closePops();
+    const pop = document.createElement("div");
+    pop.className = "pop tag-pop";
+    const draw = () => {
+      const on = t => n.tags.some(x => x.toLowerCase() === t.name.toLowerCase());
+      const chip = t => `<button class="tchip" data-tag="${esc(t.name)}" style="--chip:${t.color}" aria-pressed="${on(t)}"><span class="tchip-dot"></span>${esc(t.name)}</button>`;
+      const sugg = suggestTags(noteText(n));
+      pop.innerHTML = `${sugg.length ? `<div class="pop-label">Suggested</div><div class="chips">${sugg.map(chip).join("")}</div><hr>` : ""}
+        <div class="pop-label">All tags <span class="pop-hint">· pick as many as you like</span></div>
+        <div class="chips">${allTags().map(chip).join("")}</div><hr>
+        <div class="pop-label">New tag</div>
+        <form class="new-tag"><input maxlength="24" placeholder="Tag name" autocomplete="off" autocapitalize="words"><button type="submit">Add</button></form>
+        <button class="tag-done">Done</button>`;
+    };
+    draw();
+    const done = () => { closePops(); paintNotes(p); };
+    pop.addEventListener("submit", e => {
+      e.preventDefault();
+      const name = pop.querySelector(".new-tag input").value.replace(/\s+/g, " ").trim(); if (!name) return;
+      setNoteTag(p, card, n, tagByName(name) ? tagByName(name).name : name.charAt(0).toUpperCase() + name.slice(1), true); draw();
+    });
+    pop.addEventListener("click", e => {
+      e.stopPropagation();
+      const c = e.target.closest(".tchip");
+      if (c) { setNoteTag(p, card, n, c.dataset.tag); pop.querySelectorAll(`.tchip[data-tag="${CSS.escape(c.dataset.tag)}"]`).forEach(x => x.setAttribute("aria-pressed", String(n.tags.some(y => y.toLowerCase() === c.dataset.tag.toLowerCase())))); }
+      if (e.target.closest(".tag-done")) done();
+    });
+    placePop(pop, anchor);
+  }
+  // the color dot: card colors, custom color, move to the note box, delete (as in Canvas)
+  function openNoteOptions(p, card, n, anchor) {
+    closePops();
+    const pop = document.createElement("div");
+    pop.className = "pop note-pop";
+    const cur = noteColor(p, n);
+    pop.innerHTML = `<div class="pop-label">Card color</div>
+      <div class="swatches">${[p.color, ...COLORS.filter(c => c.toLowerCase() !== p.color.toLowerCase())].slice(0, 10).map(c => `<button class="sw" style="background:${c}" data-c="${c}" aria-label="Color ${c}" aria-pressed="${c.toLowerCase() === cur.toLowerCase()}"></button>`).join("")}</div>
+      <label class="custom"><input type="color" value="${/^#[0-9a-f]{6}$/i.test(cur) ? cur : "#ffffff"}">Custom color</label>
+      <hr>
+      <div class="pop-menu">
+        <button class="pop-action dup"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8.5" y="8.5" width="12" height="12" rx="2.5"/><path d="M15.5 8.5V6A2.5 2.5 0 0 0 13 3.5H6A2.5 2.5 0 0 0 3.5 6v7A2.5 2.5 0 0 0 6 15.5h2.5"/></svg>Duplicate card</button>
+        <button class="pop-action tobox">${ICON_BOX}Move to box</button>
+        <div class="del-row"><button class="pop-action danger del">${ICON.trash}Delete note</button></div>
+      </div>`;
+    const apply = c => {
+      n.color = c.toLowerCase() === p.color.toLowerCase() ? "" : c; n.updated = Date.now(); save(p);
+      card.style.setProperty("--list-color", c); card.querySelector(".card-head").style.color = c;
+      pop.querySelectorAll(".sw").forEach(x => x.setAttribute("aria-pressed", String(x.dataset.c === c)));
+    };
+    pop.addEventListener("click", e => {
+      e.stopPropagation();
+      const sw = e.target.closest(".sw"); if (sw) apply(sw.dataset.c);
+      if (e.target.closest(".dup")) { closePops(); duplicateNote(p, n); return; }
+      if (e.target.closest(".tobox")) { closePops(); fileCard(p, n, false, true); return; }
+      if (e.target.closest(".del")) { pop.querySelector(".del-row").innerHTML = `<div class="confirm">Delete this note? <button class="yes">Delete</button><button class="no">Keep</button></div>`; return; }
+      if (e.target.closest(".yes")) { closePops(); const snap = snapshot(); p.notes = p.notes.filter(y => y !== n); save(p); paintNotes(p); showUndo("Deleted note", () => { restore(snap); const q = proj(p.id); if (q && npPid === q.id && document.querySelector(".np-modal")) paintNotes(q); }); }
+      if (e.target.closest(".no")) closePops();
+    });
+    pop.querySelector('input[type="color"]').addEventListener("input", e => apply(e.target.value));
+    placePop(pop, anchor);
+  }
+  function duplicateNote(p, n) {
+    const copy = cleanNote({ ...JSON.parse(JSON.stringify(n)), id: uid(), created: Date.now(), updated: Date.now(), filed: false, actFiled: false });
+    copy.blocks.forEach(b => { b.id = uid(); (b.items || []).forEach(i => (i.id = uid())); (b.rows || []).forEach(r => (r.id = uid())); });
+    copy.actions.forEach(a => (a.id = uid()));
+    p.notes.splice(p.notes.indexOf(n) + 1, 0, copy); save(p); paintNotes(p);
+    showUndo("Card duplicated", () => { p.notes = p.notes.filter(x => x !== copy); save(p); paintNotes(p); });
+  }
+  function editNoteTitle(card, selectAll) { const t = card.querySelector(".ntitle"); t.contentEditable = "true"; t.focus(); const rg = document.createRange(); rg.selectNodeContents(t); if (!selectAll) rg.collapse(false); const sl = getSelection(); sl.removeAllRanges(); sl.addRange(rg); }
+  function addNote(p, sid) {
+    const n = cleanNote({ title: "NEW NOTE", scope: sid ? { type: "project", sid } : { type: "general" } });
+    p.notes.unshift(n); save(p);
+    if (!(document.querySelector(".np-modal") && npPid === p.id)) openNotepad(p); else paintNotes(p);
+    const card = document.querySelector(`.np-modal .note-card[data-nid="${n.id}"]`);
+    if (card) { card.scrollIntoView({ block: "center" }); editNoteTitle(card, true); }
+  }
+  // the action column's maker card: one job, it makes a new action item card
+  function makeActCard(p) {
+    const inp = view.querySelector(".am-title"), t = (inp ? inp.value : "").replace(/\s+/g, " ").trim().toUpperCase();
+    const n = cleanNote({ title: t || "ACTION ITEMS", actOnly: true, actions: [{}], scope: { type: "general" } });
+    p.notes.unshift(n); save(p); if (inp) inp.value = "";
+    paintNotes(p);
+    const f = view.querySelector(`.act-card[data-nid="${n.id}"] .act-text`); if (f) f.focus();
+  }
+  /* ----- Action Register card: a task card that also collects action items from notes ----- */
+  const regCatOf = (p, n) => { const s = n.scope || {}; if (s.type === "project") { const x = p.subs.find(y => y.id === s.sid); if (x) return x.title; } if (s.type === "person" && s.person) return s.person; return "GENERAL"; };
+  const regSig = a => a.text + "\u0001" + a.owner + "\u0001" + (a.done ? 1 : 0);
+  function regInsert(p, c, cat, it) {
+    const same = x => x.kind === "phase" && x.text.trim().toLowerCase() === cat.toLowerCase();
+    let i = c.items.findIndex(same);
+    if (i >= 0 && it.ref) {   // after earlier items from the same note in this category, so they keep their order
+      for (let j = i + 1; j < c.items.length && c.items[j].kind !== "phase"; j++) if (c.items[j].ref && c.items[j].ref.nid === it.ref.nid) i = j;
+    }
+    if (i < 0) {
+      // a new category goes to the top; loose items already at the top get a GENERAL heading so they keep their own group
+      if (c.items.length && c.items[0].kind !== "phase" && cat !== "GENERAL") c.items.unshift(cleanItem({ kind: "phase", text: "GENERAL" }));
+      c.items.unshift(cleanItem({ kind: "phase", text: cat })); i = 0;
+    }
+    c.items.splice(i + 1, 0, it);
+  }
+  function regSync(p) {
+    const c = regCard(p); if (!c) return false;
+    const acts = new Map(); p.notes.forEach(n => n.actions.forEach(a => acts.set(a.id, { n, a })));
+    const seen = new Set(p.regSeen || []), linked = new Set(); let ch = false;
+    c.items = c.items.filter(it => {
+      if (!it.ref) return true;
+      const m = acts.get(it.ref.aid); if (!m) { ch = true; return false; }   // removed from its note
+      linked.add(it.ref.aid);
+      if (regSig(m.a) !== it.ref.sig) { if (it.text !== m.a.text || it.bic !== m.a.owner || it.done !== m.a.done) { it.text = m.a.text; it.bic = m.a.owner; if (it.done !== m.a.done) toggleDone(it); ch = true; } }
+      else if (it.text !== m.a.text || it.bic !== m.a.owner || it.done !== m.a.done) { m.a.text = it.text; m.a.owner = it.bic; m.a.done = it.done; ch = true; }
+      if (it.ref.sig !== regSig(m.a)) { it.ref.sig = regSig(m.a); ch = true; }
+      return true;
+    });
+    // deleted in the register: take it out of the note too
+    p.notes.forEach(n => { const k = n.actions.length; n.actions = n.actions.filter(a => linked.has(a.id) || !seen.has(a.id)); if (n.actions.length !== k) ch = true; });
+    // new action items from notes: to the top of their category
+    p.notes.forEach(n => n.actions.forEach(a => {
+      if (linked.has(a.id) || !a.text.trim()) return;
+      regInsert(p, c, regCatOf(p, n), cleanItem({ text: a.text, bic: a.owner, done: a.done, ref: { nid: n.id, aid: a.id, sig: regSig(a) } }));
+      seen.add(a.id); linked.add(a.id); ch = true;
+    }));
+    const keep = [...seen].filter(id => acts.has(id));
+    if (keep.length !== (p.regSeen || []).length) ch = true;
+    p.regSeen = keep;
+    if (ch) save(p);
+    return ch;
+  }
+  function regColHtml(p) { regSync(p); const c = regCard(p); return c ? cardHtml(p, c) : ""; }
+  function paintRegCol(p) {
+    const side = view.querySelector(".cnotes"), c = regCard(p); if (!side || !c) return;
+    regSync(p); side.innerHTML = cardHtml(p, c); fillCardText(p, c);
+  }
+  function addAction(p, n) {
+    n.actions.push(cleanAct({})); n.actFiled = false; n.actCollapsed = false; n.updated = Date.now(); save(p); paintNotes(p);
+    const f = view.querySelector(`.act-card[data-nid="${n.id}"] .act-row:last-child .act-text`); if (f && !document.querySelector(".np-modal")) f.focus();
+  }
+  function fileCard(p, n, act, on) {
+    if (act) n.actFiled = on; else n.filed = on;
+    n.updated = Date.now(); save(p); paintNotes(p);
+    if (on) showUndo(act ? "Action card moved to the done box" : "Note moved to the note box", () => { if (act) n.actFiled = false; else n.filed = false; save(p); paintNotes(p); });
+  }
+  document.addEventListener("click", e => {
+    const zone = e.target.closest(".cnotes, .np-modal, .proj-head"); if (!zone) return;
+    const p = notesCampus(e.target); if (!p) return;
+    const cl = e.target.closest("[data-cl]");
+    if (cl) { if (cl.dataset.cl === "notes") openNotepad(p); else openCList(p, cl.dataset.cl); return; }
+    const a = e.target.closest("[data-na]");
+    if (!a) {
+      const t = e.target.closest(".ntitle"); if (t && t.contentEditable !== "true" && !cnDragged) { const { card } = noteFind(p, t); if (card) editNoteTitle(card); }
+      return;
+    }
+    const na = a.dataset.na;
+    if (na === "npclose") { closeModal(); return; }
+    if (na === "new") { addNote(p); return; }
+    if (na === "mkact") { makeActCard(p); return; }
+    if (na === "colmenu") { openEditMenu(a, { actions: [{ icon: ICON.notes, text: "Open the Notepad", run: () => openNotepad(p) }, { icon: ICON.plus, text: "New action item card", run: () => makeActCard(p) }] }); return; }
+    if (na === "box") { const box = a.closest(".cn-box"), open = !box.classList.contains("open"); box.classList.toggle("open", open); if (box.closest(".np-modal")) npBoxOpen = open; else cnActBoxOpen = open; return; }
+    const { card, n } = noteFind(p, a); if (!n) return;
+    e.stopPropagation();
+    const row = a.closest("[data-aid]"), act = row && n.actions.find(x => x.id === row.dataset.aid);
+    switch (na) {
+      case "fold": n.collapsed = !n.collapsed; save(p); card.classList.toggle("collapsed", n.collapsed); return;
+      case "actfold": n.actCollapsed = !n.actCollapsed; save(p); card.classList.toggle("collapsed", n.actCollapsed); return;
+      case "opts": if (popOpen(".note-pop")) { closePops(); return; } openNoteOptions(p, card, n, a); return;
+      case "tags": if (popOpen(".tag-pop")) { closePops(); return; } openTagPicker(p, card, n, a); return;
+      case "tag": setNoteTag(p, card, n, a.dataset.tag, true); return;
+      case "untag": setNoteTag(p, card, n, a.dataset.tag, false); return;
+      case "addact": case "actadd": addAction(p, n); return;
+      case "actdone": if (act) { act.done = !act.done; save(p); paintNotes(p); } return;
+      case "actdel": if (act) { n.actions = n.actions.filter(x => x !== act); save(p); paintNotes(p); } return;
+      case "unfile": fileCard(p, n, false, false); return;
+      case "unfileact": fileCard(p, n, true, false); return;
+      case "actmenu":
+        if (n.actOnly) { openEditMenu(a, { actions: [
+          { icon: ICON.plus, text: "Add an action item", run: () => addAction(p, n) },
+          { icon: ICON.pencil, text: "Rename card", run: () => editNoteTitle(card, true) },
+          { icon: ICON.folder, text: "Move to the done box", run: () => fileCard(p, n, true, true) }
+        ], del: { text: "Delete card", ask: "Delete this action item card?", run: () => { const snap = snapshot(); p.notes = p.notes.filter(y => y !== n); save(p); paintNotes(p); showUndo("Action card deleted", () => restore(snap)); } } }); return; }
+        openEditMenu(a, { actions: [
+          { icon: ICON.plus, text: "Add an action item", run: () => addAction(p, n) },
+          { icon: ICON.notes, text: "Open the note", run: () => openNotepad(p, n.filed ? null : n.id) },
+          { icon: ICON.folder, text: "Move to the done box", run: () => fileCard(p, n, true, true) }
+        ], del: { text: "Delete action items", ask: "Delete these action items?", run: () => { const snap = snapshot(); n.actions = []; n.actFiled = false; save(p); paintNotes(p); showUndo("Action items deleted", () => restore(snap)); } } });
+        return;
+    }
+  });
+  let noteSugT;
+  document.addEventListener("input", e => {
+    const t = e.target; if (!t.closest || !t.closest(".cnotes, .np-modal")) return;
+    const p = notesCampus(t); if (!p) return;
+    const { card, n } = noteFind(p, t); if (!n) return;
+    if (t.classList.contains("n-person")) { n.scope.person = t.value.replace(/\s+/g, " ").trim(); n.updated = Date.now(); save(p); }
+    else if (t.classList.contains("act-text") || t.classList.contains("act-owner")) {
+      const a = n.actions.find(x => x.id === t.closest("[data-aid]").dataset.aid); if (!a) return;
+      a[t.classList.contains("act-text") ? "text" : "owner"] = t.value; save(p);
+    }
+  });
+  document.addEventListener("change", e => {
+    const t = e.target; if (!t.classList || !t.classList.contains("n-for")) return;
+    const p = notesCampus(t); if (!p) return; const { n } = noteFind(p, t); if (!n) return;
+    const v = t.value;
+    n.scope = v === "general" ? { type: "general", sid: "", person: "" } : v === "person" ? { type: "person", sid: "", person: n.scope.person } : { type: "project", sid: v.slice(2), person: "" };
+    n.updated = Date.now(); save(p); paintNotes(p, v === "person" ? `.note-card[data-nid="${n.id}"] .n-person` : null);
+  });
+  document.addEventListener("keydown", e => {
+    const t = e.target; if (!t.classList || !t.closest(".cnotes, .np-modal")) return;
+    if (t.classList.contains("ntitle") && (e.key === "Enter" || e.key === "Escape")) {
+      e.preventDefault(); e.stopPropagation(); const card = t.closest(".note-card"); t.blur();
+      if (e.key === "Enter" && card && !card.classList.contains("collapsed")) { const f = card.querySelector(".note-blocks .nb-edit"); if (f) setCaretAt(f, f.textContent.length); }
+    }
+    if (t.classList.contains("act-text") && e.key === "Enter") {
+      e.preventDefault(); const p = notesCampus(t), { n } = noteFind(p, t); if (!n) return;
+      const i = n.actions.findIndex(x => x.id === t.closest("[data-aid]").dataset.aid);
+      if (t.value.trim()) { n.actions.splice(i + 1, 0, cleanAct({})); save(p); paintNotes(p, `.act-card[data-nid="${n.id}"] .act-row:nth-child(${i + 2}) .act-text`); } else t.blur();
+    }
+    if ((t.classList.contains("act-owner") || t.classList.contains("n-person")) && e.key === "Enter") { e.preventDefault(); t.blur(); }
+    if (t.classList.contains("am-title") && e.key === "Enter") { e.preventDefault(); const p = notesCampus(t); if (p) makeActCard(p); }
+  }, true);
+  document.addEventListener("focusout", e => {
+    const t = e.target; if (!t.classList || !t.closest || !t.closest(".cnotes, .np-modal")) return;
+    const p = notesCampus(t); if (!p) return;
+    if (t.classList.contains("n-person")) { setTimeout(() => { const z = t.closest(".cnotes, .np-modal"); if (!z || !z.contains(document.activeElement)) paintNotes(p); }, 0); return; }
+    if (t.classList.contains("act-text")) { const { n } = noteFind(p, t); if (n && !t.value.trim()) { const a = n.actions.find(x => x.id === t.closest("[data-aid]").dataset.aid); setTimeout(() => { if (a && !a.text.trim() && !a.owner && document.activeElement !== t) { n.actions = n.actions.filter(x => x !== a); save(p); paintNotes(p); } }, 120); } return; }
+    if (!t.classList.contains("ntitle") || t.contentEditable !== "true") return;
+    const { n } = noteFind(p, t); if (!n) return;
+    t.contentEditable = "false";
+    const v = t.textContent.replace(/\s+/g, " ").trim().toUpperCase() || n.title;
+    t.textContent = v; if (n.title !== v) { n.title = v; n.updated = Date.now(); save(p); paintSide(p); }
+  });
+  // drag a note (in the Notepad) or an action card (on the campus page) into its box
+  let cnDrag = null, cnDragged = false;
+  document.addEventListener("pointerdown", e => {
+    if (e.button > 0) return;
+    const head = e.target.closest(".cn-drag"); if (!head || !head.closest(".cnotes, .np-modal")) return;
+    if (e.target.closest("button, input, select, textarea, [contenteditable='true']")) return;
+    if (e.pointerType !== "mouse" && !e.target.closest(".cn-grip")) return;
+    const card = head.closest(".cn-card"), zone = card.closest(".cnotes, .np-modal");
+    cnDrag = { card, zone, pid: e.pointerId, sx: e.clientX, sy: e.clientY, moved: false, ghost: null };
+    cnDragged = false;
+    e.preventDefault();
+  });
+  addEventListener("pointermove", e => {
+    if (!cnDrag || e.pointerId !== cnDrag.pid) return;
+    const dx = e.clientX - cnDrag.sx, dy = e.clientY - cnDrag.sy;
+    if (!cnDrag.moved) {
+      if (Math.hypot(dx, dy) < 6) return;
+      cnDrag.moved = true; cnDragged = true;
+      const r = cnDrag.card.getBoundingClientRect(), g = cnDrag.card.cloneNode(true);
+      g.classList.add("cn-ghost"); g.style.width = r.width + "px"; g.style.left = r.left + "px"; g.style.top = r.top + "px";
+      document.body.appendChild(g); cnDrag.ghost = g;
+      cnDrag.card.classList.add("cn-src"); document.body.classList.add("cn-dragging"); closePops(); getSelection().removeAllRanges();
+    }
+    e.preventDefault();
+    cnDrag.ghost.style.transform = `translate(${dx}px, ${dy}px) rotate(1.5deg)`;
+    const box = cnDrag.zone.querySelector(".cn-box"), br = box && box.getBoundingClientRect();
+    const over = br && e.clientX >= br.left && e.clientX <= br.right && e.clientY >= br.top - 10 && e.clientY <= br.bottom + 10;
+    if (box) box.classList.toggle("hot", !!over); cnDrag.over = over;
+    const sc = cnDrag.zone.classList.contains("np-modal") ? cnDrag.zone.querySelector(".np-body") : null;
+    const top = sc ? sc.getBoundingClientRect().top + 50 : 90, bot = sc ? sc.getBoundingClientRect().bottom - 50 : innerHeight - 60;
+    const step = e.clientY > bot ? 14 : e.clientY < top ? -14 : 0;
+    if (step) { if (sc) sc.scrollTop += step; else scrollBy(0, step); }
+  }, { passive: false });
+  const cnEnd = e => {
+    if (!cnDrag || e.pointerId !== cnDrag.pid) return;
+    const d = cnDrag; cnDrag = null;
+    if (!d.moved) return;
+    d.ghost.remove(); d.card.classList.remove("cn-src"); document.body.classList.remove("cn-dragging");
+    const box = d.zone.querySelector(".cn-box"); if (box) box.classList.remove("hot");
+    setTimeout(() => { cnDragged = false; }, 50);
+    if (e.type === "pointerup" && d.over) { const p = notesCampus(d.card), n = p && p.notes.find(x => x.id === d.card.dataset.nid); if (n) fileCard(p, n, d.card.dataset.kind === "act", true); }
+  };
+  addEventListener("pointerup", cnEnd); addEventListener("pointercancel", cnEnd);
   // placeholder cards for each project (filled in later)
-  const X_CARDS = [["contacts", "Contacts"], ["docs", "Documents"]];
+  const X_CARDS = [];  // contacts and documents moved up to the campus header
   // only real web links are allowed; "www.site.com" becomes "https://www.site.com"
   function safeUrl(u) {
     u = String(u || "").trim(); if (!u) return "";
@@ -1477,13 +2730,13 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
   const telHref = ph => "tel:" + String(ph).replace(/[^\d+]/g, "");
   function contactRow(c) {
     const sub = [c.role, c.company].filter(Boolean).map(esc).join(" · ");
-    return `<li class="xrow ct-row" data-act="x-open" data-id="${c.id}" tabindex="0">
+    return `<li class="xrow ct-row" data-cx="open" data-id="${c.id}" tabindex="0">
       <div class="xr-main"><div class="ct-name">${esc(c.name) || '<span class="xr-faint">No name</span>'}</div>${sub ? `<div class="ct-sub">${sub}</div>` : ""}</div>
       ${c.phone ? `<a class="ct-phone" href="${esc(telHref(c.phone))}">${esc(c.phone)}</a>` : ""}</li>`;
   }
   function docRow(d) {
     const links = [d.link1, d.link2].map(safeUrl).filter(Boolean);
-    return `<li class="xrow doc-row" data-act="x-open" data-id="${d.id}" tabindex="0">
+    return `<li class="xrow doc-row" data-cx="open" data-id="${d.id}" tabindex="0">
       <div class="xr-main"><div class="doc-desc">${esc(d.desc) || '<span class="xr-faint">No description</span>'}</div>
       ${links.length ? `<div class="doc-links">${links.map(u => `<a class="link-chip" href="${esc(u)}" target="_blank" rel="noopener">${ICON.link}<span>${esc(urlLabel(u))}</span></a>`).join("")}</div>` : ""}</div></li>`;
   }
@@ -1499,9 +2752,27 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
         <div class="add-btns"><button class="add-task" data-act="x-add">${ICON.plus}${k === "contacts" ? "Add contact" : "Add document"}</button></div></div></article>`;
   }
   // add / edit window for a contact or a document
-  function openXForm(p, sb, k, id) {
+  // the Contacts / Documents box that opens from the campus header
+  function openCList(p, k) {
     closeModal();
-    const isC = k === "contacts", list = isC ? sb.contacts : sb.docs;
+    const isC = k === "contacts", list = isC ? p.contacts : p.docs;
+    const m = document.createElement("div");
+    m.className = "modal pj-modal x-modal cl-modal";
+    m.innerHTML = `<div class="ev" role="dialog" aria-label="${isC ? "Contacts" : "Documents"}" style="--c:${p.color}">
+      <div class="ev-head"><div class="ev-title cl-title" style="padding-top:4px">${isC ? ICON.user + "CONTACTS" : ICON.link + "DOCUMENTS"}</div><button class="ev-x" aria-label="Close">×</button></div>
+      <div class="ev-proj"><b style="--pc:${p.color}">${esc(p.title)}</b> · ${list.length} ${isC ? (list.length === 1 ? "contact" : "contacts") : (list.length === 1 ? "document" : "documents")}</div>
+      <div class="ev-body">${list.length ? `<ul class="xlist">${list.map(isC ? contactRow : docRow).join("")}</ul>` : `<p class="sched-empty">${isC ? "No contacts yet. Add the people for this campus: name, company, role and phone." : "No documents yet. Add a name and one or two links for each."}</p>`}</div>
+      <div class="ev-foot"><button class="foot-btn cl-add">${ICON.plus}${isC ? "Add contact" : "Add document"}</button><span class="grow"></span><button class="done-btn cl-done">Done</button></div></div>`;
+    document.body.appendChild(m);
+    m.addEventListener("click", e => {
+      if (e.target === m || e.target.closest(".ev-x, .cl-done")) { closeModal(); return; }
+      if (e.target.closest(".cl-add")) { openXForm(p, k); return; }
+      const row = e.target.closest('[data-cx="open"]'); if (row && !e.target.closest("a")) openXForm(p, k, row.dataset.id);
+    });
+  }
+  function openXForm(p, k, id) {
+    closeModal();
+    const isC = k === "contacts", list = isC ? p.contacts : p.docs;
     const isNew = !id; const it = isNew ? (isC ? cleanContact({}) : cleanDoc({})) : list.find(x => x.id === id);
     if (!it) return;
     const fld = (key, label, ph, type) => `<label class="pj-lbl" for="xf-${key}">${label}</label><input class="field" id="xf-${key}" data-k="${key}" type="${type || "text"}" placeholder="${ph}" value="${esc(it[key])}" autocomplete="off"${type === "tel" ? ' inputmode="tel"' : type === "url" ? ' inputmode="url" autocapitalize="off" spellcheck="false"' : ""}>`;
@@ -1509,7 +2780,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
     m.className = "modal pj-modal x-modal";
     m.innerHTML = `<div class="ev" role="dialog" aria-label="${isC ? "Contact" : "Document"}" style="--c:${p.color}">
       <div class="ev-head"><div class="ev-title" style="padding-top:4px">${isC ? (isNew ? "NEW CONTACT" : "CONTACT") : (isNew ? "NEW DOCUMENT" : "DOCUMENT")}</div><button class="ev-x" aria-label="Close">×</button></div>
-      <div class="ev-proj"><b style="--pc:${p.color}">${esc(p.title)}</b> · ${esc(sb.title)}</div>
+      <div class="ev-proj"><b style="--pc:${p.color}">${esc(p.title)}</b> · campus ${isC ? "contact" : "document"}</div>
       <div class="ev-body">${isC
         ? fld("name", "Name", "Full name") + fld("company", "Company", "Company") + fld("role", "Role", "e.g. Superintendent") + fld("phone", "Phone #", "(555) 555-5555", "tel")
         : `<label class="pj-lbl" for="xf-desc">Description</label><textarea class="field" id="xf-desc" data-k="desc" placeholder="What are these links?">${esc(it.desc)}</textarea>` + fld("link1", "Link 1", "https://…", "url") + fld("link2", "Link 2 (optional)", "https://…", "url")}
@@ -1524,14 +2795,13 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
       if (!isC) { it.link1 = it.link1 ? (safeUrl(it.link1) || it.link1) : ""; it.link2 = it.link2 ? (safeUrl(it.link2) || it.link2) : ""; }
       const blank = isC ? !(it.name || it.company || it.role || it.phone) : !(it.desc || it.link1 || it.link2);
       if (isNew && !blank) list.push(it);
-      if (isNew && !blank) sb.sched.xc = Object.assign(sb.sched.xc || {}, { [k]: false });
-      save(p); closeModal(); rerender();
+      save(p); closeModal(); rerender(); openCList(p, k);
     };
     m.addEventListener("click", e => {
       if (e.target === m || e.target.closest(".ev-x") || e.target.closest(".x-done")) return finish();
       if (e.target.closest(".x-del")) {
         closed = true; const i = list.indexOf(it); const snap = snapshot();
-        if (i >= 0) list.splice(i, 1); save(p); closeModal(); rerender();
+        if (i >= 0) list.splice(i, 1); save(p); closeModal(); rerender(); openCList(p, k);
         showUndo(isC ? "Contact deleted" : "Document deleted", () => restore(snap));
       }
     });
@@ -1540,13 +2810,13 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
   }
   function cardHtml(p, c) {
     normalizeCard(c);
-    return `<article class="card task-card${c.collapsed ? " collapsed" : ""}${c.showDates ? "" : " no-dates"}${c.showOwners ? "" : " no-owners"}" data-cid="${c.id}" style="--list-color:${p.color}">
+    return `<article class="card task-card${c.sub === REG ? " regc" : ""}${c.collapsed ? " collapsed" : ""}${c.showDates ? "" : " no-dates"}${c.showOwners ? "" : " no-owners"}" data-cid="${c.id}" style="--list-color:${p.color}">
       <header class="card-head" style="color:${p.color}"><div class="title">${esc(c.title)}</div>
         <button class="head-btn more-btn" data-act="card-menu" data-pop aria-label="Edit card" title="Edit card">${ICON_DOTS}</button>
         <button class="head-btn toggle" data-act="collapse" aria-label="Collapse or expand" title="Collapse or expand">${ICON.chev}</button></header>
       <div class="card-body">
         <ul class="items">${c.items.map(it => taskHtml(p, c, it)).join("")}</ul>
-        <div class="add-btns"><button class="add-task" data-act="add-task">${ICON.plus}Add task</button><button class="add-task" data-act="add-phase">${ICON.plus}Add phase</button></div>
+        <div class="add-btns"><button class="add-task" data-act="add-task">${ICON.plus}${c.sub === REG ? "Add action item" : "Add task"}</button><button class="add-task" data-act="add-phase">${ICON.plus}${c.sub === REG ? "Add category" : "Add phase"}</button></div>
         <div class="sched-meta">${esc(taskMeta(c))}</div>
       </div></article>`;
   }
@@ -1554,7 +2824,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
   function taskHtml(p, c, it) {
     const col = itemColor(it, p);
     if (it.kind === "phase") return `<li class="item phase" data-iid="${it.id}" data-cid="${c.id}">
-      <div class="phase-text" contenteditable="true" spellcheck="true" autocapitalize="words" data-ph="Phase name" data-field="text"></div>
+      <div class="phase-text" contenteditable="true" spellcheck="true" autocapitalize="words" data-ph="${c.sub === REG ? "Category" : "Phase name"}" data-field="text"></div>
       <button class="phase-x" data-act="del-phase" aria-label="Remove phase" title="Remove phase">×</button>
     </li>`;
     const pill = it.sub && !it.date ? "" : `<button class="date-pill${it.date ? "" : " no-date"}" style="--c:${col}" data-act="date" data-pop title="${it.date ? fullDate(it.date) : "Add a date"}">${it.date ? shortDate(it.date) : "DATE"}</button>`;
@@ -1591,7 +2861,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
       <div class="card-body">
         ${rows.length ? `<ul class="items srows">${rows.map(({ c, it }) => `<li class="srow brow" data-iid="${it.id}" data-cid="${c.id}" title="${esc(it.blockReason ? "Blocker: " + it.blockReason : "No reason given yet. Open the item to add one.")}">
           <button class="check" role="checkbox" aria-checked="${it.done}" aria-label="Done" data-act="check">${ICON.check}</button>
-          <div class="ms-text" ${tapOpens(it) ? 'contenteditable="false" data-act="open"' : 'contenteditable="true"'} spellcheck="true" autocapitalize="sentences" data-ph="Task" data-field="text"></div>
+          <div class="ms-text" ${tapOpens(it) ? 'contenteditable="false" data-act="open"' : 'contenteditable="true"'} spellcheck="true" autocapitalize="sentences" data-ph="${c.sub === REG ? "Action item" : "Task"}" data-field="text"></div>
           <span class="bic"><span class="bic-text" contenteditable="true" spellcheck="false" autocapitalize="words" data-ph="Owner" data-field="bic" title="Owner"></span></span>
         </li>`).join("")}</ul>` : `<p class="sched-empty">Nothing is blocked. Tap the circle on a task to mark it as a blocker.</p>`}
       </div></article>`;
@@ -2152,6 +3422,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
   function allSchedTargets(onlyP) {
     const out = [];
     (onlyP ? [onlyP] : state.projects).forEach(p => p.subs.forEach(sb => subCards(p, sb.id).forEach(c => out.push({ value: p.id + "|" + c.id, label: (onlyP ? "" : p.title + " · ") + sb.title + (subCards(p, sb.id).length > 1 ? " · " + c.title : "") }))));
+    (onlyP ? [onlyP] : state.projects).forEach(p => { const r = regCard(p); if (r) out.push({ value: p.id + "|" + r.id, label: (onlyP ? "" : p.title + " · ") + "ACTION REGISTER" }); });
     return out;
   }
 
@@ -2373,8 +3644,6 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
     if (act === "sched-menu" && sb) { schedMenu(a, p, sb); return; }
     if (act === "sub-menu" && sb) { subMenu(a, p, sb); return; }
     if (act === "add-sub") { addSub(p); return; }
-    if (act === "x-add" && sb) { openXForm(p, sb, a.closest(".xcard").dataset.x); return; }
-    if (act === "x-open" && sb) { if (e.target.closest("a")) return; openXForm(p, sb, a.closest(".xcard").dataset.x, a.dataset.id); return; }
     if (act === "x-collapse" && sb) { const k = a.closest(".xcard").dataset.x; sb.sched.xc = sb.sched.xc || {}; sb.sched.xc[k] = !sb.sched.xc[k]; save(p); a.closest(".xcard").classList.toggle("collapsed", sb.sched.xc[k]); return; }
     if (act === "blk-collapse" && sb) { sb.sched.blkCollapsed = !sb.sched.blkCollapsed; save(p); a.closest(".blk-card").classList.toggle("collapsed", sb.sched.blkCollapsed); return; }
     const li = a.closest("[data-iid]"), cardE = a.closest(".task-card[data-cid]");
@@ -2592,10 +3861,11 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
       actions.push({ icon: ICON.up, text: "Move project up", disabled: i <= 0, run: () => swap(-1) });
       actions.push({ icon: ICON.down, text: "Move project down", disabled: i >= p.subs.length - 1, run: () => swap(1) });
     }
+    actions.push({ icon: ICON.notes, text: "Add a note for this project", run: () => addNote(p, x.id) });
     actions.push({ icon: ICON.palette, text: "Change campus color", run: () => projectMenu(anchor, p) });
     openEditMenu(anchor, {
       actions,
-      del: p.subs.length > 1 ? { text: "Delete project", ask: "Delete this project and all of its tasks?", run: () => { const snap = snapshot(); p.subs = p.subs.filter(y => y !== x); p.cards = p.cards.filter(c => c.sub !== x.id); save(p); renderProject(); showUndo("Project deleted", () => restore(snap)); } } : null
+      del: { text: "Delete project", ask: p.subs.length > 1 ? "Delete this project and all of its tasks?" : "Delete this project and all of its tasks? It's the only project here, so a blank PROJECT 1 will take its place.", run: () => { const snap = snapshot(); p.subs = p.subs.filter(y => y !== x); p.cards = p.cards.filter(c => c.sub !== x.id); (p.notes || []).forEach(n => { if (n.scope && n.scope.sid === x.id) n.scope = { type: "general" }; }); if (!p.subs.length) freshSub(p, newSub(p, "PROJECT 1")); save(p); renderProject(); showUndo("Project deleted", () => restore(snap)); } }
     });
   }
   function cardMenu(anchor, p, c) {
@@ -2641,7 +3911,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
       actions: [
         ...(route_.name === "project" ? [] : [{ icon: ICON.folder, text: "Open campus", run: () => go("#/p/" + p.id) }]),
         { icon: ICON.pencil, text: "Edit name & description", run: () => openProjectForm(p) },
-        { icon: ICON.dup, text: "Duplicate campus", run: () => { const copy = cleanProject(JSON.parse(JSON.stringify(p))); copy.id = uid(); copy.title = (p.title + " COPY").slice(0, 80); const map = {}; copy.subs.forEach(x => { const n = uid(); map[x.id] = n; x.id = n; }); copy.cards.forEach(c => { c.id = uid(); c.sub = map[c.sub]; c.items.forEach(x => (x.id = uid())); }); copy.created = Date.now(); state.projects.splice(state.projects.indexOf(p) + 1, 0, copy); save(copy); rerender(); showMsg("Campus duplicated"); } },
+        { icon: ICON.dup, text: "Duplicate campus", run: () => { const copy = cleanProject(JSON.parse(JSON.stringify(p))); copy.id = uid(); copy.title = (p.title + " COPY").slice(0, 80); const map = {}; copy.subs.forEach(x => { const n = uid(); map[x.id] = n; x.id = n; }); copy.cards.forEach(c => { c.id = uid(); c.sub = map[c.sub] || c.sub; c.items.forEach(x => (x.id = uid())); }); copy.created = Date.now(); state.projects.splice(state.projects.indexOf(p) + 1, 0, copy); save(copy); rerender(); showMsg("Campus duplicated"); } },
         ...(route_.name === "project" ? [] : [
           { icon: ICON.up, text: "Move earlier", disabled: state.projects.indexOf(p) === 0, run: () => { const i = state.projects.indexOf(p); [state.projects[i - 1], state.projects[i]] = [state.projects[i], state.projects[i - 1]]; save(); renderHome(); } },
           { icon: ICON.down, text: "Move later", disabled: state.projects.indexOf(p) === state.projects.length - 1, run: () => { const i = state.projects.indexOf(p); [state.projects[i + 1], state.projects[i]] = [state.projects[i], state.projects[i + 1]]; save(); renderHome(); } }

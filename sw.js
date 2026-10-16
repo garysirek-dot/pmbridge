@@ -1,5 +1,5 @@
 // PMBridge offline support. Bump VERSION when you change any file so phones pick up the update.
-const VERSION = "pmbridge-v45";
+const VERSION = "pmbridge-v54";
 const FILES = ["./", "index.html", "manifest.webmanifest", "icons/icon-192.png", "icons/icon-512.png", "icons/apple-touch-icon.png", "icons/favicon-32.png"];
 
 self.addEventListener("install", e => {
