@@ -173,6 +173,25 @@ body.combo .psec .col > .card.idle { padding-top: 10px; padding-bottom: 8px; }
   .bp-search, .bp-newform input, .bp-rename-in { font-size: 16px; }
 }
 /* the Note boxes square in the Notepad */
+.np-unsorted { display: flex; align-items: center; gap: 10px; margin: 0 0 14px; font-size: 13px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--ink); }
+.np-unsorted b { font-size: 12px; color: var(--dim); font-weight: 700; }
+.nbx-head { display: flex; align-items: center; gap: 8px; margin: 0 0 12px; font-size: 13px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+.nbx-head > svg { width: 18px; height: 18px; color: var(--c); }
+.nbx-head span { flex: 1; }
+.nbx-browse { width: 30px; height: 30px; border-radius: 8px; display: grid; place-items: center; color: var(--dim); }
+.nbx-browse:hover { background: rgba(255,255,255,.08); color: var(--ink); }
+.nbx-browse svg { width: 16px; height: 16px; }
+.nbx-list { display: flex; flex-direction: column; gap: 8px; }
+.nbx-tile { display: flex; align-items: center; gap: 10px; width: 100%; padding: 10px 12px; border-radius: 14px; background: var(--card); border: 1px solid var(--card-edge); color: var(--ink); text-align: left; transition: transform .12s, border-color .12s, background .12s; }
+.nbx-tile:hover { border-color: color-mix(in srgb, var(--bc, var(--c)) 70%, transparent); }
+.nbx-tile.hot { transform: scale(1.04); border-color: var(--bc, var(--c)); background: color-mix(in srgb, var(--bc, var(--c)) 16%, var(--card)); }
+.nbx-ic { width: 32px; height: 32px; border-radius: 9px; display: grid; place-items: center; flex: none; color: var(--bc, var(--c)); background: color-mix(in srgb, var(--bc, var(--c)) 16%, transparent); }
+.nbx-ic svg { width: 18px; height: 18px; }
+.nbx-name { flex: 1; min-width: 0; font-size: 13px; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.nbx-n { font-size: 12.5px; color: var(--dim); font-variant-numeric: tabular-nums; }
+.nbx-new { border-style: dashed; background: transparent; color: var(--dim); --bc: #8e8e93; }
+.nbx-hint { margin: 10px 2px 0; font-size: 12px; line-height: 1.45; color: var(--faint); }
+@media (max-width: 699px) { .nbx-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 button.np-boxsq { width: 100%; color: var(--ink); cursor: pointer; align-items: stretch; }
 button.np-boxsq:hover { border-color: var(--c); }
 .np-boxsq .cn-box-head { display: flex; }
@@ -893,8 +912,68 @@ table.st { width: 100%; border-collapse: collapse; min-width: 860px; font-size: 
 .st .st-empty { color: var(--dim); padding: 16px 20px; }
 /* search page */
 /* Focus List */
+.fo-page { max-width: none; }
+.fo-wide { max-width: 1400px; margin-bottom: 20px; }
+.fl-meta { display: contents; }
+.fo-wide .card-head .act-count { margin-left: auto; }
+.fo-wide .card-head .title { display: flex; align-items: center; gap: 8px; }
+.fo-wide .card-head .title svg { width: 18px; height: 18px; }
+.fo-for { color: var(--dim); font-weight: 700; }
+.fo-empty { margin: 10px 0 4px; color: var(--dim); font-size: 14px; line-height: 1.5; }
+.fl-head, .fo-line { display: grid; grid-template-columns: 24px 210px 170px minmax(0, 1fr) 140px 64px 92px; column-gap: 12px; align-items: center; }
+.fl-head { padding: 8px 0 6px; font-size: 10.5px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--faint); border-bottom: 1px solid var(--card-edge); }
+.fo-lines { list-style: none; margin: 0; padding: 0; }
+.fo-line { padding: 7px 0; border-bottom: 1px solid rgba(255,255,255,.06); min-height: 40px; }
+.fo-line:last-child { border-bottom: 0; }
+.fo-line.fresh { animation: freshRow 1.2s ease; }
+.fo-line .check { margin-top: 0; --list-color: var(--pc); }
+.fl-camp, .fl-proj, .fl-item, .fl-who { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.fl-camp { font-size: 11.5px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--pc); display: flex; align-items: center; gap: 7px; }
+.fl-camp i { width: 7px; height: 7px; border-radius: 50%; background: var(--pc); flex: none; }
+.fl-proj { font-size: 11.5px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: var(--dim); }
+.fl-item { text-align: left; color: var(--ink); font-size: 15px; padding: 2px 0; }
+.fl-item:hover { text-decoration: underline; text-decoration-color: var(--faint); }
+.fo-line.blocked .fl-item { color: #FF8A8A; }
+.fl-who { font-size: 13px; color: var(--dim); font-weight: 600; }
+.fl-due { display: flex; justify-content: flex-start; }
+.fo-line .fo-arrows { justify-content: flex-end; }
+@media (max-width: 1100px) { .fl-head, .fo-line { grid-template-columns: 24px 160px 130px minmax(0, 1fr) 110px 64px 92px; } }
+@media (max-width: 899px) {
+  .fl-head { display: none; }
+  .fl-head, .fo-line { grid-template-columns: 24px minmax(0, 1fr) auto auto; grid-template-areas: "chk item due arr" ". meta who who"; row-gap: 2px; column-gap: 8px; }
+  .fo-line .check { grid-area: chk; } .fl-item { grid-area: item; white-space: normal; } .fl-due { grid-area: due; } .fo-line .fo-arrows { grid-area: arr; }
+  .fl-meta { grid-area: meta; display: flex; gap: 10px; min-width: 0; align-items: center; }
+  .fl-camp { flex: 0 1 auto; } .fl-proj { flex: 0 1 auto; }
+  .fl-who { grid-area: who; font-size: 12px; text-align: right; max-width: 120px; }
+  .fl-who:empty { display: none; }
+}
+.fo-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(440px, 1fr)); gap: 20px; align-items: start; }
+.fo-card .card-head .act-count { margin-left: auto; }
+.fo-items { list-style: none; margin: 4px 0 0; padding: 0; }
+.fo-item { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,.06); }
+.fo-item:last-child { border-bottom: 0; }
+.fo-item.fresh { animation: freshRow 1.2s ease; }
+.fo-item .check { flex: none; margin-top: 0; }
+.fo-open { flex: 1; min-width: 0; display: flex; align-items: baseline; gap: 10px; text-align: left; color: var(--ink); padding: 2px 0; }
+.fo-proj { flex: none; max-width: 40%; font-size: 11px; font-weight: 800; letter-spacing: .07em; text-transform: uppercase; color: var(--list-color); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.fo-txt { flex: 1; min-width: 0; font-size: 15px; line-height: 1.35; overflow-wrap: anywhere; }
+.fo-open:hover .fo-txt { text-decoration: underline; text-decoration-color: var(--faint); }
+.fo-item.blocked .fo-txt::after { content: "Blocked"; margin-left: 8px; font-size: 10.5px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--danger); }
+.fo-item .fo-date { flex: none; }
+.fo-arrows { display: flex; flex: none; opacity: .35; transition: opacity .15s; }
+.fo-item:hover .fo-arrows, .fo-item:focus-within .fo-arrows { opacity: 1; }
+@media (hover: none) { .fo-arrows { opacity: .8; } }
+.fo-arrows button { width: 28px; height: 28px; border-radius: 7px; display: grid; place-items: center; color: var(--dim); }
+.fo-arrows button svg { width: 18px; height: 18px; }
+.fo-arrows button:hover:not([disabled]) { background: rgba(255,255,255,.08); color: var(--ink); }
+.fo-arrows button[disabled] { opacity: .2; cursor: default; }
+@media (max-width: 699px) {
+  .fo-cards { grid-template-columns: minmax(0, 1fr); gap: 14px; }
+  .fo-open { flex-direction: column; gap: 2px; }
+  .fo-proj { max-width: 100%; }
+}
 #addBtn.on { background: color-mix(in srgb, var(--accent) 28%, #2c2c2e); color: var(--ink); }
-.fo-page { max-width: 980px; }
+.fo-page { max-width: none; }
 .fo-pick { display: flex; align-items: flex-start; gap: 12px; margin: 4px 0 18px; }
 .fo-lbl { font-size: 11.5px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--dim); padding-top: 11px; }
 .fo-owners { display: flex; flex-wrap: wrap; gap: 8px; }
@@ -1017,6 +1096,23 @@ table.st.sr { min-width: 640px; }
 .blk-btn.s-ns { background: transparent; border-color: var(--card-edge); }
 .blk-btn.s-ns .s-dot { background: transparent; box-shadow: inset 0 0 0 1.5px var(--faint); }
 .blk-btn.s-blk { background: color-mix(in srgb, #FF5A5A 28%, transparent); border-color: #FF5A5A; }
+.blk-btn.s-upd { --s: #5FD68A; background: color-mix(in srgb, #5FD68A 26%, transparent); border-color: #5FD68A; }
+.pop.flag-pop { width: 236px; }
+.fl-opt small { margin-left: auto; font-size: 11.5px; color: var(--dim); }
+.fl-opt[aria-pressed="true"] { background: rgba(255,255,255,.08); font-weight: 700; }
+.fl-dot { width: 14px; height: 14px; border-radius: 50%; flex: none; background: color-mix(in srgb, var(--s) 30%, transparent); box-shadow: inset 0 0 0 2px var(--s); }
+.st-upd { width: 18px; height: 18px; border-radius: 50%; display: inline-grid; place-items: center; vertical-align: -3px; margin-right: 8px; border: 2px solid #5FD68A; background: color-mix(in srgb, #5FD68A 26%, transparent); }
+.st-upd i { width: 6px; height: 6px; border-radius: 50%; background: #5FD68A; }
+.st-upd:hover { filter: brightness(1.2); }
+.fo-pri-wrap { margin-bottom: 20px; }
+.fo-pri .card-head .title { display: flex; align-items: center; gap: 8px; }
+.fo-pri .card-head .title svg { width: 18px; height: 18px; }
+.fo-pri .fo-item .check { border-color: var(--faint); }
+.fo-pri .fo-open { flex-direction: column; gap: 2px; }
+.fo-pri .fo-proj { max-width: 100%; }
+.fo-who { margin-left: 8px; font-size: 12.5px; color: var(--dim); font-weight: 600; }
+.fo-unstar { color: #FFD84D !important; }
+.fo-unstar svg { width: 15px !important; height: 15px !important; }
 .item.blocked .text { color: color-mix(in srgb, #FF5A5A 30%, var(--ink)); }
 .ev-blk { margin-top: 8px; }
 @media (min-width: 1000px) {
@@ -1443,7 +1539,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
     <div class="brand-text"><span class="brand-name">PMBridge</span><span class="brand-sub">Projects, Tasks &amp; Dates</span></div>
   </div>
   <div class="top-right">
-    <span class="brand-tag" id="brandTag">Open a campus card - star tasks for Status - every date is on the Calendar</span>
+    <span class="brand-tag" id="brandTag">Open a campus card - star your priorities - every date is on the Calendar</span>
     <button class="round-btn" id="searchBtn" aria-label="Search tasks" title="Search tasks"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L20.5 20.5"/></svg></button>
     <button class="round-btn" id="addBtn" aria-label="Focus List" title="Focus List"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></button>
     <button class="round-btn" id="moreBtn" data-pop aria-label="Backup and restore" title="Backup and restore"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5.5" cy="12" r="1.9"/><circle cx="12" cy="12" r="1.9"/><circle cx="18.5" cy="12" r="1.9"/></svg></button>
@@ -1473,7 +1569,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
   const STATUSES = ["Not Started", "In Progress", "Blocked", "Done"];
   const STATUS_CLASS = { "Not Started": "s-ns", "In Progress": "s-ip", "Blocked": "s-blk", "Done": "s-done" };
   const LS_KEY = "pmbridge-v1";
-  const APP_VERSION = "67 (Oct 17)";
+  const APP_VERSION = "72 (Oct 17)";
   const $ = id => document.getElementById(id);
   const uid = () => Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4);
   const pad2 = n => String(n).padStart(2, "0");
@@ -1546,7 +1642,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
       color: r.color && /^#[0-9a-f]{3,8}$/i.test(r.color) ? r.color : "",
       notes: String(r.notes || ""), meeting: String(r.meeting || ""),
       links: (Array.isArray(r.links) ? r.links : []).map(l => ({ id: l.id || uid(), label: String(l.label || ""), url: String(l.url || "") })),
-      blockReason: String(r.blockReason || ""), update: String(r.update || ""), star: !!r.star, stAt: +r.stAt || 0,
+      blockReason: String(r.blockReason || ""), update: String(r.update || ""), star: r.upd !== undefined ? !!r.star : false, upd: r.upd !== undefined ? !!r.upd : !!r.star, stAt: +r.stAt || 0, ...(+r.po > 0 ? { po: +r.po } : {}),
       comments: (Array.isArray(r.comments) ? r.comments : []).map(c => ({ id: c.id || uid(), text: String(c.text || ""), at: c.at || 0 })),
       created: r.created || Date.now(), ...(+r.fo > 0 ? { fo: +r.fo } : {}),
       ...(r.ref && r.ref.aid ? { ref: { nid: String(r.ref.nid || ""), aid: String(r.ref.aid), sig: String(r.ref.sig || "") } } : {})
@@ -1558,6 +1654,29 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
   };
   const cleanTask = cleanItem, cleanSched = cleanItem;
   function setStatus(it, s) { it.stAt = Date.now(); if ((s === "Done" || s === "Blocked") && it.status !== s && it.status !== "Done" && it.status !== "Blocked") it.prev = it.status; it.status = s; it.done = s === "Done"; }
+  // the circle on a task: green Update (Status table) or red Blocker (Status table + Blockers section)
+  function setFlag(it, k) {
+    const blk = it.status === "Blocked";
+    if (k === "blk") { it.upd = false; if (!blk) toggleBlocked(it); }
+    else { if (blk) toggleBlocked(it); it.upd = k === "upd"; }
+    it.stAt = Date.now();
+  }
+  function openFlagPop(anchor, p, c, it) {
+    closePops();
+    const pop = document.createElement("div"); pop.className = "pop flag-pop";
+    const cur = it.status === "Blocked" ? "blk" : it.upd ? "upd" : "";
+    pop.innerHTML = `<div class="pop-label">Show on the Status table as</div>
+      <button class="pop-action fl-opt" data-k="upd" aria-pressed="${cur === "upd"}"><span class="fl-dot" style="--s:#5FD68A"></span>Update<small>Green</small></button>
+      <button class="pop-action fl-opt" data-k="blk" aria-pressed="${cur === "blk"}"><span class="fl-dot" style="--s:#FF5A5A"></span>Blocker<small>Red</small></button>
+      ${cur ? `<hr><button class="pop-action fl-opt" data-k="">Clear</button>` : ""}`;
+    pop.addEventListener("click", e => {
+      const b = e.target.closest(".fl-opt"); if (!b) return; e.stopPropagation(); closePops();
+      const k = b.dataset.k; setFlag(it, k); save(p); repaint(p, c);
+      const t = `“${it.text || (c.sub === REG ? "Action item" : "Task")}”`;
+      showMsg(k === "upd" ? `${t} is on the Status table as an Update` : k === "blk" ? `${t} added to Blockers. Open it to note the reason.` : `${t} cleared`);
+    });
+    placePop(pop, anchor);
+  }
   function toggleBlocked(it) { if (it.status === "Blocked") setStatus(it, it.prev && it.prev !== "Blocked" && it.prev !== "Done" ? it.prev : "Not Started"); else setStatus(it, "Blocked"); }
   const ICON_STAR = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.8l2.8 5.9 6.4.8-4.7 4.4 1.2 6.4L12 17.2l-5.7 3.1 1.2-6.4-4.7-4.4 6.4-.8z"/></svg>', ICON_STAR_O = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2.8l2.8 5.9 6.4.8-4.7 4.4 1.2 6.4L12 17.2l-5.7 3.1 1.2-6.4-4.7-4.4 6.4-.8z"/></svg>';
   const ICON_DOTS = '<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5.5" cy="12" r="1.9"/><circle cx="12" cy="12" r="1.9"/><circle cx="18.5" cy="12" r="1.9"/></svg>';
@@ -1631,7 +1750,12 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
     lists.notes = lists.notes.filter(n => { if (!n.actOnly) return true; n.actions.filter(a => a.text.trim()).forEach(a => register.push(cleanReg({ ...a, id: "", cat: n.title === "ACTION ITEMS" ? "" : n.title }))); return false; });
     return { id: p.id || uid(), title: String(p.title || "NEW CAMPUS"), desc: String(p.desc || ""), color: safeColor(p.color, PROJECT_COLORS[0]),
       cards, subs, ...lists, regSeen: (Array.isArray(p.regSeen) ? p.regSeen : []).map(String),
-      boxes: (Array.isArray(p.boxes) ? p.boxes : []).filter(b => b && b.id).map(b => ({ id: String(b.id), name: String(b.name || "Box").slice(0, 40), color: /^#[0-9a-f]{6}$/i.test(b.color || "") ? b.color : "#8e8e93", created: b.created || Date.now() })), est: cleanEst(p.est), created: p.created || Date.now(), updated: p.updated || Date.now() };
+      ...(() => {
+        const boxes = (Array.isArray(p.boxes) ? p.boxes : []).filter(b => b && b.id).map(b => ({ id: String(b.id), name: String(b.name || "Box").slice(0, 40), color: /^#[0-9a-f]{6}$/i.test(b.color || "") ? b.color : "#8e8e93", created: b.created || Date.now(), ...(b.sid ? { sid: String(b.sid) } : {}) }));
+        if (!p.boxInit) subs.forEach(x => { if (!boxes.some(b => b.sid === x.id)) boxes.push({ id: uid(), name: x.title.slice(0, 40), color: COLORS[boxes.length % COLORS.length], created: Date.now(), sid: x.id }); });
+        lists.notes.forEach(n => { if (n.filed && !boxes.some(b => b.id === n.box)) { n.filed = false; n.box = ""; n.filedAt = 0; } });
+        return { boxes, boxInit: true };
+      })(), est: cleanEst(p.est), created: p.created || Date.now(), updated: p.updated || Date.now() };
   }
   const EST_CATS = [
     { k: "isp", name: "ISP", icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.7 3.9 5.7 3.9 9s-1.3 6.3-3.9 9c-2.6-2.7-3.9-5.7-3.9-9S9.4 5.7 12 3z"/></svg>' },
@@ -1897,7 +2021,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
     state.projects.forEach(p => p.cards.forEach(c => c.items.forEach(it => {
       if (it.kind === "phase" || it.done || !it.text.trim()) return;
       const blk = it.status === "Blocked";
-      if (!blk && !it.star) return;
+      if (!blk && !it.upd) return;
       items++; if (blk) blockers++; if (it.stAt > last) last = it.stAt;
     })));
     return `<article class="card ptile ov-tile" data-act="go-status" tabindex="0" style="--c:var(--accent)" aria-label="Open the Status table">
@@ -1926,13 +2050,13 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
   let tblMode = (() => { try { const m = localStorage.getItem(TBL_KEY); return m === "blk" ? "blk" : "cp"; } catch (e) { return "cp"; } })();
   function tableRows() {
     const out = [];
-    state.projects.forEach(p => p.subs.forEach(x => {
+    state.projects.forEach(p => [...p.subs, { id: REG, title: "ACTION REGISTER" }].forEach(x => {
       const rows = [];
       subCards(p, x.id).forEach(c => c.items.forEach(it => {
         if (it.kind === "phase" || it.done || !it.text.trim()) return;
         const blocked = it.status === "Blocked";
         if (tblMode === "blk" && !blocked) return;
-        if (tblMode === "cp" && !it.star) return;
+        if (tblMode === "cp" && !it.upd) return;
         rows.push({ p, s: x, c, it });
       }));
       rows.sort((a, b) => (a.it.date || "9999").localeCompare(b.it.date || "9999"));
@@ -1942,14 +2066,14 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
   }
   function tableHtml() {
     const rows = tableRows();
-    const empty = { cp: "Nothing starred yet. Tap the star on a task to show it here.", blk: "Nothing is blocked. Tap the circle on a task to mark it as a blocker." }[tblMode];
+    const empty = { cp: "No updates yet. Tap the circle on a task and choose Update (green) to show it here.", blk: "Nothing is blocked. Tap the circle on a task and choose Blocker (red)." }[tblMode];
     return `<div class="st-sec"><div class="home-head"><span>${rows.length} ${rows.length === 1 ? "item" : "items"}</span>
-        <div class="seg st-seg" role="group" aria-label="Show">${[["cp", "Starred"], ["blk", "Blockers"]].map(([k, l]) => `<button data-act="tbl-mode" data-m="${k}" aria-pressed="${tblMode === k}">${l}</button>`).join("")}</div></div>
+        <div class="seg st-seg" role="group" aria-label="Show">${[["cp", "Update"], ["blk", "Blockers"]].map(([k, l]) => `<button data-act="tbl-mode" data-m="${k}" aria-pressed="${tblMode === k}">${l}</button>`).join("")}</div></div>
       <section class="card st-card" aria-label="Status"><div class="st-wrap"><table class="st"><thead><tr><th>Campus</th><th>Project</th><th>Item</th><th>Update</th><th>Blocker</th><th>Owner</th></tr></thead>
       <tbody>${rows.length ? rows.map(r => { const ref = r.p.id + "|" + r.c.id + "|" + r.it.id, blk = r.it.status === "Blocked"; return `<tr data-ref="${ref}">
         <td><span class="st-camp" style="--c:${r.p.color}"><i></i>${esc(r.p.title)}</span></td>
         <td class="st-proj">${esc(r.s.title)}</td>
-        <td><button class="st-star${r.it.star ? " on" : ""}" data-act="st-star" data-ref="${ref}" aria-pressed="${r.it.star}" title="${r.it.star ? "Starred. Tap to remove from Status" : "Star to keep on Status"}">${r.it.star ? ICON_STAR : ICON_STAR_O}</button><button class="st-item" data-act="open-item" data-ref="${ref}">${r.it.date ? `<span class="np" style="--c:${r.p.color}">${shortDate(r.it.date)}</span>` : ""}${esc(r.it.text)}</button></td>
+        <td>${blk ? "" : `<button class="st-upd" data-act="st-upd" data-ref="${ref}" title="Update. Tap to take it off the Status table"><i></i></button>`}<button class="st-item" data-act="open-item" data-ref="${ref}">${r.it.date ? `<span class="np" style="--c:${r.p.color}">${shortDate(r.it.date)}</span>` : ""}${esc(r.it.text)}</button></td>
         <td><div class="st-edit" contenteditable="true" spellcheck="true" data-tfield="update" data-ph="Add update"></div></td>
         <td>${blk ? `<div class="st-blk"><i></i><div class="st-edit" contenteditable="true" spellcheck="true" data-tfield="blockReason" data-ph="Add reason"></div></div>` : `<span class="st-none">—</span>`}</td>
         <td><div class="st-edit" contenteditable="true" spellcheck="false" autocapitalize="words" data-tfield="bic" data-ph="Owner"></div></td></tr>`; }).join("") : `<tr><td colspan="6" class="st-empty">${empty}</td></tr>`}</tbody></table></div>
@@ -2028,7 +2152,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
   function colHtml(p, x) {
     const cp = schedHtml(p, x), bk = blkHtml(p, x), ca = cpActive(p, x), ba = blkActive(p, x);
     const mid = subCards(p, x.id).map(c => cardHtml(p, c)).join("");
-    return mid + cp + bk + projNotesHtml(p, x);   // Tasks, Critical Path, Blockers, then the project's notes (if any)
+    return mid + cp + bk;   // Tasks, Critical Path, Blockers
   }
   const wasActive = {};
   // a card that just woke up opens itself so the new date / blocker is visible
@@ -2584,13 +2708,14 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
     active.forEach(n => { const k = n.tags[0] ? (tagByName(n.tags[0]) || { name: n.tags[0] }).name : ""; if (!groups.has(k)) groups.set(k, []); groups.get(k).push(n); });
     const order = allTags().map(t => t.name).filter(k => groups.has(k)); if (groups.has("")) order.push("");
     const filed = p.notes.filter(n => n.filed && !n.actOnly).map(n => ({ n, a: false }));
-    return `${peopleList(p)}<div class="np-layout"><div class="np-main">${active.length ? order.map(k => `<section class="np-sec"><h3 class="np-h" style="--chip:${k ? tagColor(k) : "#8e8e93"}"><span class="tchip-dot"></span>${k ? esc(k) : "Untagged"}<b>${groups.get(k).length}</b></h3>
+    const boxN = b => p.notes.filter(n => n.filed && n.box === b.id).length;
+    return `${peopleList(p)}<div class="np-layout"><div class="np-main"><h2 class="np-unsorted">Unsorted notes<b>${active.length}</b></h2>${active.length ? order.map(k => `<section class="np-sec"><h3 class="np-h" style="--chip:${k ? tagColor(k) : "#8e8e93"}"><span class="tchip-dot"></span>${k ? esc(k) : "Untagged"}<b>${groups.get(k).length}</b></h3>
         <div class="np-grid" data-ids="${groups.get(k).map(n => n.id).join(",")}"></div></section>`).join("")
       : `<div class="np-empty"><div class="np-empty-ic">${ICON.notes}</div><b>Notepad</b><p>Tap New note to capture a note for ${esc(p.title)}. Type it, paste it, or tap the microphone on your keyboard to say it. Tag it and it files itself under that tag.</p></div>`}
-      </div><aside class="np-side"><button class="cn-box np-boxsq" data-na="bxopen" title="Open the note boxes">
-        <span class="cn-box-head">${ICON_BOX}<span class="cn-box-t">Note boxes</span><span class="cn-box-n">${filed.length ? filed.length + " filed" : "Nothing filed yet"}${p.boxes.length ? " · " + p.boxes.length + " box" + (p.boxes.length > 1 ? "es" : "") : ""}</span></span>
-        ${p.boxes.length ? `<span class="nbx-chips">${p.boxes.slice(0, 6).map(b => `<span style="--bc:${b.color}">${esc(b.name)}<b>${p.notes.filter(n => n.filed && n.box === b.id).length}</b></span>`).join("")}${p.boxes.length > 6 ? `<span class="more">+${p.boxes.length - 6} more</span>` : ""}</span>` : ""}
-        <span class="cn-box-hint">Drag a note here to file it in a box.<br>Tap to browse your boxes.</span></button></aside></div>`;
+      </div><aside class="np-side"><div class="nbx-head">${ICON_BOX}<span>Note boxes</span><button class="nbx-browse" data-na="bxopen" title="Browse and search the boxes">${ICON_SEARCH}</button></div>
+        <div class="nbx-list">${p.boxes.map(b => `<button class="nbx-tile" data-na="bxopen" data-bid="${b.id}" data-drop-bid="${b.id}" style="--bc:${b.color}" title="Open ${esc(b.name)}"><span class="nbx-ic">${ICON_BOX}</span><span class="nbx-name">${esc(b.name)}</span><span class="nbx-n">${boxN(b)}</span></button>`).join("")}
+          <button class="nbx-tile nbx-new" data-na="bxnew" data-drop-bid="new"><span class="nbx-ic">${ICON.plus}</span><span class="nbx-name">New box</span></button></div>
+        <p class="nbx-hint">Drag a note onto a box to file it there, or tap a box to see what's inside.</p></aside></div>`;
   }
   function fillNotepad(p, body) {
     regSync(p);
@@ -2744,6 +2869,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
           <span class="pn-date">${noteDay(n.updated)}</span></button></li>`; }).join("")}</ul></div></article>`;
   }
   function paintProjNotes(p) {
+    return;   // the Notes section left the project cards; notes live in project boxes in the Notepad
     if (route_.name !== "project" || currentProject() !== p) return;
     p.subs.forEach(x => {
       const col = view.querySelector(`.psec[data-sid="${x.id}"] > .col`); if (!col) return;
@@ -2992,7 +3118,8 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
     const na = a.dataset.na;
     if (na === "npclose") { closeModal(); return; }
     if (na === "new") { addNote(p); return; }
-    if (na === "bxopen") { openBoxPanel(p); return; }
+    if (na === "bxopen") { openBoxPanel(p); if (a.dataset.bid) { bx.view = "box"; bx.box = a.dataset.bid; bx.q = ""; bx.expanded.clear(); renderBoxPanel(); } return; }
+    if (na === "bxnew") { openBoxPanel(p); bx.view = "home"; bx.creating = true; renderBoxPanel(); return; }
     if (na === "mkact") { makeActCard(p); return; }
     if (na === "colmenu") { openEditMenu(a, { actions: [{ icon: ICON.notes, text: "Open the Notepad", run: () => openNotepad(p) }, { icon: ICON.plus, text: "New action item card", run: () => makeActCard(p) }] }); return; }
     if (na === "box") { const box = a.closest(".cn-box"), open = !box.classList.contains("open"); box.classList.toggle("open", open); if (box.closest(".np-modal")) npBoxOpen = open; else cnActBoxOpen = open; return; }
@@ -3093,9 +3220,9 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
     }
     e.preventDefault();
     cnDrag.ghost.style.transform = `translate(${dx}px, ${dy}px) rotate(1.5deg)`;
-    const box = cnDrag.zone.querySelector(".cn-box"), br = box && box.getBoundingClientRect();
-    const over = br && e.clientX >= br.left && e.clientX <= br.right && e.clientY >= br.top - 10 && e.clientY <= br.bottom + 10;
-    if (box) box.classList.toggle("hot", !!over); cnDrag.over = over;
+    let hit = null;
+    cnDrag.zone.querySelectorAll("[data-drop-bid]").forEach(t => { const r = t.getBoundingClientRect(), on = !hit && e.clientX >= r.left - 4 && e.clientX <= r.right + 4 && e.clientY >= r.top - 4 && e.clientY <= r.bottom + 4; t.classList.toggle("hot", on); if (on) hit = t.dataset.dropBid; });
+    cnDrag.over = !!hit; cnDrag.overBid = hit;
     const sc = cnDrag.zone.classList.contains("np-modal") ? cnDrag.zone.querySelector(".np-body") : null;
     const top = sc ? sc.getBoundingClientRect().top + 50 : 90, bot = sc ? sc.getBoundingClientRect().bottom - 50 : innerHeight - 60;
     const step = e.clientY > bot ? 14 : e.clientY < top ? -14 : 0;
@@ -3106,9 +3233,9 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
     const d = cnDrag; cnDrag = null;
     if (!d.moved) return;
     d.ghost.remove(); d.card.classList.remove("cn-src"); document.body.classList.remove("cn-dragging");
-    const box = d.zone.querySelector(".cn-box"); if (box) box.classList.remove("hot");
+    d.zone.querySelectorAll(".hot").forEach(t => t.classList.remove("hot"));
     setTimeout(() => { cnDragged = false; }, 50);
-    if (e.type === "pointerup" && d.over) { const p = notesCampus(d.card), n = p && p.notes.find(x => x.id === d.card.dataset.nid); if (n) { if (d.card.dataset.kind === "act") fileCard(p, n, true, true); else openBoxPanel(p, { file: n.id }); } }
+    if (e.type === "pointerup" && d.over) { const p = notesCampus(d.card), n = p && p.notes.find(x => x.id === d.card.dataset.nid); if (n) { if (d.overBid && d.overBid !== "new") bxFileNote(p, n.id, d.overBid); else { openBoxPanel(p, { file: n.id }); bx.creating = true; renderBoxPanel(); } } }
   };
   addEventListener("pointerup", cnEnd); addEventListener("pointercancel", cnEnd);
   // placeholder cards for each project (filled in later)
@@ -3228,8 +3355,8 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
       <div class="text" ${tapOpens(it) ? 'contenteditable="false" data-act="open"' : 'contenteditable="true"'} spellcheck="true" autocapitalize="sentences" data-field="text"></div>
       <button class="indent" data-act="indent" aria-label="Make subtask" title="Subtask (Tab)">${ICON.indent}</button>
       <button class="indent" data-act="imp" aria-label="Mark important" title="Important">!</button>
-      <button class="star-btn" data-act="star" aria-pressed="${it.star}" aria-label="${it.star ? "On the Status table. Tap to remove" : "Show on the Status table"}" title="${it.star ? "On the Status table" : "Show on the Status table"}">${it.star ? ICON_STAR : ICON_STAR_O}</button>
-      <button class="status-pill blk-btn ${it.status === "Blocked" ? "s-blk" : "s-ns"}" data-act="block" aria-pressed="${it.status === "Blocked"}" aria-label="${it.status === "Blocked" ? "Blocked. Tap to clear" : "Mark as blocker"}" title="${it.status === "Blocked" ? "Blocked" + (it.blockReason ? ": " + esc(it.blockReason) : "") : "Mark as blocker"}"><span class="s-dot"></span></button>
+      <button class="star-btn" data-act="star" aria-pressed="${it.star}" aria-label="${it.star ? "Priority on the Focus List. Tap to remove" : "Make it a priority on the Focus List"}" title="${it.star ? "Priority (Focus List)" : "Priority for the Focus List"}">${it.star ? ICON_STAR : ICON_STAR_O}</button>
+      <button class="status-pill blk-btn ${it.status === "Blocked" ? "s-blk" : it.upd ? "s-upd" : "s-ns"}" data-act="block" data-pop aria-pressed="${it.status === "Blocked" || it.upd}" aria-label="${it.status === "Blocked" ? "Blocker. Tap to change" : it.upd ? "Update on the Status table. Tap to change" : "Mark as Update or Blocker"}" title="${it.status === "Blocked" ? "Blocked" + (it.blockReason ? ": " + esc(it.blockReason) : "") : "Mark as blocker"}"><span class="s-dot"></span></button>
       <span class="bic"><span class="bic-text" contenteditable="true" spellcheck="false" autocapitalize="words" data-ph="Owner" data-field="bic" title="Owner"></span></span>
       <button class="row-open${it.date || hasMore(it) ? " has" : ""}" data-act="open" aria-label="Open details" title="Open details">${ICON.open}</button>
     </li>`;
@@ -3504,52 +3631,76 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
   function focusItems(k) {
     const out = [];
     state.projects.forEach(p => p.cards.forEach(c => c.items.forEach(it => {
-      if (it.kind === "phase" || it.done || !it.text.trim() || ownerKey(it.bic) !== k) return;
+      if (it.kind === "phase" || it.done || !it.text.trim() || it.star || ownerKey(it.bic) !== k) return;
       out.push({ p, c, it, ref: p.id + "|" + c.id + "|" + it.id, ...focusCat(p, c, it) });
     })));
     return out.sort((a, b) => ((a.it.fo || 1e9) - (b.it.fo || 1e9)) || ((a.it.date || "9999") < (b.it.date || "9999") ? -1 : (a.it.date || "9999") > (b.it.date || "9999") ? 1 : 0) || ((a.it.created || 0) - (b.it.created || 0)));
   }
+  function priItems() {
+    const out = [];
+    state.projects.forEach(p => p.cards.forEach(c => c.items.forEach(it => {
+      if (it.kind === "phase" || it.done || !it.text.trim() || !it.star) return;
+      out.push({ p, c, it, ref: p.id + "|" + c.id + "|" + it.id, ...focusCat(p, c, it) });
+    })));
+    return out.sort((a, b) => ((a.it.po || 1e9) - (b.it.po || 1e9)) || (a.it.date || "9999").localeCompare(b.it.date || "9999") || ((a.it.stAt || 0) - (b.it.stAt || 0)));
+  }
+  function priMove(ref, to) {
+    const list = priItems(), i = list.findIndex(x => x.ref === ref); if (i < 0) return;
+    const j = Math.max(0, Math.min(list.length - 1, i + to)); if (i === j) return;
+    const [x] = list.splice(i, 1); list.splice(j, 0, x);
+    const touched = new Set(); list.forEach((y, n) => { if (y.it.po !== n + 1) { y.it.po = n + 1; touched.add(y.p); } });
+    touched.forEach(p => save(p)); renderFocus(ref);
+  }
   function focusMove(k, ref, to) {
     const list = focusItems(k), i = list.findIndex(x => x.ref === ref); if (i < 0) return;
-    const j = to === "top" ? 0 : Math.max(0, Math.min(list.length - 1, i + to)); if (i === j) return;
+    const j = Math.max(0, Math.min(list.length - 1, i + to)); if (i === j) return;
     const [x] = list.splice(i, 1); list.splice(j, 0, x);
-    const touched = new Set();
-    list.forEach((y, n) => { if (y.it.fo !== n + 1) { y.it.fo = n + 1; touched.add(y.p); } });
-    touched.forEach(p => save(p));
-    renderFocus(ref);
+    const touched = new Set(); list.forEach((y, n) => { if (y.it.fo !== n + 1) { y.it.fo = n + 1; touched.add(y.p); } });
+    touched.forEach(p => save(p)); renderFocus(ref);
+  }
+  // one line per item: checkbox · campus · project · item · owner · due date · order arrows
+  function foLineHtml(x, n, len, t, flashRef, pri) {
+    const late = x.it.date && itemEnd(x.it) < t, proj = x.c.sub === REG ? (x.ph ? "Register · " + x.ph : "Action Register") : x.where + (x.ph ? " · " + x.ph : "");
+    const ARR_UP = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6-6 6 6"/></svg>', ARR_DN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>';
+    return `<li class="fo-line${x.ref === flashRef ? " fresh" : ""}${x.it.status === "Blocked" ? " blocked" : ""}" data-ref="${x.ref}" style="--pc:${x.p.color}">
+      <button class="check" role="checkbox" aria-checked="false" aria-label="Mark done" data-fo="done">${ICON.check}</button>
+      <span class="fl-meta"><span class="fl-camp" title="${esc(x.p.title)}"><i></i>${esc(x.p.title)}</span>
+      <span class="fl-proj" title="${esc(proj)}">${esc(proj)}</span></span>
+      <button class="fl-item" data-fo="open" title="${esc(x.it.text)} · open details">${esc(x.it.text)}</button>
+      <span class="fl-who" title="${esc(x.it.bic)}">${esc(x.it.bic)}</span>
+      <span class="fl-due">${x.it.date ? `<span class="date-pill" style="--c:${late ? "var(--danger)" : x.p.color}" title="${late ? "Past due" : "Due"} ${fullDate(x.it.date)}">${shortDate(x.it.date)}</span>` : ""}</span>
+      <span class="fo-arrows">${pri ? `<button data-fo="unstar" class="fo-unstar" aria-label="Remove from Priorities" title="Remove from Priorities">${ICON_STAR}</button>` : ""}<button data-fo="${pri ? "pup" : "up"}" aria-label="Move up" title="Move up"${n ? "" : " disabled"}>${ARR_UP}</button><button data-fo="${pri ? "pdown" : "down"}" aria-label="Move down" title="Move down"${n < len - 1 ? "" : " disabled"}>${ARR_DN}</button></span>
+    </li>`;
   }
   function renderFocus(flashRef) {
     const owners = focusOwners();
     if (focusOwner && !owners.some(o => o.k === focusOwner)) focusOwner = "";
     const sel = owners.find(o => o.k === focusOwner), t = todayIso();
-    const list = sel ? focusItems(sel.k) : [];
+    const list = sel ? focusItems(sel.k) : [], pri = priItems();
+    const head = `<div class="fl-head" aria-hidden="true"><span></span><span>Campus</span><span>Project</span><span>Item</span><span>Owner</span><span>Due</span><span></span></div>`;
     view.innerHTML = pageHead("Focus List", "var(--accent)") + `<div class="page-body fo-page">
       ${owners.length ? `<div class="fo-pick"><span class="fo-lbl">Owner</span><div class="fo-owners" role="group" aria-label="Owner">${owners.map(o => `<button class="fo-own" data-k="${esc(o.k)}" aria-pressed="${o.k === focusOwner}">${esc(o.name)}<b>${o.n}</b></button>`).join("")}</div></div>` : ""}
-      ${!owners.length ? `<p class="sr-hint">No open items have an owner yet. Put a name in the Owner field of a task or an Action Register item and it shows up here.</p>`
-        : !sel ? `<p class="sr-hint">Pick an owner to see every open item assigned to them, across all campuses. Then put them in the order you want to work them.</p>`
-        : `<div class="sr-count">${list.length} open item${list.length === 1 ? "" : "s"} for ${esc(sel.name)} · use the arrows to set your order · tap an item for its details</div>
-      <ol class="fo-list">${list.map((x, n) => { const late = x.it.date && itemEnd(x.it) < t; return `<li class="fo-row${x.ref === flashRef ? " fresh" : ""}" data-ref="${x.ref}" style="--c:${x.p.color}">
-          <span class="fo-n">${n + 1}</span>
-          <button class="fo-check" data-fo="done" aria-label="Mark done" title="Mark done">${ICON.check}</button>
-          <button class="fo-main" data-fo="open" title="Open details">
-            <span class="fo-cat"><span class="st-camp" style="--c:${x.p.color}"><i></i>${esc(x.p.title)}</span><span class="fo-where">${esc(x.where)}</span>${x.ph ? `<span class="fo-ph">${esc(x.ph)}</span>` : ""}</span>
-            <span class="fo-text">${x.it.sub ? '<span class="sr-subtag">Subtask</span>' : ""}${esc(x.it.text)}</span>
-            ${x.it.status === "Blocked" || x.it.update ? `<span class="fo-sub">${x.it.status === "Blocked" ? '<span class="fo-blk">Blocked</span>' : ""}${x.it.update ? esc(x.it.update.split("\n")[0].slice(0, 120)) : ""}</span>` : ""}
-          </button>
-          ${x.it.date ? `<span class="date-pill fo-date" style="--c:${late ? "var(--danger)" : x.p.color}" title="${late ? "Past due" : "Due"} ${fullDate(x.it.date)}">${shortDate(x.it.date)}</span>` : `<span class="fo-nodate">No date</span>`}
-          <span class="fo-move"><button data-fo="top" aria-label="Move to top" title="Move to top"${n ? "" : " disabled"}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 5h12M12 19V9M7.5 13.5L12 9l4.5 4.5"/></svg></button><button data-fo="up" aria-label="Move up" title="Move up"${n ? "" : " disabled"}>${ICON.up}</button><button data-fo="down" aria-label="Move down" title="Move down"${n < list.length - 1 ? "" : " disabled"}>${ICON.down}</button></span>
-        </li>`; }).join("")}</ol>`}
+      <article class="card task-card fo-wide fo-pri" style="--list-color:#FFD84D">
+        <header class="card-head" style="color:#FFD84D"><div class="title">${ICON_STAR}Priorities</div><span class="act-count">${pri.length}</span></header>
+        <div class="card-body">${pri.length ? head + `<ul class="fo-lines">${pri.map((x, n) => foLineHtml(x, n, pri.length, t, flashRef, true)).join("")}</ul>` : `<p class="fo-empty">Star a task or an Action Register item and it lands here. Use the arrows to rank them.</p>`}</div></article>
+      <article class="card task-card fo-wide fo-mine" style="--list-color:var(--accent)">
+        <header class="card-head" style="color:var(--accent)"><div class="title">My Checklist${sel ? ` <span class="fo-for">· ${esc(sel.name)}</span>` : ""}</div><span class="act-count">${sel ? list.length : ""}</span></header>
+        <div class="card-body">${!owners.length ? `<p class="fo-empty">No open items have an owner yet. Put a name in the Owner field of a task or an Action Register item and it shows up here.</p>`
+          : !sel ? `<p class="fo-empty">Pick an owner above to see every open item assigned to them, across all campuses.</p>`
+          : list.length ? head + `<ul class="fo-lines">${list.map((x, n) => foLineHtml(x, n, list.length, t, flashRef, false)).join("")}</ul>` : `<p class="fo-empty">Everything for ${esc(sel.name)} is either done or on Priorities.</p>`}</div></article>
     </div>`;
     const body = view.querySelector(".fo-page");
     body.addEventListener("click", e => {
       const ob = e.target.closest(".fo-own");
       if (ob) { focusOwner = ob.getAttribute("aria-pressed") === "true" ? "" : ob.dataset.k; try { localStorage.setItem(FOCUS_KEY, focusOwner); } catch (err) {} renderFocus(); return; }
-      const b = e.target.closest("[data-fo]"); if (!b || !sel) return;
-      const ref = b.closest(".fo-row").dataset.ref, f = findItem(ref); if (!f) return;
+      const b = e.target.closest("[data-fo]"); if (!b) return;
+      const ref = b.closest(".fo-line").dataset.ref, f = findItem(ref); if (!f) return;
       const k = b.dataset.fo;
       if (k === "open") { openEditor(ref); return; }
       if (k === "done") { const snap = snapshot(); toggleDone(f.it); save(f.p); renderFocus(); showUndo(`Done: ${f.it.text}`, () => { restore(snap); }); return; }
-      focusMove(sel.k, ref, k === "top" ? "top" : k === "up" ? -1 : 1);
+      if (k === "pup" || k === "pdown") { priMove(ref, k === "pup" ? -1 : 1); return; }
+      if (k === "unstar") { const snap = snapshot(); f.it.star = false; save(f.p); renderFocus(); showUndo("Removed from Priorities", () => restore(snap)); return; }
+      if (sel) focusMove(sel.k, ref, k === "up" ? -1 : 1);
     });
   }
 
@@ -3924,14 +4075,13 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
           </div>
           <label class="allday"><input type="checkbox" class="allday-in"${all ? " checked" : ""}> All day</label>
         </div></div>
-        <div class="ev-sec"><span class="ev-ico">${ICON.flag}</span><div>
-          <div class="ev-lbl">Status</div>
-          <div class="ev-status">${STATUSES.map(st => `<button class="status-opt ${STATUS_CLASS[st]}" data-s="${st}" aria-pressed="${it.status === st}"><span class="s-dot"></span>${st}</button>`).join("")}</div>
-          <div class="bic-row"><span>OWNER</span><input class="field ev-bic" placeholder="Who owns this item?" value="${esc(it.bic)}" autocomplete="off" autocapitalize="words"></div>
+        <div class="ev-sec"><span class="ev-ico">${ICON.user}</span><div>
+          <div class="bic-row" style="margin-top:0"><span>OWNER</span><input class="field ev-bic" placeholder="Who owns this item?" value="${esc(it.bic)}" autocomplete="off" autocapitalize="words"></div>
         </div></div>
         <div class="ev-sec"><span class="ev-ico">${ICON.comment}</span><div>
           <div class="ev-lbl">Update</div>
-          <label class="allday" style="margin:0 0 8px"><input type="checkbox" class="star-in"${it.star ? " checked" : ""} style="accent-color:#FFD84D"> Show on the Status table</label>
+          <label class="allday" style="margin:0 0 6px"><input type="checkbox" class="upd-in"${it.upd ? " checked" : ""} style="accent-color:#5FD68A"> Update (shows on the Status table)</label>
+          <label class="allday" style="margin:0 0 8px"><input type="checkbox" class="star-in"${it.star ? " checked" : ""} style="accent-color:#FFD84D"> Priority (shows on the Focus List)</label>
           <textarea class="field ev-upd" placeholder="Latest update on this item" aria-label="Update">${esc(it.update)}</textarea>
         </div></div>
         <div class="ev-sec"><span class="ev-ico" style="color:${it.status === "Blocked" ? "#FF5A5A" : "var(--dim)"}">${ICON_BLOCK}</span><div>
@@ -3961,11 +4111,6 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
         <div class="ev-sec"><span class="ev-ico">${ICON.notes}</span><div>
           <div class="ev-lbl">Notes</div>
           <textarea class="field ev-notes" placeholder="Add notes" aria-label="Notes">${esc(it.notes)}</textarea>
-        </div></div>
-        <div class="ev-sec"><span class="ev-ico">${ICON.comment}</span><div>
-          <div class="ev-lbl">Comments</div>
-          <div class="comments">${it.comments.map(x => `<div class="cmt"><div class="cmt-t">${esc(x.text)}</div><div class="cmt-at">${esc(when(x.at))}</div><button class="x-btn cmt-x" data-id="${x.id}" aria-label="Delete comment" title="Delete">×</button></div>`).join("")}</div>
-          <form class="add-row cmt-form"><input class="field" name="c" placeholder="Add a comment" autocomplete="off"><button class="mini-btn ghost" type="submit">Post</button></form>
         </div></div>
       </div>
       <div class="ev-foot"><button class="foot-btn danger ev-del">${ICON.trash}Delete</button><button class="foot-btn ev-dup">${ICON.dup}Duplicate</button>${showOpen ? `<button class="foot-btn ev-goto">${ICON.folder}Open campus</button>` : ""}<span class="grow"></span><button class="done-btn ev-done">Done</button></div>`;
@@ -4041,7 +4186,8 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
         fixTimes(it); changed(); renderEditor();
       } else if (t.classList.contains("ev-custom")) renderEditor();
       else if (t.classList.contains("star-in")) { it.star = t.checked; it.stAt = Date.now(); changed(); }
-      else if (t.classList.contains("blk-in")) { if (t.checked !== (it.status === "Blocked")) toggleBlocked(it); changed(); renderEditor(); }
+      else if (t.classList.contains("upd-in")) { setFlag(it, t.checked ? "upd" : ""); changed(); renderEditor(); }
+      else if (t.classList.contains("blk-in")) { setFlag(it, t.checked ? "blk" : ""); changed(); renderEditor(); }
       else if (t.classList.contains("sub-in")) {
         if (t.checked && !canIndent(f.c, it)) { t.checked = false; return; }
         it.sub = t.checked; changed(); renderEditor();
@@ -4088,6 +4234,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
       case "cal-prev": shiftMonth(-1); return;
       case "cal-next": shiftMonth(1); return;
       case "st-star": { const f = findItem(a.dataset.ref); if (f) { f.it.star = !f.it.star; f.it.stAt = Date.now(); save(f.p); renderTable(); } return; }
+      case "st-upd": { const f = findItem(a.dataset.ref); if (f) { const snap = snapshot(); setFlag(f.it, ""); save(f.p); renderTable(); showUndo("Taken off the Status table", () => restore(snap)); } return; }
       case "go-status": go("#/status"); return;
       case "go-cal": go("#/calendar"); return;
       case "tbl-mode": tblMode = a.dataset.m; try { localStorage.setItem(TBL_KEY, tblMode); } catch (err) {} renderTable(); return;
@@ -4131,8 +4278,8 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
           if (v && !had) showMsg(c.sub === REG ? `“${it.text || "Action item"}” is due ${shortDate(v)}` : `“${it.text || "Task"}” is on the critical path for ${shortDate(v)}`);
         }, true);
         return;
-      case "star": { it.star = !it.star; it.stAt = Date.now(); save(p); repaint(p, c); showMsg(it.star ? `“${it.text || "Task"}” is on the Status table` : `“${it.text || "Task"}” removed from the Status table`); return; }
-      case "block": { toggleBlocked(it); save(p); repaint(p, c); if (it.status === "Blocked") showMsg(`“${it.text || "Task"}” added to Blockers. Open it to note the reason.`); return; }
+      case "star": { it.star = !it.star; it.stAt = Date.now(); save(p); repaint(p, c); showMsg(it.star ? `“${it.text || "Task"}” is a priority on the Focus List` : `“${it.text || "Task"}” removed from Priorities`); return; }
+      case "block": { if (popOpen(".flag-pop")) { closePops(); return; } openFlagPop(a, p, c, it); return; }
       case "status": openStatusMenu(a, it.status, st => { setStatus(it, st); save(p); repaint(p, c); }); return;
       case "open": openEditor(p.id + "|" + c.id + "|" + it.id); return;
     }
@@ -4239,7 +4386,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
       t.setAttribute("contenteditable", "false");
       const sb = subById(p, t.closest(".psec").dataset.sid); if (!sb) return;
       const v = t.textContent.replace(/\s+/g, " ").trim().toUpperCase() || sb.title;
-      t.textContent = v; if (sb.title !== v) { sb.title = v; save(p); }
+      t.textContent = v; if (sb.title !== v) { const bxx = (p.boxes || []).find(b => b.sid === sb.id && b.name.toUpperCase() === sb.title.slice(0, 40).toUpperCase()); if (bxx) bxx.name = v.slice(0, 40); sb.title = v; save(p); }
       return;
     }
     if (t.classList.contains("title") && t.getAttribute("contenteditable") === "true") {
@@ -4296,6 +4443,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
   function editSubTitle(sec) { const t = sec.querySelector(".psec-title"); t.setAttribute("contenteditable", "true"); t.focus(); const r = document.createRange(); r.selectNodeContents(t); const s = getSelection(); s.removeAllRanges(); s.addRange(r); }
   // a new project starts tidy: everything folded up except Tasks, which is open and ready for items
   function freshSub(p, x) {
+    if (p.boxes && !p.boxes.some(b => b.sid === x.id)) p.boxes.push({ id: uid(), name: x.title.slice(0, 40), color: COLORS[p.boxes.length % COLORS.length], created: Date.now(), sid: x.id });   // every new project gets its own note box
     x.sched.collapsed = true; x.sched.blkCollapsed = true; x.sched.xc = {}; X_CARDS.forEach(([k]) => { x.sched.xc[k] = true; });
     p.cards.filter(c => c.sub === x.id).forEach(c => { c.collapsed = false; });
   }
