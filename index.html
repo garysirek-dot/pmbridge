@@ -652,8 +652,8 @@ button.np-boxsq:hover { border-color: var(--c); }
 .act-maker .am-title:focus { border-color: var(--list-color); }
 .act-card .ntitle { cursor: text; outline: none; }
 /* Action Register */
-.camp-body.has-side { grid-template-columns: 520px minmax(0, 1fr); }
-@media (min-width: 900px) { .camp-body.has-side .pcols { grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); } }
+.camp-body.has-side { grid-template-columns: 440px minmax(0, 1fr); }
+@media (min-width: 900px) { .camp-body.has-side .pcols { grid-template-columns: repeat(auto-fill, minmax(440px, 1fr)); } }
 .cnotes > .regc { margin: 0; }
 .reg-card .card-head .act-count { margin-left: auto; }
 .rg-cols, .rg-row { display: grid; grid-template-columns: 24px 84px minmax(0, 1fr) 84px 20px; column-gap: 8px; align-items: start; }
@@ -883,6 +883,8 @@ body.cn-dragging, body.cn-dragging * { user-select: none !important; -webkit-use
 .st-star.on { color: #FFD84D; }
 .st-star:hover { color: #FFD84D; background: rgba(255,255,255,.07); }
 .st-seg { margin-left: auto; }
+.st-modes { margin-bottom: 10px; }
+.st-modes .cal-key { margin: 0; }
 .st-sec .home-head .st-seg button { padding: 5px 11px; font-size: 12.5px; color: var(--dim); }
 .st-sec .home-head .st-seg button[aria-pressed="true"] { background: #3a3a3d; color: var(--ink); }
 .st-card .st-seg button { padding: 4px 10px; font-size: 12px; color: var(--dim); }
@@ -911,6 +913,23 @@ table.st { width: 100%; border-collapse: collapse; min-width: 860px; font-size: 
 .st-none { color: var(--faint); }
 .st .st-empty { color: var(--dim); padding: 16px 20px; }
 /* search page */
+/* Critical Path card on the Calendar page */
+.gcp-wrap { margin-top: 22px; }
+.gcp-card .card-head .act-count { margin-left: auto; }
+.gcp-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(520px, 1fr)); gap: 20px; align-items: start; }
+.gcp-sub { color: var(--dim); font-weight: 700; }
+.gcp-head, .gcp-line { display: grid; grid-template-columns: 72px minmax(80px, 140px) minmax(0, 1fr) minmax(60px, 120px); column-gap: 12px; align-items: center; }
+.gcp-head { padding: 8px 0 6px; font-size: 10.5px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--faint); border-bottom: 1px solid var(--card-edge); }
+.gcp-line { padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,.06); }
+.gcp-line:last-child { border-bottom: 0; }
+.gcp-line .date-pill { white-space: nowrap; }
+.gcp-item { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 15px; color: var(--ink); }
+@media (max-width: 899px) {
+  .gcp-head { display: none; }
+  .gcp-grid { grid-template-columns: minmax(0, 1fr); gap: 14px; }
+  .gcp-line { grid-template-columns: 72px minmax(0, 1fr) auto; align-items: start; grid-template-areas: "date item item" ". proj who"; row-gap: 2px; column-gap: 10px; }
+  .gcp-date { grid-area: date; } .gcp-item { grid-area: item; white-space: normal; } .gcp-line .fl-camp { grid-area: camp; } .gcp-line .fl-proj { grid-area: proj; } .gcp-line .fl-who { grid-area: who; text-align: right; font-size: 12px; }
+}
 /* Focus List */
 .fo-page { max-width: none; }
 .fo-wide { max-width: 1400px; margin-bottom: 20px; }
@@ -1024,6 +1043,18 @@ table.st { width: 100%; border-collapse: collapse; min-width: 860px; font-size: 
 .sr-in::-webkit-search-cancel-button { filter: invert(1) opacity(.5); }
 .sr-seg button { padding: 8px 14px; font-size: 13.5px; font-weight: 600; color: var(--dim); }
 .sr-seg button[aria-pressed="true"] { background: #3a3a3d; color: var(--ink); }
+.sr-why { font-size: 12.5px; color: var(--dim); margin-top: 3px; } .sr-why b { color: var(--faint); font-weight: 700; }
+.sr-extra { margin-top: 18px; }
+.sr-extra .card-head .act-count { margin-left: auto; }
+.sr-xlist { list-style: none; margin: 4px 0 0; padding: 0; }
+.sr-xlist li + li { border-top: 1px solid rgba(255,255,255,.06); }
+.sr-x { width: 100%; display: grid; grid-template-columns: 210px 220px minmax(0, 1fr) auto; gap: 12px; align-items: center; padding: 9px 4px; text-align: left; color: var(--ink); border-radius: 8px; }
+.sr-x:hover { background: rgba(255,255,255,.05); }
+.sr-x .st-camp { font-size: 11.5px; min-width: 0; overflow: hidden; }
+.sr-x b { font-size: 13.5px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sr-xs { color: var(--dim); font-size: 13.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+.sr-xt { color: var(--faint); font-size: 12px; white-space: nowrap; }
+@media (max-width: 899px) { .sr-x { grid-template-columns: minmax(0, 1fr) auto; } .sr-x .st-camp { grid-column: 1 / -1; } .sr-xs { grid-column: 1 / -1; } }
 .sr-hint, .sr-count { color: var(--dim); font-size: 14px; margin: 0 2px 12px; }
 table.st.sr { min-width: 640px; }
 .st.sr th:nth-child(1) { width: 20%; } .st.sr th:nth-child(2) { width: 17%; } .st.sr th:nth-child(3) { width: 11%; } .st.sr th:nth-child(4) { width: 36%; } .st.sr th:nth-child(5) { width: 16%; }
@@ -1198,7 +1229,8 @@ body.row-drag, body.row-drag * { cursor: grabbing !important; user-select: none;
 /* phases: fixed, bold headings in the card color */
 .task-card .item:not(.editing) .date-pill { display: none; }
 /* Action Register: a date is just the due date, shown on the line */
-.task-card.regc:not(.no-dates) .item:not(.editing) .date-pill:not(.no-date) { display: inline-block; }
+.task-card:not(.no-dates) .item:not(.editing) .date-pill:not(.no-date) { display: inline-block; }
+.task-card .item .date-pill.overdue { border-color: #FF6B6B; color: #FF6B6B; }
 .regc .items > li.item.phase:not(:first-child) { border-top: 1px solid rgba(255,255,255,.12); margin-top: 10px; padding-top: 12px; }
 .regc .item .date-pill.overdue { border-color: #FF6B6B; color: #FF6B6B; }
 .item.phase { align-items: center; padding: 12px 0 5px 0; margin: 0 0 2px 20px; }
@@ -1569,7 +1601,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
   const STATUSES = ["Not Started", "In Progress", "Blocked", "Done"];
   const STATUS_CLASS = { "Not Started": "s-ns", "In Progress": "s-ip", "Blocked": "s-blk", "Done": "s-done" };
   const LS_KEY = "pmbridge-v1";
-  const APP_VERSION = "72 (Oct 17)";
+  const APP_VERSION = "75 (Oct 18)";
   const $ = id => document.getElementById(id);
   const uid = () => Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4);
   const pad2 = n => String(n).padStart(2, "0");
@@ -2067,8 +2099,9 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
   function tableHtml() {
     const rows = tableRows();
     const empty = { cp: "No updates yet. Tap the circle on a task and choose Update (green) to show it here.", blk: "Nothing is blocked. Tap the circle on a task and choose Blocker (red)." }[tblMode];
-    return `<div class="st-sec"><div class="home-head"><span>${rows.length} ${rows.length === 1 ? "item" : "items"}</span>
-        <div class="seg st-seg" role="group" aria-label="Show">${[["cp", "Update"], ["blk", "Blockers"]].map(([k, l]) => `<button data-act="tbl-mode" data-m="${k}" aria-pressed="${tblMode === k}">${l}</button>`).join("")}</div></div>
+    const cnt = { cp: 0, blk: 0 };
+    state.projects.forEach(p => [...p.subs.map(x => x.id), REG].forEach(sid => subCards(p, sid).forEach(c => c.items.forEach(it => { if (it.kind === "phase" || it.done || !it.text.trim()) return; if (it.status === "Blocked") cnt.blk++; else if (it.upd) cnt.cp++; }))));
+    return `<div class="st-sec"><div class="home-head st-modes"><div class="cal-key" role="group" aria-label="Show">${[["cp", "Update", "#5FD68A"], ["blk", "Blockers", "#FF5A5A"]].map(([k, l, col]) => `<button class="ck" data-act="tbl-mode" data-m="${k}" aria-pressed="${tblMode === k}" style="--c:${col}"><i></i><span>${l}</span><b class="ck-n">${cnt[k]}</b></button>`).join("")}</div></div>
       <section class="card st-card" aria-label="Status"><div class="st-wrap"><table class="st"><thead><tr><th>Campus</th><th>Project</th><th>Item</th><th>Update</th><th>Blocker</th><th>Owner</th></tr></thead>
       <tbody>${rows.length ? rows.map(r => { const ref = r.p.id + "|" + r.c.id + "|" + r.it.id, blk = r.it.status === "Blocked"; return `<tr data-ref="${ref}">
         <td><span class="st-camp" style="--c:${r.p.color}"><i></i>${esc(r.p.title)}</span></td>
@@ -2152,7 +2185,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
   function colHtml(p, x) {
     const cp = schedHtml(p, x), bk = blkHtml(p, x), ca = cpActive(p, x), ba = blkActive(p, x);
     const mid = subCards(p, x.id).map(c => cardHtml(p, c)).join("");
-    return mid + cp + bk;   // Tasks, Critical Path, Blockers
+    return mid;   // the project card holds its task list only; dates feed the Critical Path card on the Calendar page
   }
   const wasActive = {};
   // a card that just woke up opens itself so the new date / blocker is visible
@@ -3347,7 +3380,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
       <div class="phase-text" contenteditable="true" spellcheck="true" autocapitalize="words" data-ph="${c.sub === REG ? "Category" : "Phase name"}" data-field="text"></div>
       <button class="phase-x" data-act="del-phase" aria-label="Remove phase" title="Remove phase">×</button>
     </li>`;
-    const pill = it.sub && !it.date ? "" : `<button class="date-pill${it.date ? "" : " no-date"}${c.sub === REG && it.date && !it.done && it.date < todayIso() ? " overdue" : ""}" style="--c:${col}" data-act="date" data-pop title="${it.date ? fullDate(it.date) : "Add a date"}">${it.date ? shortDate(it.date) : "DATE"}</button>`;
+    const pill = it.sub && !it.date ? "" : `<button class="date-pill${it.date ? "" : " no-date"}${it.date && !it.done && itemEnd(it) < todayIso() ? " overdue" : ""}" style="--c:${col}" data-act="date" data-pop title="${it.date ? fullDate(it.date) : "Add a date"}">${it.date ? shortDate(it.date) : "DATE"}</button>`;
     return `<li class="item${it.star ? " starred" : ""}${it.id === editingIid ? " editing" : ""}${it.status === "Blocked" ? " blocked" : ""}${it.sub ? " sub" : ""}${it.done ? " done" : ""}${it.imp ? " important" : ""}${it.id === freshId ? " fresh" : ""}" data-iid="${it.id}" data-cid="${c.id}">
       <span class="grip" aria-label="Drag to reorder" title="Drag to reorder">${ICON.grip}</span>
       <button class="check" role="checkbox" aria-checked="${it.done}" aria-label="Done" data-act="check">${ICON.check}<i class="bang">!</i></button>
@@ -3524,6 +3557,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
     </div>`;
   }
   function renderCal() {
+    paintGcp();
     const box = $("cal"); if (!box) return;
     const p = currentProject(), global = !p;
     const list = global ? collectItems(null).filter(x => calShows(x.p)) : collectItems(p.id);
@@ -3557,8 +3591,24 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
         <button class="nav-btn" data-act="go-home" aria-label="All campuses" title="All campuses">${ICON.back}</button>
         <div class="ph-main"><span class="ph-crumb" data-act="go-home">All campuses</span><h1 class="ph-title" style="color:${color}">${title}</h1></div></nav>`;
   function renderGlobalCal() {
-    view.innerHTML = `<div class="page-body tab-body"><section class="cal" id="cal"></section></div>`;
+    view.innerHTML = `<div class="page-body tab-body"><section class="cal" id="cal"></section><div id="gcp" class="gcp-wrap"></div></div>`;
     renderCal();
+  }
+  // every campus's dated, open tasks in date order (follows the campus filter above the calendar)
+  function paintGcp() {
+    const box = $("gcp"); if (!box) return;
+    const t = todayIso(), rows = [];
+    state.projects.forEach(p => { if (!calShows(p)) return; p.subs.forEach(x => datedItems(p, x.id).forEach(({ c, it }) => { if (!it.done) rows.push({ p, x, c, it }); })); });
+    rows.sort((a, b) => (a.it.date + (a.it.startTime || "")).localeCompare(b.it.date + (b.it.startTime || "")) || a.p.title.localeCompare(b.p.title));
+    const groups = state.projects.filter(calShows).map(p => ({ p, rows: rows.filter(r => r.p === p) })).filter(g => g.rows.length);
+    box.innerHTML = groups.length ? `<div class="gcp-grid">${groups.map(g => `<article class="card task-card gcp-card" style="--list-color:${g.p.color}">
+      <header class="card-head" style="color:${g.p.color}"><div class="title">${esc(g.p.title)} <span class="gcp-sub">· Critical Path</span></div><span class="act-count">${g.rows.length}</span></header>
+      <div class="card-body"><div class="gcp-head" aria-hidden="true"><span>Date</span><span>Project</span><span>Task</span><span>Owner</span></div><ul class="fo-lines">${g.rows.map(r => { const late = itemEnd(r.it) < t; return `<li class="gcp-line" style="--pc:${r.p.color}">
+          <span class="gcp-date"><span class="date-pill" style="--c:${late ? "var(--danger)" : r.p.color}" title="${late ? "Past due " : ""}${fullDate(r.it.date)}">${shortDate(r.it.date)}</span></span>
+          <span class="fl-proj" title="${esc(r.x.title)}">${esc(r.x.title)}</span>
+          <span class="gcp-item" title="${esc(r.it.text)}">${esc(r.it.text || "Untitled")}</span>
+          <span class="fl-who" title="${esc(r.it.bic)}">${esc(r.it.bic)}</span></li>`; }).join("")}</ul></div></article>`).join("")}</div>`
+      : `<article class="card task-card gcp-card" style="--list-color:var(--accent)"><header class="card-head" style="color:var(--accent)"><div class="title">Critical Path</div></header><div class="card-body"><p class="fo-empty">Give a task a date on any project card and it shows up here, one card per campus, in date order.</p></div></article>`;
   }
   function renderStatusPage() {
     view.innerHTML = `<div class="page-body tab-body">${tableHtml()}</div>`;
@@ -3571,9 +3621,9 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
   function searchRows() {
     const t = todayIso(), soon = addDays(t, 3), words = srch.q.toLowerCase().split(/\s+/).filter(Boolean), out = [];
     if (srch.mode === "text" && !words.length) return null;
-    state.projects.forEach(p => p.subs.forEach(x => subCards(p, x.id).forEach(c => c.items.forEach(it => {
+    state.projects.forEach(p => [...p.subs, { id: REG, title: "ACTION REGISTER" }].forEach(x => subCards(p, x.id).forEach(c => c.items.forEach(it => {
       if (it.kind === "phase" || !it.text.trim()) return;
-      if (srch.mode === "text") { const hay = (it.text + " " + (it.bic || "")).toLowerCase(); if (!words.every(w => hay.includes(w))) return; }
+      if (srch.mode === "text") { const hay = [it.text, it.bic, it.update, it.notes, it.blockReason, x.id === REG ? focusCat(p, c, it).ph : ""].join(" ").toLowerCase(); if (!words.every(w => hay.includes(w))) return; }
       else { if (it.done || !it.date) return;
         if (srch.mode === "past" && !(itemEnd(it) < t)) return;
         if (srch.mode === "soon" && !(it.date <= soon && itemEnd(it) >= t)) return; }
@@ -3582,26 +3632,60 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
     out.sort((a, b) => (a.it.date || "9999").localeCompare(b.it.date || "9999") || a.p.title.localeCompare(b.p.title));
     return out;
   }
+  // notes, contacts and documents that match the search words
+  function searchExtras() {
+    if (srch.mode !== "text") return { n: 0, html: "" };
+    const words = srch.q.toLowerCase().split(/\s+/).filter(Boolean); if (!words.length) return { n: 0, html: "" };
+    const hit = s => { const h = s.toLowerCase(); return words.every(w => h.includes(w)); };
+    const notes = [], people = [], docs = [];
+    state.projects.forEach(p => {
+      p.notes.filter(n => !n.actOnly && hit([n.title, n.tags.join(" "), noteText(n)].join(" "))).forEach(n => notes.push({ p, n }));
+      p.contacts.filter(c => hit([c.name, c.company, c.role, c.phone].join(" "))).forEach(c => people.push({ p, c }));
+      p.docs.filter(d => hit([d.desc, d.link1, d.link2].join(" "))).forEach(d => docs.push({ p, d }));
+    });
+    const camp = p => `<span class="st-camp" style="--c:${p.color}"><i></i>${esc(p.title)}</span>`;
+    const sec = (title, n, body) => n ? `<section class="card task-card sr-extra" style="--list-color:var(--accent)"><header class="card-head" style="color:var(--accent)"><div class="title">${title}</div><span class="act-count">${n}</span></header><div class="card-body"><ul class="sr-xlist">${body}</ul></div></section>` : "";
+    const html = sec("Notes", notes.length, notes.map(({ p, n }) => { const first = (noteText(n).split("\n").find(l => l.trim()) || "").trim(), b = n.filed ? p.boxes.find(x => x.id === n.box) : null;
+        return `<li><button class="sr-x" data-sr="note" data-pid="${p.id}" data-nid="${n.id}">${camp(p)}<b>${esc(n.title)}</b><span class="sr-xs">${esc(first.slice(0, 140)) || "No text"}</span><span class="sr-xt">${b ? "In box: " + esc(b.name) : "Notepad"}</span></button></li>`; }).join(""))
+      + sec("Contacts", people.length, people.map(({ p, c }) => `<li><button class="sr-x" data-sr="contact" data-pid="${p.id}">${camp(p)}<b>${esc(c.name || "(no name)")}</b><span class="sr-xs">${esc([c.role, c.company].filter(Boolean).join(" · "))}</span><span class="sr-xt">${esc(c.phone)}</span></button></li>`).join(""))
+      + sec("Documents", docs.length, docs.map(({ p, d }) => `<li><button class="sr-x" data-sr="doc" data-pid="${p.id}">${camp(p)}<b>${esc(d.desc || d.link1 || "Document")}</b><span class="sr-xs">${esc([d.link1, d.link2].filter(Boolean).join("  ·  "))}</span><span class="sr-xt">Open list</span></button></li>`).join(""));
+    return { n: notes.length + people.length + docs.length, html };
+  }
+  // when a task matched on its update, notes or blocker reason, show that line so it's clear why
+  function srWhy(it) {
+    if (srch.mode !== "text") return "";
+    const words = srch.q.toLowerCase().split(/\s+/).filter(Boolean), inText = (it.text + " " + it.bic).toLowerCase();
+    if (!words.length || words.every(w => inText.includes(w))) return "";
+    for (const [k, l] of [["update", "Update"], ["notes", "Notes"], ["blockReason", "Blocker"]]) { const v = String(it[k] || ""); if (words.some(w => v.toLowerCase().includes(w))) return `<div class="sr-why"><b>${l}:</b> ${esc(v.replace(/\s+/g, " ").slice(0, 120))}</div>`; }
+    return "";
+  }
   function searchResultsHtml() {
     const rows = searchRows(), t = todayIso();
-    if (rows === null) return `<p class="sr-hint">Type a task or an owner's name, or pick Past due or Next 3 days.</p>`;
-    const label = { text: `${rows.length} ${rows.length === 1 ? "task" : "tasks"} matching “${esc(srch.q.trim())}”`, past: `${rows.length} past due`, soon: `${rows.length} due in the next 3 days` }[srch.mode];
+    if (rows === null) return `<p class="sr-hint">Type a word to find matching tasks, Action Register items, notes, contacts and documents, or pick Past due or Next 3 days.</p>`;
+    const ex = searchExtras();
+    const label = { text: `${rows.length} ${rows.length === 1 ? "task or action item" : "tasks and action items"}${ex.n ? ` · ${ex.n} other match${ex.n > 1 ? "es" : ""} below` : ""} for “${esc(srch.q.trim())}”`, past: `${rows.length} past due`, soon: `${rows.length} due in the next 3 days` }[srch.mode];
     return `<div class="sr-count">${label}</div>
       <section class="card st-card" aria-label="Search results"><div class="st-wrap"><table class="st sr"><thead><tr><th>Campus</th><th>Project</th><th>Date</th><th>Task</th><th>Owner</th></tr></thead>
       <tbody>${rows.length ? rows.map(r => { const ref = r.p.id + "|" + r.c.id + "|" + r.it.id, late = !r.it.done && r.it.date && itemEnd(r.it) < t; return `<tr class="${r.it.done ? "sr-done" : ""}">
         <td><span class="st-camp" style="--c:${r.p.color}"><i></i>${esc(r.p.title)}</span></td>
         <td class="st-proj">${esc(r.s.title)}</td>
         <td>${r.it.date ? `<span class="np${late ? " late" : ""}" style="--c:${late ? "var(--danger)" : r.p.color}">${shortDate(r.it.date)}</span>` : `<span class="st-none">—</span>`}</td>
-        <td><button class="st-item" data-act="open-item" data-ref="${ref}">${r.it.sub ? '<span class="sr-subtag">Subtask</span>' : ""}${esc(r.it.text)}${r.it.done ? ' <span class="sr-donetag">Done</span>' : ""}</button><div class="sr-meta"><span class="st-camp" style="--c:${r.p.color}"><i></i>${esc(r.p.title)}</span><span>${esc(r.s.title)}</span>${r.it.bic ? `<span class="sr-mo">${esc(r.it.bic)}</span>` : ""}</div></td>
-        <td class="sr-owner">${r.it.bic ? esc(r.it.bic) : '<span class="st-none">—</span>'}</td></tr>`; }).join("") : `<tr><td colspan="5" class="st-empty">${srch.mode === "text" ? "No tasks match." : srch.mode === "past" ? "Nothing is past due." : "Nothing is due in the next 3 days."}</td></tr>`}</tbody></table></div></section>`;
+        <td><button class="st-item" data-act="open-item" data-ref="${ref}">${r.it.sub ? '<span class="sr-subtag">Subtask</span>' : ""}${esc(r.it.text)}${r.it.done ? ' <span class="sr-donetag">Done</span>' : ""}</button>${srWhy(r.it)}<div class="sr-meta"><span class="st-camp" style="--c:${r.p.color}"><i></i>${esc(r.p.title)}</span><span>${esc(r.s.title)}</span>${r.it.bic ? `<span class="sr-mo">${esc(r.it.bic)}</span>` : ""}</div></td>
+        <td class="sr-owner">${r.it.bic ? esc(r.it.bic) : '<span class="st-none">—</span>'}</td></tr>`; }).join("") : `<tr><td colspan="5" class="st-empty">${srch.mode === "text" ? "No tasks or action items match." : srch.mode === "past" ? "Nothing is past due." : "Nothing is due in the next 3 days."}</td></tr>`}</tbody></table></div></section>${ex.html}`;
   }
   function renderSearch() {
     view.innerHTML = pageHead("Search", "var(--accent)") + `<div class="page-body sr-page">
       <div class="sr-bar"></div></div>`;
     const bar = view.querySelector(".sr-bar");
-    bar.innerHTML = `<label class="sr-box">${ICON_SEARCH}<input class="sr-in" type="search" placeholder="Search tasks or owners" aria-label="Search tasks or owners" enterkeyhint="search" autocomplete="off" value="${esc(srch.mode === "text" ? srch.q : "")}"></label>
+    bar.innerHTML = `<label class="sr-box">${ICON_SEARCH}<input class="sr-in" type="search" placeholder="Search tasks, action items, notes, contacts…" aria-label="Search tasks or owners" enterkeyhint="search" autocomplete="off" value="${esc(srch.mode === "text" ? srch.q : "")}"></label>
       <div class="seg sr-seg" role="group" aria-label="Due dates"><button data-sm="past" aria-pressed="${srch.mode === "past"}">Past due</button><button data-sm="soon" aria-pressed="${srch.mode === "soon"}">Next 3 days</button></div>`;
     const res = document.createElement("div"); res.className = "sr-res"; res.innerHTML = searchResultsHtml(); bar.after(res);
+    res.addEventListener("click", e => {
+      const b = e.target.closest("[data-sr]"); if (!b) return;
+      const p = proj(b.dataset.pid); if (!p) return;
+      if (b.dataset.sr === "note") { const n = p.notes.find(x => x.id === b.dataset.nid); if (!n) return; openNotepad(p, n.filed ? null : n.id); if (n.filed) { openBoxPanel(p); bx.view = "box"; bx.box = n.box; bx.q = ""; bx.expanded = new Set([n.id]); renderBoxPanel(); } return; }
+      openCList(p, b.dataset.sr === "contact" ? "contacts" : "docs");
+    });
     const inp = bar.querySelector(".sr-in");
     const paint = () => { res.innerHTML = searchResultsHtml(); bar.querySelectorAll("[data-sm]").forEach(b => b.setAttribute("aria-pressed", String(srch.mode === b.dataset.sm))); };
     inp.addEventListener("input", () => { srch.q = inp.value; srch.mode = "text"; paint(); });
@@ -4275,7 +4359,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
           it.date = v; it.end = v ? addDays(v, span) : null; fixTimes(it); save(p);
           if (v) { calView.y = parseIso(v).getFullYear(); calView.m = parseIso(v).getMonth(); if (!had) { markFresh(it.id); subOf(p, c).sched.collapsed = false; } }
           repaint(p, c, it.id === editingIid && !isTouch() ? it.id : null);
-          if (v && !had) showMsg(c.sub === REG ? `“${it.text || "Action item"}” is due ${shortDate(v)}` : `“${it.text || "Task"}” is on the critical path for ${shortDate(v)}`);
+          if (v && !had) showMsg(c.sub === REG ? `“${it.text || "Action item"}” is due ${shortDate(v)}` : `“${it.text || "Task"}” is on the Critical Path (Calendar page) for ${shortDate(v)}`);
         }, true);
         return;
       case "star": { it.star = !it.star; it.stAt = Date.now(); save(p); repaint(p, c); showMsg(it.star ? `“${it.text || "Task"}” is a priority on the Focus List` : `“${it.text || "Task"}” removed from Priorities`); return; }
