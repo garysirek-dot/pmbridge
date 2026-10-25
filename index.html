@@ -1783,7 +1783,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
   const STATUSES = ["Not Started", "In Progress", "Blocked", "Done"];
   const STATUS_CLASS = { "Not Started": "s-ns", "In Progress": "s-ip", "Blocked": "s-blk", "Done": "s-done" };
   const LS_KEY = "pmbridge-v1";
-  const APP_VERSION = "95 (Oct 25)";
+  const APP_VERSION = "96 (Oct 25)";
   const $ = id => document.getElementById(id);
   const uid = () => Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4);
   const pad2 = n => String(n).padStart(2, "0");
@@ -1865,7 +1865,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
     };
     if (r.done && it.status !== "Done") { it.prev = it.status; it.status = "Done"; }
     it.done = it.status === "Done";
-    if (it.kind === "phase") { it.sub = false; it.imp = false; it.date = null; it.end = null; it.done = false; it.status = "Not Started"; }
+    if (it.kind === "phase") { it.sub = false; it.imp = false; it.end = it.date; it.done = false; it.status = "Not Started"; }   // a phase keeps its milestone date
     return it;
   };
   const cleanTask = cleanItem, cleanSched = cleanItem;
@@ -4543,6 +4543,13 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
   }
   const offLabel = o => (o == null ? "—" : o === 0 ? "T-0" : o < 0 ? "T" + o : "T+" + o);
   // the T-0 task got a date: every other task from the same template moves with it
+  // template dates are workdays: T-0 is the milestone itself; every other T-date moves to the nearest Friday
+  function tplDate(zero, off) {
+    if (!off) return zero;
+    const d = addDays(zero, off), dow = parseIso(d).getDay();   // 0 Sun … 5 Fri … 6 Sat
+    const back = (dow - 5 + 7) % 7, fwd = (5 - dow + 7) % 7;
+    return addDays(d, back <= fwd ? -back : fwd);
+  }
   function tplCascade(p, it) {
     if (!it.tgrp || !Number.isFinite(it.toff) || !it.date) return;
     const grp = [];
@@ -4550,7 +4557,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
     if (it.toff !== 0 && grp.some(g => g.y.date)) return;   // moving one phase by hand doesn't drag the others; the T-0 phase does
     const zero = addDays(it.date, -it.toff);
     let n = 0;
-    grp.forEach(({ q, y }) => { const d = addDays(zero, y.toff); if (y.date !== d) { y.date = d; y.end = d; n++; if (q !== p) save(q); } });
+    grp.forEach(({ q, y }) => { const d = y.toff === 0 ? zero : tplDate(zero, y.toff); if (y.date !== d) { y.date = d; y.end = d; n++; if (q !== p) save(q); } });
     if (n) setTimeout(() => showUndo(`${n} template date${n > 1 ? "s" : ""} set from ${shortDate(it.date)}`, null), 50);
   }
   function applyTemplate(p, x, t, target, replace) {
@@ -4558,7 +4565,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
     const snap = snapshot(), grp = uid();
     if (replace) c.items = [];
     t.rows.forEach(r => {
-      const d = target && r.kind === "phase" && r.off != null ? addDays(target, r.off) : null;
+      const d = target && r.kind === "phase" && r.off != null ? tplDate(target, r.off) : null;
       if (r.kind === "phase") { c.items.push(cleanItem({ kind: "phase", text: r.text, date: d, end: d, ...(r.off != null ? { tgrp: grp, toff: r.off } : {}) })); return; }
       c.items.push(cleanItem({ text: r.text, bic: r.owner, sub: r.sub }));
     });
@@ -4615,7 +4622,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
           <div class="tp-head"><input class="tp-name" value="${esc(t.name)}" aria-label="Template name" autocapitalize="characters">
             <label class="tp-anchor">T-0 milestone <input class="tp-in" data-tf="anchor" value="${esc(t.anchor)}" placeholder="Installation"></label>
             <button class="foot-btn" data-tp="dup">${ICON.dup}Duplicate</button><button class="foot-btn danger" data-tp="deltpl">${ICON.trash}Delete</button></div>
-          <p class="tp-help">Phases carry the dates. <b>T days</b> count from the <b>${esc(t.anchor)}</b> date: <b>-20</b> is 20 days before, <b>0</b> is the ${esc(t.anchor)} phase itself, <b>7</b> is a week after. Tasks start with no date; date one on the card when it matters and it joins the Critical Path.</p>
+          <p class="tp-help">Phases carry the dates. <b>T days</b> count from the <b>${esc(t.anchor)}</b> date: <b>-20</b> is 20 days before, <b>0</b> is the ${esc(t.anchor)} phase itself, <b>7</b> is a week after. Every date except T-0 lands on the nearest Friday. Tasks start with no date; date one on the card when it matters and it joins the Critical Path.</p>
           <div class="st-wrap"><table class="st tpt"><colgroup><col style="width:130px"><col><col style="width:180px"><col style="width:120px"><col style="width:104px"></colgroup><thead><tr><th>Type</th><th>Phase / Task</th><th>Owner</th><th>T days</th><th></th></tr></thead>
             <tbody>${t.rows.map(rowHtml).join("") || `<tr><td colspan="5" class="st-empty">No rows yet. Add a phase, then its tasks.</td></tr>`}</tbody></table></div>
           <div class="cap-add tp-add"><button class="add-task" data-tp="addph">${ICON.plus}Add phase</button><button class="add-task" data-tp="addtask">${ICON.plus}Add task</button></div>
