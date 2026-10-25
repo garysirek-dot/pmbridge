@@ -935,6 +935,43 @@ table.st { width: 100%; border-collapse: collapse; min-width: 860px; font-size: 
 .st-card .st:not(.sr) tbody tr:first-child td { padding-top: 14px; }
 /* Program tab + L10 */
 .soon-card { max-width: 760px; }
+/* Closed (archived) */
+.closed-sec { margin-top: 28px; border-top: 1px solid var(--card-edge); padding-top: 14px; }
+.cl-toggle { display: inline-flex; align-items: center; gap: 10px; color: var(--dim); font-size: 13px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; padding: 6px 4px; }
+.cl-toggle svg { width: 18px; height: 18px; } .cl-toggle b { font-size: 12px; padding: 1px 8px; border-radius: 99px; background: #2a2a2d; color: var(--ink); letter-spacing: 0; }
+.cl-chev svg { width: 16px; height: 16px; } .cl-chev { display: inline-grid; transition: transform .15s; } .closed-sec.open .cl-chev { transform: rotate(180deg); } .cl-toggle:hover { color: var(--ink); }
+.cl-body { display: none; padding-top: 6px; } .closed-sec.open .cl-body { display: block; }
+.cl-lbl { margin: 12px 0 6px; font-size: 11px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--faint); }
+.cl-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 8px; }
+.cl-row { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 12px; background: var(--card); border: 1px solid var(--card-edge); opacity: .88; }
+.cl-row > i { width: 10px; height: 10px; border-radius: 50%; background: var(--c); flex: none; }
+.cl-main { flex: 1; min-width: 0; display: flex; flex-direction: column; } .cl-main b { font-size: 14px; letter-spacing: .05em; text-transform: uppercase; color: var(--c); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } .cl-main span { font-size: 12px; color: var(--dim); }
+.cl-row .foot-btn { padding: 6px 10px; font-size: 13px; } .cl-row .foot-btn svg { width: 15px; height: 15px; }
+.closed-banner { grid-column: 1 / -1; box-sizing: border-box; max-width: 100%; display: flex; align-items: center; gap: 12px; margin: -18px 20px 18px; padding: 10px 14px; border-radius: 12px; border: 1px dashed #8a8a8f; background: rgba(255,255,255,.04); color: var(--dim); font-size: 14px; }
+.closed-banner svg { width: 20px; height: 20px; flex: none; } .closed-banner span { flex: 1; } .closed-banner b { color: var(--ink); }
+.cb-open { padding: 7px 12px; border-radius: 9px; background: var(--accent); color: #0b0b0c; font-weight: 800; font-size: 13px; }
+.cv-list li { gap: 8px; } .cv-list li.done .cv-t { text-decoration: line-through; color: var(--faint); }
+.cv-ck { width: 16px; height: 16px; border-radius: 4px; border: 1.5px solid var(--card-edge); display: inline-grid; place-items: center; flex: none; align-self: center; } .cv-ck svg { width: 12px; height: 12px; color: var(--c); }
+/* Tools → Notepad */
+.nt-top { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 16px; margin: 6px 0 12px; }
+.nt-h { display: flex; align-items: center; gap: 10px; margin: 0; font-size: 20px; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); } .nt-h svg { width: 22px; height: 22px; }
+.nt-search { flex: 1 1 280px; display: flex; align-items: center; gap: 8px; height: 42px; padding: 0 12px; border-radius: 12px; border: 1px solid var(--card-edge); background: #1d1d1f; color: var(--dim); }
+.nt-search:focus-within { border-color: var(--accent); } .nt-search svg { width: 18px; height: 18px; flex: none; }
+.nt-q { flex: 1; min-width: 0; background: transparent; border: 0; outline: none; color: var(--ink); font: inherit; font-size: 15px; }
+.nt-new { display: inline-flex; align-items: center; gap: 6px; height: 42px; padding: 0 16px; border-radius: 12px; background: var(--accent); color: #0b0b0c; font-weight: 800; font-size: 14px; white-space: nowrap; } .nt-new svg { width: 16px; height: 16px; } .nt-new:hover { filter: brightness(1.08); }
+.nt-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+.nt-chip { display: inline-flex; align-items: center; gap: 7px; padding: 6px 12px; border-radius: 99px; border: 1px solid var(--card-edge); color: var(--dim); font-size: 13px; font-weight: 700; }
+.nt-chip i { width: 8px; height: 8px; border-radius: 50%; background: var(--c); } .nt-chip b { font-size: 11.5px; color: var(--faint); } .nt-chip small { font-size: 10.5px; color: var(--faint); font-weight: 600; }
+.nt-chip[aria-pressed="true"] { border-color: var(--c); color: var(--ink); background: color-mix(in srgb, var(--c) 14%, transparent); }
+.nt-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 12px; }
+.nt-card { display: flex; flex-direction: column; gap: 6px; padding: 14px 16px; text-align: left; color: var(--ink); border-left: 3px solid var(--c); min-height: 120px; }
+.nt-card:hover { border-color: var(--c); }
+.nt-meta { display: flex; align-items: center; gap: 6px; font-size: 11.5px; color: var(--dim); font-weight: 600; } .nt-meta i { width: 8px; height: 8px; border-radius: 50%; background: var(--c); flex: none; }
+.nt-title { font-size: 15px; letter-spacing: .04em; text-transform: uppercase; }
+.nt-snip { font-size: 13px; color: var(--dim); line-height: 1.45; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; } .nt-snip em { color: var(--faint); }
+.nt-card mark { background: color-mix(in srgb, var(--accent) 35%, transparent); color: var(--ink); border-radius: 3px; padding: 0 1px; }
+.nt-act { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; color: var(--accent); font-weight: 700; } .nt-act svg { width: 14px; height: 14px; }
+@media (max-width: 599px) { .cl-list { grid-template-columns: minmax(0, 1fr); } .nt-grid { grid-template-columns: minmax(0, 1fr); } }
 /* Templates */
 .tp-layout { display: grid; grid-template-columns: 260px minmax(0, 1fr); gap: 20px; align-items: start; }
 .tp-tlist { display: flex; flex-direction: column; gap: 8px; }
@@ -1740,7 +1777,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
   const STATUSES = ["Not Started", "In Progress", "Blocked", "Done"];
   const STATUS_CLASS = { "Not Started": "s-ns", "In Progress": "s-ip", "Blocked": "s-blk", "Done": "s-done" };
   const LS_KEY = "pmbridge-v1";
-  const APP_VERSION = "92 (Oct 25)";
+  const APP_VERSION = "93 (Oct 25)";
   const $ = id => document.getElementById(id);
   const uid = () => Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4);
   const pad2 = n => String(n).padStart(2, "0");
@@ -1776,6 +1813,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
     indent: I('<path d="M4 6h16M10 12h10M10 18h10M4 10l3 2.5L4 15"/>'),
     task: I('<rect x="3.5" y="3.5" width="17" height="17" rx="4"/><path d="M8 12.5l2.8 2.8L16.5 9"/>'),
     cal: I('<rect x="3.5" y="5" width="17" height="15.5" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/>'),
+    archive: I('<rect x="3" y="4" width="18" height="5" rx="1.5"/><path d="M5 9v9.5A1.5 1.5 0 0 0 6.5 20h11a1.5 1.5 0 0 0 1.5-1.5V9M10 13h4"/>'),
     folder: I('<path d="M3.5 7.5A2 2 0 0 1 5.5 5.5h4l2 2.5h7a2 2 0 0 1 2 2v7.5a2 2 0 0 1-2 2h-13a2 2 0 0 1-2-2z"/>'),
     pencil: I('<path d="M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16z"/><path d="M13.5 6.5l4 4"/>'),
     clock: I('<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>'),
@@ -1921,7 +1959,10 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
     // v52 stand-alone action cards fold into the register; the card's name becomes the category
     lists.notes = lists.notes.filter(n => { if (!n.actOnly) return true; n.actions.filter(a => a.text.trim()).forEach(a => register.push(cleanReg({ ...a, id: "", cat: n.title === "ACTION ITEMS" ? "" : n.title }))); return false; });
     return { id: p.id || uid(), title: String(p.title || "NEW CAMPUS"), desc: String(p.desc || ""), color: safeColor(p.color, PROJECT_COLORS[0]),
-      cards, subs, ...lists, regSeen: (Array.isArray(p.regSeen) ? p.regSeen : []).map(String),
+      cards, subs, ...lists,
+      ...(p.closed ? { closed: +p.closed || Date.now() } : {}),
+      ...(Array.isArray(p.archive) && p.archive.length ? { archive: p.archive.filter(a => a && a.sub).map(a => { const s = cleanSub(a.sub); return { sub: s, closedAt: +a.closedAt || Date.now(), cards: (Array.isArray(a.cards) ? a.cards : []).filter(Boolean).map(c => ({ ...cleanCard(c), sub: s.id })) }; }) } : {}),
+      regSeen: (Array.isArray(p.regSeen) ? p.regSeen : []).map(String),
       ...(Array.isArray(p.templates) ? { templates: p.templates.filter(Boolean).map(cleanTpl) } : {}),
       ...(Array.isArray(p.caps) ? { caps: p.caps.filter(Boolean).map(r => { const o = { id: String(r.id || uid()) }; CAP_COLS.forEach(([k]) => (o[k] = String(r[k] || ""))); return o; }) } : {}),
       ...(() => {
@@ -1987,7 +2028,9 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
     rows: (Array.isArray(t.rows) ? t.rows : []).filter(Boolean).map(r => ({ id: String(r.id || uid()), kind: r.kind === "phase" ? "phase" : "task", text: String(r.text || ""), owner: String(r.owner || ""), sub: r.kind !== "phase" && !!r.sub, off: r.kind === "phase" || r.off === "" || r.off == null || !Number.isFinite(+r.off) ? null : Math.round(+r.off) })) });
   const CAP_COLS = [["capability", "Capability"], ["component", "Component"], ["description", "Description"], ["products", "Products"], ["projects", "Projects"], ["owners", "Owners"]];
   const isProg = p => !!p && p.id === PROG;
-  const camps = () => state.projects.filter(p => !isProg(p));   // real campuses (the Program register is not a campus)
+  const camps = () => state.projects.filter(p => !isProg(p) && !p.closed);
+  const closedCamps = () => state.projects.filter(p => !isProg(p) && p.closed);
+  const liveProjects = () => state.projects.filter(p => !p.closed);   // closed (archived) campuses stay out of Status, Calendar and My Stuff   // real campuses (the Program register is not a campus)
   function programCampus() {
     let p = proj(PROG);
     if (!p) { p = cleanProject({ id: PROG, title: "PROGRAM", desc: "", color: "#B8C1CC", cards: [] }); p.boxInit = true; p.boxes = []; state.projects.push(p); save(p); }
@@ -2147,6 +2190,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
     if (h === "program") return { name: "program" };
     if (h === "tools") return { name: "tools" };
     if (h === "templates") return { name: "templates" };
+    if (h === "notes") return { name: "notes" };
     if (h === "applications") return { name: "applications" };
     if (h === "insight") return { name: "insight" };
     if (h === "calendar") return { name: "calendar" };
@@ -2181,17 +2225,18 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
     else if (route_.name === "program") renderProgram();
     else if (route_.name === "tools") renderTools();
     else if (route_.name === "templates") renderTemplates();
+    else if (route_.name === "notes") renderNotesTool();
     else if (route_.name === "applications" || route_.name === "insight") renderSoon(route_.name);
     else renderHome();
-    { const at = document.querySelector(`#tabs .stab[data-tab="${route_.name === "project" ? "home" : (route_.name === "estimator" || route_.name === "templates") ? "tools" : route_.name}"]`); if (at && at.scrollIntoView && $("tabs").scrollWidth > $("tabs").clientWidth) at.scrollIntoView({ block: "nearest", inline: "center" }); }
+    { const at = document.querySelector(`#tabs .stab[data-tab="${route_.name === "project" ? "home" : (route_.name === "estimator" || route_.name === "templates" || route_.name === "notes") ? "tools" : route_.name}"]`); if (at && at.scrollIntoView && $("tabs").scrollWidth > $("tabs").clientWidth) at.scrollIntoView({ block: "nearest", inline: "center" }); }
     $("addBtn").classList.toggle("on", route_.name === "focus");
-    const tab = route_.name === "project" ? "home" : (route_.name === "estimator" || route_.name === "templates") ? "tools" : route_.name;
+    const tab = route_.name === "project" ? "home" : (route_.name === "estimator" || route_.name === "templates" || route_.name === "notes") ? "tools" : route_.name;
     document.querySelectorAll("#tabs .stab").forEach(b => { if (b.dataset.tab === tab) b.setAttribute("aria-current", "page"); else b.removeAttribute("aria-current"); });
     if (prev.name !== route_.name || prev.pid !== route_.pid) scrollTo(0, 0);
   }
   addEventListener("hashchange", route);
   const currentProject = () => (route_.name === "project" ? proj(route_.pid) : route_.name === "program" ? proj(PROG) : null);
-  function rerender() { if (route_.name === "project") { if (!currentProject()) return go("#/"); renderProject(); } else if (route_.name === "calendar") renderGlobalCal(); else if (route_.name === "status") renderStatusPage(); else if (route_.name === "search") renderSearch(); else if (route_.name === "focus") renderFocus(); else if (route_.name === "estimator") renderEst(); else if (route_.name === "program") renderProgram(); else if (route_.name === "tools") renderTools(); else if (route_.name === "templates") renderTemplates(); else if (route_.name === "applications" || route_.name === "insight") renderSoon(route_.name); else renderHome(); }
+  function rerender() { if (route_.name === "project") { if (!currentProject()) return go("#/"); renderProject(); } else if (route_.name === "calendar") renderGlobalCal(); else if (route_.name === "status") renderStatusPage(); else if (route_.name === "search") renderSearch(); else if (route_.name === "focus") renderFocus(); else if (route_.name === "estimator") renderEst(); else if (route_.name === "program") renderProgram(); else if (route_.name === "tools") renderTools(); else if (route_.name === "templates") renderTemplates(); else if (route_.name === "notes") renderNotesTool(); else if (route_.name === "applications" || route_.name === "insight") renderSoon(route_.name); else renderHome(); }
 
   /* ================= home: project squares ================= */
   const MAXSUBS = isPhone() ? 3 : 5;
@@ -2209,11 +2254,13 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
       <div class="pgrid">${camps().map(tileHtml).join("")}
         <button class="new-tile" data-act="new-project"><span class="ni">${ICON.plus}</span>New campus</button>
       </div>
+      ${closedHtml()}
       </section>`;
+    wireClosed();
   }
   function statusTileHtml() {
     let items = 0, blockers = 0, last = 0;
-    state.projects.forEach(p => p.cards.forEach(c => c.items.forEach(it => {
+    liveProjects().forEach(p => p.cards.forEach(c => c.items.forEach(it => {
       if (it.kind === "phase" || it.done || !it.text.trim()) return;
       const blk = it.status === "Blocked";
       if (!blk && !it.upd) return;
@@ -2245,7 +2292,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
   let tblMode = (() => { try { const m = localStorage.getItem(TBL_KEY); return m === "blk" ? "blk" : "cp"; } catch (e) { return "cp"; } })();
   function tableRows() {
     const out = [];
-    state.projects.forEach(p => [...p.subs, { id: REG, title: "ACTION REGISTER" }].forEach(x => {
+    liveProjects().forEach(p => [...p.subs, { id: REG, title: "ACTION REGISTER" }].forEach(x => {
       const rows = [];
       subCards(p, x.id).forEach(c => c.items.forEach(it => {
         if (it.kind === "phase" || it.done || !it.text.trim()) return;
@@ -2263,7 +2310,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
     const rows = tableRows();
     const empty = { cp: "No updates yet. Tap the circle on a task and choose Update (green) to show it here.", blk: "Nothing is blocked. Tap the circle on a task and choose Blocker (red)." }[tblMode];
     const cnt = { cp: 0, blk: 0 };
-    state.projects.forEach(p => [...p.subs.map(x => x.id), REG].forEach(sid => subCards(p, sid).forEach(c => c.items.forEach(it => { if (it.kind === "phase" || it.done || !it.text.trim()) return; if (it.status === "Blocked") cnt.blk++; else if (it.upd) cnt.cp++; }))));
+    liveProjects().forEach(p => [...p.subs.map(x => x.id), REG].forEach(sid => subCards(p, sid).forEach(c => c.items.forEach(it => { if (it.kind === "phase" || it.done || !it.text.trim()) return; if (it.status === "Blocked") cnt.blk++; else if (it.upd) cnt.cp++; }))));
     return `<div class="st-sec"><div class="home-head st-modes"><div class="cal-key" role="group" aria-label="Show">${[["cp", "Update", "#5FD68A"], ["blk", "Blockers", "#FF5A5A"]].map(([k, l, col]) => `<button class="ck" data-act="tbl-mode" data-m="${k}" aria-pressed="${tblMode === k}" style="--c:${col}"><i></i><span>${l}</span><b class="ck-n">${cnt[k]}</b></button>`).join("")}</div></div>
       <section class="card st-card" aria-label="Status"><div class="st-wrap"><table class="st"><thead><tr><th>Campus</th><th>Project</th><th>Item</th><th class="st-l10h">L10</th><th>Update</th><th>Blocker</th><th>Owner</th></tr></thead>
       <tbody>${rows.length ? rows.map(r => { const ref = r.p.id + "|" + r.c.id + "|" + r.it.id, blk = r.it.status === "Blocked"; return `<tr data-ref="${ref}">
@@ -2309,6 +2356,14 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
     </section>`;
   }
   function renderProject() {
+    renderProject0();
+    const p = currentProject(); if (!p || !p.closed) return;
+    const head = view.querySelector(".proj-head"); if (!head) return;
+    const b = document.createElement("div"); b.className = "closed-banner";
+    b.innerHTML = `${ICON.archive}<span>This campus is <b>closed</b> (archived ${new Date(p.closed).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}). It stays off Status, Calendar and My Stuff.</span><button class="cb-open">Reopen campus</button>`;
+    head.after(b); b.querySelector(".cb-open").addEventListener("click", () => reopenCampus(p));
+  }
+  function renderProject0() {
     const p = currentProject(); if (!p) return;
     const keep = captureFocus();
     if (qaEntry.pid !== p.id) { qaEntry.pid = p.id; qaEntry.date = null; qaEntry.color = null; qaEntry.cid = null; }
@@ -3696,7 +3751,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
   const renderCalSoon = () => { clearTimeout(calT); calT = setTimeout(renderCal, 150); };
   function collectItems(onlyPid) {
     const out = [];
-    state.projects.forEach(p => {
+    liveProjects().forEach(p => {
       if (onlyPid && p.id !== onlyPid) return;
       p.cards.forEach(c => c.items.forEach(it => { if (it.date) out.push({ p, c, it, ref: p.id + "|" + c.id + "|" + it.id }); }));
     });
@@ -3717,9 +3772,9 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
   const saveCalHidden = () => { try { localStorage.setItem(CAL_HIDE_KEY, JSON.stringify([...calHidden])); } catch (e) {} };
   const calShows = p => !calHidden.has(p.id);
   function keyHtml() {
-    const counts = new Map(state.projects.map(q => [q.id, collectItems(q.id).length]));
+    const counts = new Map(liveProjects().map(q => [q.id, collectItems(q.id).length]));
     return `<div class="cal-key" role="group" aria-label="Campuses shown on the calendar">
-      ${state.projects.map(q => `<button class="ck" data-act="cal-toggle" data-pid="${q.id}" aria-pressed="${calShows(q)}" style="--c:${q.color}" title="${calShows(q) ? "Hide" : "Show"} ${esc(q.title)}"><i></i><span>${esc(q.title)}</span><b class="ck-n">${counts.get(q.id) || 0}</b></button>`).join("")}
+      ${liveProjects().map(q => `<button class="ck" data-act="cal-toggle" data-pid="${q.id}" aria-pressed="${calShows(q)}" style="--c:${q.color}" title="${calShows(q) ? "Hide" : "Show"} ${esc(q.title)}"><i></i><span>${esc(q.title)}</span><b class="ck-n">${counts.get(q.id) || 0}</b></button>`).join("")}
       ${state.projects.length > 1 ? `<span class="ck-quick"><button data-act="cal-all">ALL</button><button data-act="cal-none">NONE</button></span>` : ""}
     </div>`;
   }
@@ -3738,7 +3793,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
       cells += `<div class="cell${other ? " other" : ""}${d === t ? " today" : ""}${i >= (weeks - 1) * 7 ? " last-row" : ""}" data-act="day" data-d="${d}">
         <span class="num">${dd.getDate()}</span>${show.map(x => chipHtml(x, d, global)).join("")}${on.length > show.length ? `<button class="more" data-act="day" data-d="${d}">+${on.length - show.length} more</button>` : ""}</div>`;
     }
-    const shown = global ? state.projects.filter(calShows).length : 0;
+    const shown = global ? liveProjects().filter(calShows).length : 0;
     box.innerHTML = `<div class="cal-top"><div class="cal-month">${MONTHS[calView.m]} <span>${calView.y}</span></div>
         <button class="today-btn" data-act="cal-today">TODAY</button>
         <button class="nav-btn" data-act="cal-prev" aria-label="Previous month">${ICON.back}</button>
@@ -3765,9 +3820,9 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
   function paintGcp() {
     const box = $("gcp"); if (!box) return;
     const t = todayIso(), rows = [];
-    state.projects.forEach(p => { if (!calShows(p)) return; p.subs.forEach(x => datedItems(p, x.id).forEach(({ c, it }) => { if (!it.done) rows.push({ p, x, c, it }); })); });
+    liveProjects().forEach(p => { if (!calShows(p)) return; p.subs.forEach(x => datedItems(p, x.id).forEach(({ c, it }) => { if (!it.done) rows.push({ p, x, c, it }); })); });
     rows.sort((a, b) => (a.it.date + (a.it.startTime || "")).localeCompare(b.it.date + (b.it.startTime || "")) || a.p.title.localeCompare(b.p.title));
-    const groups = state.projects.filter(calShows).map(p => ({ p, rows: rows.filter(r => r.p === p) })).filter(g => g.rows.length);
+    const groups = liveProjects().filter(calShows).map(p => ({ p, rows: rows.filter(r => r.p === p) })).filter(g => g.rows.length);
     box.innerHTML = groups.length ? `<div class="gcp-grid">${groups.map(g => `<article class="card task-card gcp-card" style="--list-color:${g.p.color}">
       <header class="card-head" style="color:${g.p.color}"><div class="title">${esc(g.p.title)} <span class="gcp-sub">· Critical Path</span></div><span class="act-count">${g.rows.length}</span></header>
       <div class="card-body"><div class="gcp-head" aria-hidden="true"><span>Date</span><span>Project</span><span>Task</span><span>Owner</span></div><ul class="fo-lines">${g.rows.map(r => { const late = itemEnd(r.it) < t; return `<li class="gcp-line" style="--pc:${r.p.color}">
@@ -3805,7 +3860,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
     const words = srch.q.toLowerCase().split(/\s+/).filter(Boolean); if (!words.length) return { n: 0, html: "" };
     const hit = s => { const h = s.toLowerCase(); return words.every(w => h.includes(w)); };
     const notes = [], people = [], docs = [];
-    state.projects.forEach(p => {
+    liveProjects().forEach(p => {
       p.notes.filter(n => !n.actOnly && hit([n.title, n.tags.join(" "), noteText(n)].join(" "))).forEach(n => notes.push({ p, n }));
       p.contacts.filter(c => hit([c.name, c.company, c.role, c.phone].join(" "))).forEach(c => people.push({ p, c }));
       p.docs.filter(d => hit([d.desc, d.link1, d.link2].join(" "))).forEach(d => docs.push({ p, d }));
@@ -3867,7 +3922,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
   const ownerKey = s => String(s || "").replace(/\s+/g, " ").trim().toLowerCase();
   function focusOwners() {
     const m = new Map();
-    state.projects.forEach(p => p.cards.forEach(c => c.items.forEach(it => {
+    liveProjects().forEach(p => p.cards.forEach(c => c.items.forEach(it => {
       if (it.kind === "phase" || it.done || !it.text.trim() || !it.bic.trim()) return;
       const k = ownerKey(it.bic); if (!m.has(k)) m.set(k, { k, name: it.bic.replace(/\s+/g, " ").trim(), n: 0 }); m.get(k).n++;
     })));
@@ -3904,7 +3959,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
   }
   function focusItems(k) {
     const out = [];
-    state.projects.forEach(p => p.cards.forEach(c => c.items.forEach(it => {
+    liveProjects().forEach(p => p.cards.forEach(c => c.items.forEach(it => {
       if (it.kind === "phase" || it.done || !it.text.trim() || it.star || (k != null && ownerKey(it.bic) !== k)) return;
       out.push({ p, c, it, ref: p.id + "|" + c.id + "|" + it.id, ...focusCat(p, c, it) });
     })));
@@ -3912,7 +3967,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
   }
   function priItems() {
     const out = [];
-    state.projects.forEach(p => p.cards.forEach(c => c.items.forEach(it => {
+    liveProjects().forEach(p => p.cards.forEach(c => c.items.forEach(it => {
       if (it.kind === "phase" || it.done || !it.text.trim() || !it.star) return;
       out.push({ p, c, it, ref: p.id + "|" + c.id + "|" + it.id, ...focusCat(p, c, it) });
     })));
@@ -4019,7 +4074,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
   // every open item (starred or not) in your order
   function focusAll() {
     const out = [];
-    state.projects.forEach(p => p.cards.forEach(c => c.items.forEach(it => {
+    liveProjects().forEach(p => p.cards.forEach(c => c.items.forEach(it => {
       if (it.kind === "phase" || it.done || !it.text.trim()) return;
       out.push({ p, c, it, ref: p.id + "|" + c.id + "|" + it.id, ...focusCat(p, c, it) });
     })));
@@ -4331,6 +4386,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
   }
   // Tools tab: a shelf of tools; the Estimator is the first
   const TOOLS = [
+    { id: "notes", name: "Notepad", desc: "Every note from every campus in one place, searchable, including closed campuses and projects. Write general program notes here too.", icon: ICON.notes },
     { id: "templates", name: "Templates", desc: "Reusable phase and task lists for projects. Set each task's owner and its T-minus days from a milestone (like Installation), then use the template on any project card and the dates fill in.", icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2.5"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>' },
     { id: "estimator", name: "Estimator", desc: "Technology estimates for trailers and buildings: ISP, network, AV, printing and workstations, with materials and labor kept apart and a shared price list.", icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2.5"/><path d="M8.5 7h7M8.5 11h1M12 11h1M15.5 11h0M8.5 14.5h1M12 14.5h1M8.5 18h1M12 18h1M15.5 14.5v3.5"/></svg>' }
   ];
@@ -4339,6 +4395,118 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
     const t = k === "applications" ? { name: "Applications", p: "This tab is ready for the Applications section. Tell me what it should hold and it gets built here." } : { name: "Insights", p: "This tab is ready for the Insights section. Tell me what it should show and it gets built here." };
     view.innerHTML = `<div class="page-body tab-body"><article class="card soon-card" style="--list-color:var(--accent)"><header class="card-head" style="color:var(--accent)"><div class="title">${t.name}</div></header><div class="card-body"><p class="fo-empty">${t.p}</p></div></article></div>`;
   }
+  /* ================= Close (archive) campuses and projects ================= */
+  const fmtDay = ms => new Date(ms).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+  function closeCampus(p) {
+    const snap = snapshot(); p.closed = Date.now(); save(p);
+    if (route_.name === "project") go("#/"); else rerender();
+    showUndo(`${p.title} closed. Find it under Closed on Infrastructure`, () => restore(snap));
+  }
+  function reopenCampus(p) { delete p.closed; save(p); rerender(); showUndo(`${p.title} reopened`, null); }
+  function closeSub(p, x) {
+    const snap = snapshot();
+    const cards = p.cards.filter(c => c.sub === x.id);
+    p.archive = p.archive || [];
+    p.archive.unshift({ sub: x, cards, closedAt: Date.now() });
+    p.subs = p.subs.filter(y => y !== x); p.cards = p.cards.filter(c => c.sub !== x.id);
+    if (!p.subs.length) freshSub(p, newSub(p, "PROJECT 1"));
+    save(p); rerender();
+    showUndo(`${x.title} closed. Its tasks are kept under Closed`, () => restore(snap));
+  }
+  function reopenSub(p, a) {
+    p.archive = (p.archive || []).filter(z => z !== a);
+    // a blank placeholder project made when the last one closed gives way to the reopened one
+    const blank = p.subs.length === 1 && p.cards.filter(c => c.sub === p.subs[0].id).every(c => !c.items.some(it => it.text.trim()));
+    if (blank) { const s0 = p.subs[0]; p.subs = []; p.cards = p.cards.filter(c => c.sub !== s0.id); }
+    p.subs.push(a.sub); p.cards.push(...a.cards);
+    save(p); rerender(); showUndo(`${a.sub.title} reopened on ${p.title}`, null);
+  }
+  const closedSubs = () => state.projects.filter(p => !isProg(p)).flatMap(p => (p.archive || []).map(a => ({ p, a })));
+  let closedOpen = (() => { try { return localStorage.getItem("pmbridge-closed-open") === "1"; } catch (e) { return false; } })();
+  function closedHtml() {
+    const cc = closedCamps(), cs = closedSubs(), n = cc.length + cs.length;
+    if (!n) return "";
+    const tasksIn = cards => cards.reduce((k, c) => k + c.items.filter(it => it.kind !== "phase" && it.text.trim()).length, 0);
+    return `<section class="closed-sec${closedOpen ? " open" : ""}">
+      <button class="cl-toggle" aria-expanded="${closedOpen}">${ICON.archive}<span>Closed</span><b>${n}</b><i class="cl-chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></i></button>
+      <div class="cl-body">
+        ${cc.length ? `<div class="cl-lbl">Campuses</div><div class="cl-list">${cc.map(p => `<div class="cl-row" style="--c:${p.color}"><i></i><div class="cl-main"><b>${esc(p.title)}</b><span>${p.subs.length + (p.archive || []).length} project${p.subs.length + (p.archive || []).length === 1 ? "" : "s"} · ${p.notes.length} note${p.notes.length === 1 ? "" : "s"} · closed ${fmtDay(p.closed)}</span></div>
+          <button class="foot-btn" data-cl-act="open" data-pid="${p.id}">Open</button><button class="foot-btn" data-cl-act="reopen" data-pid="${p.id}">Reopen</button></div>`).join("")}</div>` : ""}
+        ${cs.length ? `<div class="cl-lbl">Projects</div><div class="cl-list">${cs.map(({ p, a }) => `<div class="cl-row" style="--c:${p.color}"><i></i><div class="cl-main"><b>${esc(a.sub.title)}</b><span>${esc(p.title)}${p.closed ? " (closed)" : ""} · ${tasksIn(a.cards)} task${tasksIn(a.cards) === 1 ? "" : "s"} · closed ${fmtDay(a.closedAt)}</span></div>
+          <button class="foot-btn" data-cl-act="view" data-pid="${p.id}" data-sid="${a.sub.id}">View</button><button class="foot-btn" data-cl-act="resub" data-pid="${p.id}" data-sid="${a.sub.id}">Reopen</button><button class="foot-btn danger" data-cl-act="delsub" data-pid="${p.id}" data-sid="${a.sub.id}" aria-label="Delete for good">${ICON.trash}</button></div>`).join("")}</div>` : ""}
+      </div></section>`;
+  }
+  function wireClosed() {
+    const sec = view.querySelector(".closed-sec"); if (!sec) return;
+    sec.addEventListener("click", e => {
+      if (e.target.closest(".cl-toggle")) { closedOpen = !closedOpen; try { localStorage.setItem("pmbridge-closed-open", closedOpen ? "1" : "0"); } catch (er) {} sec.classList.toggle("open", closedOpen); sec.querySelector(".cl-toggle").setAttribute("aria-expanded", String(closedOpen)); return; }
+      const b = e.target.closest("[data-cl-act]"); if (!b) return;
+      const p = proj(b.dataset.pid); if (!p) return;
+      const a = b.dataset.sid && (p.archive || []).find(z => z.sub.id === b.dataset.sid);
+      const k = b.dataset.clAct;
+      if (k === "open") go("#/p/" + p.id);
+      else if (k === "reopen") reopenCampus(p);
+      else if (k === "view" && a) viewClosedSub(p, a);
+      else if (k === "resub" && a) reopenSub(p, a);
+      else if (k === "delsub" && a) { const snap = snapshot(); p.archive = p.archive.filter(z => z !== a); save(p); rerender(); showUndo(`${a.sub.title} deleted`, () => restore(snap)); }
+    });
+  }
+  function viewClosedSub(p, a) {
+    closeModal();
+    const m = document.createElement("div"); m.className = "modal pj-modal x-modal";
+    const rows = a.cards.map(c => c.items.filter(it => it.kind === "phase" || it.text.trim()).map(it => it.kind === "phase" ? `<li class="ph">${esc(it.text)}</li>` :
+      `<li class="${it.done ? "done" : ""}${it.sub ? " sub" : ""}"><span class="cv-ck">${it.done ? ICON.check : ""}</span><span class="cv-t">${esc(it.text)}</span>${it.bic ? `<em>${esc(it.bic)}</em>` : ""}${it.date ? `<b>${shortDate(it.date)}</b>` : ""}</li>`).join("")).join("");
+    m.innerHTML = `<div class="ev ut-win" role="dialog" aria-label="Closed project" style="--c:${p.color}">
+      <div class="ev-head"><div class="ev-title" style="padding-top:4px">${esc(a.sub.title)}</div><button class="ev-x" aria-label="Close">×</button></div>
+      <div class="ev-proj"><b style="--pc:${p.color}">${esc(p.title)}</b> · closed ${fmtDay(a.closedAt)}</div>
+      <div class="ev-body"><ul class="ut-prev cv-list">${rows || '<li>No tasks.</li>'}</ul></div>
+      <div class="ev-foot"><span class="grow"></span><button class="done-btn cv-re">Reopen project</button></div></div>`;
+    document.body.appendChild(m);
+    m.addEventListener("click", e => { if (e.target === m || e.target.closest(".ev-x")) closeModal(); else if (e.target.closest(".cv-re")) { closeModal(); reopenSub(p, a); } });
+  }
+
+  /* ================= Tools → Notepad: every note, searchable; general notes live on the Program record ================= */
+  let ntQ = "", ntPid = "all";
+  function renderNotesTool() {
+    const P = programCampus();
+    const srcs = [P, ...camps(), ...closedCamps()];
+    const label = p => (isProg(p) ? "General" : p.title);
+    const words = ntQ.toLowerCase().split(/\s+/).filter(Boolean);
+    const all = [];
+    srcs.forEach(p => (p.notes || []).forEach(n => {
+      const body = noteText(n), bx = n.filed && (p.boxes || []).find(b => b.id === n.box);
+      all.push({ p, n, body, bx, hay: [n.title, body, (n.tags || []).join(" "), label(p), bx ? bx.name : ""].join(" ").toLowerCase() });
+    }));
+    const shown = all.filter(r => (ntPid === "all" || r.p.id === ntPid) && words.every(w => r.hay.includes(w))).sort((a, b) => (b.n.updated || b.n.created || 0) - (a.n.updated || a.n.created || 0));
+    const cnt = id => all.filter(r => id === "all" || r.p.id === id).length;
+    const hl = s => { let h = esc(s); words.forEach(w => { h = h.replace(new RegExp("(" + w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&").replace(/&/g, "&amp;").replace(/</g, "&lt;") + ")", "gi"), "<mark>$1</mark>"); }); return h; };
+    const snip = body => {
+      const flat = body.replace(/\s+/g, " ").trim(); if (!flat) return "";
+      const i = words.length ? Math.max(0, flat.toLowerCase().indexOf(words[0])) : 0, st = Math.max(0, i - 60);
+      return (st ? "…" : "") + flat.slice(st, st + 200) + (flat.length > st + 200 ? "…" : "");
+    };
+    const chip = (id, name, color, closed) => `<button class="nt-chip" data-nt-pid="${id}" aria-pressed="${ntPid === id}" style="--c:${color}"><i></i>${esc(name)}${closed ? ' <small>closed</small>' : ""}<b>${cnt(id)}</b></button>`;
+    view.innerHTML = `<div class="page-body tab-body nt-page"><button class="tools-crumb">‹ Tools</button>
+      <div class="nt-top"><h2 class="nt-h">${ICON.notes}Notepad</h2>
+        <label class="nt-search">${ICON_SEARCH}<input class="nt-q" type="search" placeholder="Search all notes" value="${esc(ntQ)}" aria-label="Search all notes"></label>
+        <button class="nt-new">${ICON.plus}New general note</button></div>
+      <div class="nt-chips">${chip("all", "All notes", "var(--accent)")}${chip(P.id, "General", "#B8C1CC")}${[...camps(), ...closedCamps()].map(p => chip(p.id, p.title, p.color, p.closed)).join("")}</div>
+      <div class="nt-grid">${shown.map(({ p, n, body, bx }) => `<button class="card nt-card" data-pid="${p.id}" data-nid="${n.id}" style="--c:${isProg(p) ? "#B8C1CC" : p.color}">
+          <span class="nt-meta"><i></i>${esc(label(p))}${p.closed ? " · closed" : ""}${bx ? ` · ${esc(bx.name)}` : ""}<span class="grow"></span>${fmtDay(n.updated || n.created || Date.now())}</span>
+          <b class="nt-title">${hl(n.title || "Untitled")}</b>
+          <span class="nt-snip">${hl(snip(body)) || '<em>Empty note</em>'}</span>
+          ${(n.actions || []).filter(x => x.text && x.text.trim()).length ? `<span class="nt-act">${ICON.check}${(n.actions || []).filter(x => x.text && x.text.trim()).length} action item${(n.actions || []).filter(x => x.text && x.text.trim()).length === 1 ? "" : "s"}</span>` : ""}
+        </button>`).join("") || `<p class="sr-hint">${all.length ? "No notes match." : "No notes yet. Tap New general note, or open a campus Notepad."}</p>`}</div></div>`;
+    view.querySelector(".tools-crumb").addEventListener("click", () => go("#/tools"));
+    const q = view.querySelector(".nt-q");
+    q.addEventListener("input", () => { ntQ = q.value; const pos = q.selectionStart; renderNotesTool(); const q2 = view.querySelector(".nt-q"); q2.focus(); try { q2.setSelectionRange(pos, pos); } catch (e) {} });
+    view.querySelector(".nt-page").addEventListener("click", e => {
+      const c = e.target.closest(".nt-chip"); if (c) { ntPid = c.dataset.ntPid; renderNotesTool(); return; }
+      if (e.target.closest(".nt-new")) { openNotepad(P); const nb = document.querySelector('.np-modal [data-na="new"]'); if (nb) nb.click(); return; }
+      const card = e.target.closest(".nt-card"); if (card) { const p = proj(card.dataset.pid); if (p) openNotepad(p, card.dataset.nid); }
+    });
+  }
+
   /* ================= Templates: phases + tasks with owners and T± days from a milestone ================= */
   function sampleTemplate() {
     const T = (text, off, owner) => ({ kind: "task", text, off, owner: owner || "" }), P = text => ({ kind: "phase", text });
@@ -4632,7 +4800,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
 
   /* ----- day sheet ----- */
   let dayOpen = null;
-  function closeModal() { document.querySelectorAll(".modal").forEach(m => m.remove()); closePops(); closeBoxPanel(); dayOpen = null; }
+  function closeModal() { const np = document.querySelector(".np-modal"); document.querySelectorAll(".modal").forEach(m => m.remove()); closePops(); closeBoxPanel(); dayOpen = null; if (np && route_.name === "notes") renderNotesTool(); }
   function openDay(d) {
     closeModal();
     dayOpen = d;
@@ -5120,7 +5288,8 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
         p.cards.splice(last ? p.cards.indexOf(last) + 1 : p.cards.length, 0, c); save(p); renderProject();
         const el = cardEl(c.id); el.scrollIntoView({ behavior: "smooth", block: "center" }); editTitle(el); } },
       { icon: ICON.dup, text: "Duplicate project (tasks only)", run: () => duplicateSub(p, x) },
-      { icon: ICON.task, text: "Use template…", run: () => openUseTemplate(p, x) }
+      { icon: ICON.task, text: "Use template…", run: () => openUseTemplate(p, x) },
+      { icon: ICON.archive, text: "Close project (archive)", run: () => closeSub(p, x) }
     ];
     if (p.subs.length > 1) {
       actions.push({ icon: ICON.up, text: "Move project up", disabled: i <= 0, run: () => swap(-1) });
@@ -5130,7 +5299,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
     actions.push({ icon: ICON.palette, text: "Change campus color", run: () => projectMenu(anchor, p) });
     openEditMenu(anchor, {
       actions,
-      del: { text: "Delete project", ask: p.subs.length > 1 ? "Delete this project and all of its tasks?" : "Delete this project and all of its tasks? It's the only project here, so a blank PROJECT 1 will take its place.", run: () => { const snap = snapshot(); p.subs = p.subs.filter(y => y !== x); p.cards = p.cards.filter(c => c.sub !== x.id); (p.notes || []).forEach(n => { if (n.scope && n.scope.sid === x.id) n.scope = { type: "general" }; }); if (!p.subs.length) freshSub(p, newSub(p, "PROJECT 1")); save(p); renderProject(); showUndo("Project deleted", () => restore(snap)); } }
+      del: { text: "Delete project", ask: "Delete this project and all of its tasks for good? To keep them, use Close project instead." + (p.subs.length > 1 ? "" : " A blank PROJECT 1 will take its place."), run: () => { const snap = snapshot(); p.subs = p.subs.filter(y => y !== x); p.cards = p.cards.filter(c => c.sub !== x.id); (p.notes || []).forEach(n => { if (n.scope && n.scope.sid === x.id) n.scope = { type: "general" }; }); if (!p.subs.length) freshSub(p, newSub(p, "PROJECT 1")); save(p); renderProject(); showUndo("Project deleted", () => restore(snap)); } }
     });
   }
   function cardMenu(anchor, p, c) {
@@ -5180,9 +5349,10 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
         ...(route_.name === "project" ? [] : [
           { icon: ICON.up, text: "Move earlier", disabled: state.projects.indexOf(p) === 0, run: () => { const i = state.projects.indexOf(p); [state.projects[i - 1], state.projects[i]] = [state.projects[i], state.projects[i - 1]]; save(); renderHome(); } },
           { icon: ICON.down, text: "Move later", disabled: state.projects.indexOf(p) === state.projects.length - 1, run: () => { const i = state.projects.indexOf(p); [state.projects[i + 1], state.projects[i]] = [state.projects[i], state.projects[i + 1]]; save(); renderHome(); } }
-        ])
+        ]),
+        ...(isProg(p) ? [] : [p.closed ? { icon: ICON.archive, text: "Reopen campus", run: () => reopenCampus(p) } : { icon: ICON.archive, text: "Close campus (archive)", run: () => closeCampus(p) }])
       ],
-      del: { text: "Delete campus", ask: "Delete this campus and all of its projects?", run: () => { const snap = snapshot(); state.projects = state.projects.filter(x => x !== p); save(); if (route_.name === "project") go("#/"); else rerender(); showUndo("Campus deleted", () => restore(snap)); } }
+      del: { text: "Delete campus", ask: "Delete this campus and everything in it for good? To keep its projects, notes and action items, use Close campus instead.", run: () => { const snap = snapshot(); state.projects = state.projects.filter(x => x !== p); save(); if (route_.name === "project") go("#/"); else rerender(); showUndo("Campus deleted", () => restore(snap)); } }
     });
   }
 
