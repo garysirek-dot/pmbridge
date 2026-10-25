@@ -922,6 +922,12 @@ table.st { width: 100%; border-collapse: collapse; min-width: 860px; font-size: 
 .gcp-head { padding: 8px 0 6px; font-size: 10.5px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--faint); border-bottom: 1px solid var(--card-edge); }
 .gcp-line { padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,.06); }
 .gcp-line:last-child { border-bottom: 0; }
+.gcp-ph .gcp-item { font-weight: 800; letter-spacing: .07em; text-transform: uppercase; }
+.gcp-ph .gcp-item::before { content: "◆ "; color: var(--pc); font-size: 11px; }
+.chip.ph-chip .t { font-weight: 800; letter-spacing: .05em; text-transform: uppercase; }
+.item.phase.ph-dated { margin-left: 0; gap: 10px; }
+.item.phase .ph-date { flex: none; display: inline-block !important; }
+.card.no-dates .item.phase .ph-date { display: inline-block !important; }
 .gcp-line .date-pill { white-space: nowrap; }
 .gcp-item { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 15px; color: var(--ink); }
 @media (max-width: 899px) {
@@ -1777,7 +1783,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
   const STATUSES = ["Not Started", "In Progress", "Blocked", "Done"];
   const STATUS_CLASS = { "Not Started": "s-ns", "In Progress": "s-ip", "Blocked": "s-blk", "Done": "s-done" };
   const LS_KEY = "pmbridge-v1";
-  const APP_VERSION = "93 (Oct 25)";
+  const APP_VERSION = "95 (Oct 25)";
   const $ = id => document.getElementById(id);
   const uid = () => Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4);
   const pad2 = n => String(n).padStart(2, "0");
@@ -2024,8 +2030,18 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
 
   const proj = id => state.projects.find(p => p.id === id);
   const PROG = "__program";
-  const cleanTpl = t => ({ id: String(t.id || uid()), name: String(t.name || "NEW TEMPLATE").slice(0, 60), anchor: String(t.anchor || "Installation").slice(0, 40),
-    rows: (Array.isArray(t.rows) ? t.rows : []).filter(Boolean).map(r => ({ id: String(r.id || uid()), kind: r.kind === "phase" ? "phase" : "task", text: String(r.text || ""), owner: String(r.owner || ""), sub: r.kind !== "phase" && !!r.sub, off: r.kind === "phase" || r.off === "" || r.off == null || !Number.isFinite(+r.off) ? null : Math.round(+r.off) })) });
+  const tplOff = v => (v === "" || v == null || !Number.isFinite(+v) ? null : Math.round(+v));
+  const cleanTpl = t => {
+    let rows = (Array.isArray(t.rows) ? t.rows : []).filter(Boolean).map(r => ({ id: String(r.id || uid()), kind: r.kind === "phase" ? "phase" : "task", text: String(r.text || ""), owner: String(r.owner || ""), sub: r.kind !== "phase" && !!r.sub, off: tplOff(r.off) }));
+    if (t.v !== 2) {
+      // v1 kept T days on tasks: each phase takes T-0 if one of its tasks had it, otherwise its earliest task
+      let ph = null, offs = [];
+      const settle = () => { if (ph && offs.length) ph.off = offs.includes(0) ? 0 : Math.min(...offs); };
+      rows.forEach(r => { if (r.kind === "phase") { settle(); ph = r; offs = []; r.off = null; } else { if (r.off != null) offs.push(r.off); r.off = null; } });
+      settle();
+    } else rows.forEach(r => { if (r.kind !== "phase") r.off = null; });
+    return { id: String(t.id || uid()), v: 2, name: String(t.name || "NEW TEMPLATE").slice(0, 60), anchor: String(t.anchor || "Installation").slice(0, 40), rows };
+  };
   const CAP_COLS = [["capability", "Capability"], ["component", "Component"], ["description", "Description"], ["products", "Products"], ["projects", "Projects"], ["owners", "Owners"]];
   const isProg = p => !!p && p.id === PROG;
   const camps = () => state.projects.filter(p => !isProg(p) && !p.closed);
@@ -3598,7 +3614,8 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
   const hasMore = it => !!(it.notes.trim() || it.meeting || it.links.length || it.comments.length || it.startTime || it.bic);
   function taskHtml(p, c, it) {
     const col = itemColor(it, p);
-    if (it.kind === "phase") return `<li class="item phase" data-iid="${it.id}" data-cid="${c.id}">
+    if (it.kind === "phase") return `<li class="item phase${c.sub === REG ? "" : " ph-dated"}" data-iid="${it.id}" data-cid="${c.id}">
+      ${c.sub === REG ? "" : `<button class="date-pill ph-date${it.date ? "" : " no-date"}${it.date && itemEnd(it) < todayIso() ? " overdue" : ""}" style="--c:${col}" data-act="date" data-pop title="${it.date ? "Phase date " + fullDate(it.date) : "Add a phase date"}">${it.date ? shortDate(it.date) : "DATE"}</button>`}
       <div class="phase-text" contenteditable="true" spellcheck="true" autocapitalize="words" data-ph="${c.sub === REG ? "Category" : "Phase name"}" data-field="text"></div>
       <button class="phase-x" data-act="del-phase" aria-label="Remove phase" title="Remove phase">×</button>
     </li>`;
@@ -3763,6 +3780,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
     const col = global || x.c.sub === REG ? x.p.color : itemColor(x.it, x.p), cont = x.it.date < d && d !== weekStart(d);
     const t = esc(x.it.text || "Untitled"), tip = esc((x.it.text || "Untitled") + (x.it.bic ? " · " + x.it.bic : ""));
     const done = (x.it.done ? " done" : "") + (x.c.sub === REG ? " reg" : "");   // Action Register due dates: outlined
+    if (x.it.kind === "phase") return `<button class="chip allday ph-chip${done}" style="--c:${col}" data-act="open-project" data-pid="${x.p.id}" title="${tip} (phase)"><span class="t">${t}</span></button>`;
     if (isAllDay(x.it)) return `<button class="chip allday${done}${x.it.date < d ? " cont" : ""}" style="--c:${col}" data-act="open-item" data-ref="${x.ref}" title="${tip}"><span class="t">${t}</span></button>`;
     return `<button class="chip timed${done}" style="--c:${col}" data-act="open-item" data-ref="${x.ref}" title="${tip}"><span class="d"></span><span class="tm">${shortTime(x.it.startTime)}</span><span class="t">${t}</span></button>`;
   }
@@ -3825,7 +3843,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
     const groups = liveProjects().filter(calShows).map(p => ({ p, rows: rows.filter(r => r.p === p) })).filter(g => g.rows.length);
     box.innerHTML = groups.length ? `<div class="gcp-grid">${groups.map(g => `<article class="card task-card gcp-card" style="--list-color:${g.p.color}">
       <header class="card-head" style="color:${g.p.color}"><div class="title">${esc(g.p.title)} <span class="gcp-sub">· Critical Path</span></div><span class="act-count">${g.rows.length}</span></header>
-      <div class="card-body"><div class="gcp-head" aria-hidden="true"><span>Date</span><span>Project</span><span>Task</span><span>Owner</span></div><ul class="fo-lines">${g.rows.map(r => { const late = itemEnd(r.it) < t; return `<li class="gcp-line" style="--pc:${r.p.color}">
+      <div class="card-body"><div class="gcp-head" aria-hidden="true"><span>Date</span><span>Project</span><span>Task</span><span>Owner</span></div><ul class="fo-lines">${g.rows.map(r => { const late = itemEnd(r.it) < t; return `<li class="gcp-line${r.it.kind === "phase" ? " gcp-ph" : ""}" style="--pc:${r.p.color}">
           <span class="gcp-date"><span class="date-pill" style="--c:${late ? "var(--danger)" : r.p.color}" title="${late ? "Past due " : ""}${fullDate(r.it.date)}">${shortDate(r.it.date)}</span></span>
           <span class="fl-proj" title="${esc(r.x.title)}">${esc(r.x.title)}</span>
           <span class="gcp-item" title="${esc(r.it.text)}">${esc(r.it.text || "Untitled")}</span>
@@ -4509,9 +4527,14 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
 
   /* ================= Templates: phases + tasks with owners and T± days from a milestone ================= */
   function sampleTemplate() {
-    const T = (text, off, owner) => ({ kind: "task", text, off, owner: owner || "" }), P = text => ({ kind: "phase", text });
-    return cleanTpl({ name: "STANDARD INSTALL", anchor: "Installation", rows: [P("PLANNING"), T("Site survey", -30), T("Design & bill of materials", -25), T("Quote approved", -21),
-      P("ORDERING"), T("Order equipment", -20), T("Confirm delivery date", -7), P("INSTALLATION"), T("Pre-install walkthrough", -3), T("Installation", 0), T("Punch list", 3), T("Closeout", 7)] });
+    const T = (text, owner) => ({ kind: "task", text, owner: owner || "" }), P = (text, off) => ({ kind: "phase", text, off });
+    return cleanTpl({ v: 2, name: "STANDARD PROJECT", anchor: "Installation", rows: [
+      P("PLANNING", -60), T("Gather Requirements"), T("Create Design Quote"), T("Create Design Diagram"), T("Develop Bill of Materials"),
+      P("CONTRACTS", -45), T("Confirm NDA and MSA"), T("Connect with Site PM/PC"), T("Redline Subcontractor Agreement / Rider A"), T("Submit Material and Labor Schedule of Values"), T("Finalize Exhibit A"), T("Route Exhibit A for Signature"),
+      P("PROCUREMENT", -30), T("Order Fiber Circuit"), T("Order Starlink/LEO Services"), T("Order Hardware / Materials"), T("Schedule Labor"), T("Staging and Shipping"),
+      P("PRE-INSTALLATION", -3), T("Conduct Coordination Meeting"), T("Receive Delivery"), T("Perform Inventory"), T("Perform PreWalk with Sup"), T("Complete 80% Electrical"),
+      P("INSTALLATION", 0), T("Install Network and Cabling"), T("Install AV Systems"), T("Install Workstations / Monitors"), T("Install Printers"), T("Complete 20% Electrical"), T("Conduct Testing"),
+      P("TURNOVER", null), T("Develop Punchlist"), T("Perform Site Walk with Sup"), T("Knowledge Transfer"), T("Signoff by Sup")] });
   }
   function allTemplates() {
     const p = programCampus();
@@ -4521,9 +4544,13 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
   const offLabel = o => (o == null ? "—" : o === 0 ? "T-0" : o < 0 ? "T" + o : "T+" + o);
   // the T-0 task got a date: every other task from the same template moves with it
   function tplCascade(p, it) {
-    if (!it.tgrp || it.toff !== 0 || !it.date) return;
+    if (!it.tgrp || !Number.isFinite(it.toff) || !it.date) return;
+    const grp = [];
+    state.projects.forEach(q => q.cards.forEach(c => c.items.forEach(y => { if (y !== it && y.tgrp === it.tgrp && Number.isFinite(y.toff)) grp.push({ q, y }); })));
+    if (it.toff !== 0 && grp.some(g => g.y.date)) return;   // moving one phase by hand doesn't drag the others; the T-0 phase does
+    const zero = addDays(it.date, -it.toff);
     let n = 0;
-    state.projects.forEach(q => q.cards.forEach(c => c.items.forEach(y => { if (y !== it && y.tgrp === it.tgrp && Number.isFinite(y.toff)) { const d = addDays(it.date, y.toff); if (y.date !== d) { y.date = d; y.end = d; n++; } if (q !== p) save(q); } })));
+    grp.forEach(({ q, y }) => { const d = addDays(zero, y.toff); if (y.date !== d) { y.date = d; y.end = d; n++; if (q !== p) save(q); } });
     if (n) setTimeout(() => showUndo(`${n} template date${n > 1 ? "s" : ""} set from ${shortDate(it.date)}`, null), 50);
   }
   function applyTemplate(p, x, t, target, replace) {
@@ -4531,12 +4558,12 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
     const snap = snapshot(), grp = uid();
     if (replace) c.items = [];
     t.rows.forEach(r => {
-      if (r.kind === "phase") { c.items.push(cleanItem({ kind: "phase", text: r.text })); return; }
-      const d = target && r.off != null ? addDays(target, r.off) : null;
-      c.items.push(cleanItem({ text: r.text, bic: r.owner, sub: r.sub, date: d, end: d, ...(r.off != null ? { tgrp: grp, toff: r.off } : {}) }));
+      const d = target && r.kind === "phase" && r.off != null ? addDays(target, r.off) : null;
+      if (r.kind === "phase") { c.items.push(cleanItem({ kind: "phase", text: r.text, date: d, end: d, ...(r.off != null ? { tgrp: grp, toff: r.off } : {}) })); return; }
+      c.items.push(cleanItem({ text: r.text, bic: r.owner, sub: r.sub }));
     });
     c.collapsed = false; save(p); renderProject();
-    showUndo(`“${t.name}” added to ${x.title}${target ? "" : `. Set the ${t.anchor} date to fill in the rest`}`, () => restore(snap));
+    showUndo(`“${t.name}” added to ${x.title}${target ? "" : `. Date any phase and the other phases fill in`}`, () => restore(snap));
   }
   function openUseTemplate(p, x) {
     const list = allTemplates(), c = subCards(p, x.id)[0], has = c && c.items.length;
@@ -4544,13 +4571,13 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
     closeModal();
     const m = document.createElement("div"); m.className = "modal pj-modal x-modal";
     let sel = list[0];
-    const anchorRow = t => `<label class="pj-lbl" for="ut-date">${esc(t.anchor)} date <span class="ut-opt">(optional)</span></label><input class="field" id="ut-date" type="date"><p class="ut-hint">Every task with a T-minus value gets its date counted from this one. Leave it blank and set the ${esc(t.anchor)} task's date later; the rest fill in then.</p>`;
-    const preview = t => `<ul class="ut-prev">${t.rows.map(r => r.kind === "phase" ? `<li class="ph">${esc(r.text)}</li>` : `<li${r.sub ? ' class="sub"' : ""}><span>${esc(r.text)}</span>${r.owner ? `<em>${esc(r.owner)}</em>` : ""}<b>${offLabel(r.off)}</b></li>`).join("")}</ul>`;
+    const anchorRow = t => `<label class="pj-lbl" for="ut-date">${esc(t.anchor)} date <span class="ut-opt">(optional)</span></label><input class="field" id="ut-date" type="date"><p class="ut-hint">Each phase gets its date counted from this one; tasks start with no date. Leave it blank and date a phase on the card later; the other phases fill in then.</p>`;
+    const preview = t => `<ul class="ut-prev">${t.rows.map(r => r.kind === "phase" ? `<li class="ph"><span>${esc(r.text)}</span><b>${r.off == null ? "" : offLabel(r.off)}</b></li>` : `<li${r.sub ? ' class="sub"' : ""}><span>${esc(r.text)}</span>${r.owner ? `<em>${esc(r.owner)}</em>` : ""}</li>`).join("")}</ul>`;
     m.innerHTML = `<div class="ev ut-win" role="dialog" aria-label="Use template" style="--c:${p.color}">
       <div class="ev-head"><div class="ev-title" style="padding-top:4px">USE TEMPLATE</div><button class="ev-x" aria-label="Close">×</button></div>
       <div class="ev-proj"><b style="--pc:${p.color}">${esc(p.title)}</b> · ${esc(x.title)}</div>
       <div class="ev-body">
-        <span class="pj-lbl">Template</span><div class="ut-list">${list.map((t, i) => `<button class="ut-t" data-tid="${t.id}" aria-pressed="${i === 0}"><b>${esc(t.name)}</b><span>${t.rows.filter(r => r.kind !== "phase").length} tasks · from ${esc(t.anchor)}</span></button>`).join("")}</div>
+        <span class="pj-lbl">Template</span><div class="ut-list">${list.map((t, i) => `<button class="ut-t" data-tid="${t.id}" aria-pressed="${i === 0}"><b>${esc(t.name)}</b><span>${t.rows.filter(r => r.kind === "phase").length} phases · ${t.rows.filter(r => r.kind !== "phase").length} tasks</span></button>`).join("")}</div>
         <div class="ut-anchor">${anchorRow(sel)}</div>
         ${has ? `<span class="pj-lbl">This project already has tasks</span><div class="seg ut-mode"><button data-m="add" aria-pressed="true">Add below</button><button data-m="replace" aria-pressed="false">Replace them</button></div>` : ""}
         <div class="ut-pv">${preview(sel)}</div>
@@ -4577,18 +4604,18 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
         <td><select class="sel tp-kind" aria-label="Type"><option value="phase"${r.kind === "phase" ? " selected" : ""}>Phase</option><option value="task"${r.kind !== "phase" && !r.sub ? " selected" : ""}>Task</option><option value="sub"${r.sub ? " selected" : ""}>Subtask</option></select></td>
         <td><input class="tp-in" data-f="text" value="${esc(r.text)}" placeholder="${r.kind === "phase" ? "Phase name" : "Task"}"></td>
         <td>${r.kind === "phase" ? "" : `<input class="tp-in" data-f="owner" value="${esc(r.owner)}" placeholder="Owner" autocapitalize="words">`}</td>
-        <td>${r.kind === "phase" ? "" : `<div class="tp-off"><span>T</span><input class="tp-in" data-f="off" type="number" step="1" value="${r.off == null ? "" : r.off}" placeholder="—" aria-label="Days from ${esc(t.anchor)}"></div>`}</td>
+        <td>${r.kind !== "phase" ? "" : `<div class="tp-off"><span>T</span><input class="tp-in" data-f="off" type="number" step="1" value="${r.off == null ? "" : r.off}" placeholder="—" aria-label="Days from ${esc(t.anchor)}"></div>`}</td>
         <td class="tp-ctl"><button data-tp="up" aria-label="Move up"${i ? "" : " disabled"}>${ICON.up}</button><button data-tp="down" aria-label="Move down"${i < t.rows.length - 1 ? "" : " disabled"}>${ICON.down}</button><button data-tp="del" class="tp-x" aria-label="Delete row">×</button></td></tr>`;
     view.innerHTML = `<div class="page-body tab-body tp-page"><button class="tools-crumb">‹ Tools</button>
       <div class="tp-layout">
-        <aside class="tp-side"><div class="nbx-head"><span>Templates</span></div><div class="tp-tlist">${list.map(z => `<button class="nbx-tile tp-pick" data-tid="${z.id}" aria-pressed="${z.id === tplOpen}" style="--bc:var(--accent)"><span class="nbx-ic">${ICON.task}</span><span class="nbx-name">${esc(z.name)}</span><span class="nbx-n">${z.rows.filter(r => r.kind !== "phase").length}</span></button>`).join("")}
+        <aside class="tp-side"><div class="nbx-head"><span>Templates</span></div><div class="tp-tlist">${list.map(z => `<button class="nbx-tile tp-pick" data-tid="${z.id}" aria-pressed="${z.id === tplOpen}" style="--bc:var(--accent)"><span class="nbx-ic">${ICON.task}</span><span class="nbx-name">${esc(z.name)}</span><span class="nbx-n">${z.rows.filter(r => r.kind === "phase").length}</span></button>`).join("")}
           <button class="nbx-tile nbx-new" data-tp="new"><span class="nbx-ic">${ICON.plus}</span><span class="nbx-name">New template</span></button></div>
           <p class="nbx-hint">Use a template from any project's ⋯ menu: <b>Use template…</b></p></aside>
         ${t ? `<article class="card st-card tp-card">
           <div class="tp-head"><input class="tp-name" value="${esc(t.name)}" aria-label="Template name" autocapitalize="characters">
             <label class="tp-anchor">T-0 milestone <input class="tp-in" data-tf="anchor" value="${esc(t.anchor)}" placeholder="Installation"></label>
             <button class="foot-btn" data-tp="dup">${ICON.dup}Duplicate</button><button class="foot-btn danger" data-tp="deltpl">${ICON.trash}Delete</button></div>
-          <p class="tp-help"><b>T days</b> count from the <b>${esc(t.anchor)}</b> date: <b>-20</b> is 20 days before, <b>0</b> is the ${esc(t.anchor)} day itself, <b>3</b> is 3 days after. Leave it blank for no date.</p>
+          <p class="tp-help">Phases carry the dates. <b>T days</b> count from the <b>${esc(t.anchor)}</b> date: <b>-20</b> is 20 days before, <b>0</b> is the ${esc(t.anchor)} phase itself, <b>7</b> is a week after. Tasks start with no date; date one on the card when it matters and it joins the Critical Path.</p>
           <div class="st-wrap"><table class="st tpt"><colgroup><col style="width:130px"><col><col style="width:180px"><col style="width:120px"><col style="width:104px"></colgroup><thead><tr><th>Type</th><th>Phase / Task</th><th>Owner</th><th>T days</th><th></th></tr></thead>
             <tbody>${t.rows.map(rowHtml).join("") || `<tr><td colspan="5" class="st-empty">No rows yet. Add a phase, then its tasks.</td></tr>`}</tbody></table></div>
           <div class="cap-add tp-add"><button class="add-task" data-tp="addph">${ICON.plus}Add phase</button><button class="add-task" data-tp="addtask">${ICON.plus}Add task</button></div>
@@ -4597,8 +4624,8 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
     view.querySelector(".tools-crumb").addEventListener("click", () => go("#/tools"));
     if (focusSel) { const f = view.querySelector(focusSel); if (f) f.focus(); }
     const pg = view.querySelector(".tp-page");
-    const R = el => t && t.rows.find(r => r.id === el.closest("tr").dataset.rid);
-    pg.addEventListener("input", e => {
+    // look the template up on every event: a sync from another device can swap in a fresh copy of the Program record
+    pg.addEventListener("input", e => { const P = programCampus(), list = allTemplates(), t = list.find(z => z.id === tplOpen), R = el => t && el.closest("tr") && t.rows.find(r => r.id === el.closest("tr").dataset.rid); 
       const el = e.target; if (!t) return;
       if (el.classList.contains("tp-name")) { t.name = el.value.toUpperCase(); save(P); const n = view.querySelector(`.tp-pick[data-tid="${t.id}"] .nbx-name`); if (n) n.textContent = t.name; return; }
       if (el.dataset.tf === "anchor") { t.anchor = el.value; save(P); return; }
@@ -4606,19 +4633,28 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
       if (el.dataset.f === "off") r.off = el.value === "" || !Number.isFinite(+el.value) ? null : Math.round(+el.value); else r[el.dataset.f] = el.value;
       save(P);
     });
-    pg.addEventListener("change", e => {
+    pg.addEventListener("change", e => { const P = programCampus(), list = allTemplates(), t = list.find(z => z.id === tplOpen), R = el => t && el.closest("tr") && t.rows.find(r => r.id === el.closest("tr").dataset.rid); 
       const el = e.target; if (!el.classList.contains("tp-kind")) return; const r = R(el); if (!r) return;
-      r.kind = el.value === "phase" ? "phase" : "task"; r.sub = el.value === "sub"; if (r.kind === "phase") r.off = null; save(P); renderTemplates();
+      r.kind = el.value === "phase" ? "phase" : "task"; r.sub = el.value === "sub"; if (r.kind !== "phase") r.off = null; save(P); renderTemplates();
     });
-    pg.addEventListener("click", e => {
+    // Enter moves to the next line (a new task at the end), like typing a list
+    pg.addEventListener("keydown", e => {
+      if (e.key !== "Enter" || e.isComposing || !e.target.classList.contains("tp-in") || !e.target.dataset.f) return;
+      e.preventDefault();
+      const tr = e.target.closest("tr"), f = e.target.dataset.f, nx = tr && tr.nextElementSibling;
+      if (nx) { const el = nx.querySelector(`[data-f="${f}"]`) || nx.querySelector('[data-f="text"]'); if (el) { el.focus(); if (el.select) el.select(); } return; }
+      const t = allTemplates().find(z => z.id === tplOpen); if (!t) return;
+      const r = cleanTpl({ v: 2, rows: [{ kind: "task", text: "" }] }).rows[0]; t.rows.push(r); save(programCampus()); renderTemplates(`tr[data-rid="${r.id}"] [data-f="text"]`);
+    });
+    pg.addEventListener("click", e => { const P = programCampus(), list = allTemplates(), t = list.find(z => z.id === tplOpen), R = el => t && el.closest("tr") && t.rows.find(r => r.id === el.closest("tr").dataset.rid); 
       const pk = e.target.closest(".tp-pick"); if (pk) { tplOpen = pk.dataset.tid; renderTemplates(); return; }
       const b = e.target.closest("[data-tp]"); if (!b) return;
       const k = b.dataset.tp;
-      if (k === "new") { const n = cleanTpl({ name: "NEW TEMPLATE", rows: [{ kind: "phase", text: "PHASE 1" }, { kind: "task", text: "", off: null }] }); list.push(n); tplOpen = n.id; save(P); renderTemplates(".tp-name"); view.querySelector(".tp-name").select(); return; }
+      if (k === "new") { const n = cleanTpl({ v: 2, name: "NEW TEMPLATE", rows: [{ kind: "phase", text: "PHASE 1", off: 0 }, { kind: "task", text: "" }] }); list.push(n); tplOpen = n.id; save(P); renderTemplates(".tp-name"); view.querySelector(".tp-name").select(); return; }
       if (!t) return;
       if (k === "dup") { const n = cleanTpl({ ...JSON.parse(JSON.stringify(t)), id: "", name: t.name + " COPY" }); n.rows.forEach(r => (r.id = uid())); list.splice(list.indexOf(t) + 1, 0, n); tplOpen = n.id; save(P); renderTemplates(); return; }
       if (k === "deltpl") { const snap = snapshot(); P.templates = list.filter(z => z !== t); save(P); renderTemplates(); showUndo("Template deleted", () => { restore(snap); }); return; }
-      if (k === "addph" || k === "addtask") { const r = cleanTpl({ rows: [{ kind: k === "addph" ? "phase" : "task", text: "", off: null }] }).rows[0]; t.rows.push(r); save(P); renderTemplates(`tr[data-rid="${r.id}"] [data-f="text"]`); return; }
+      if (k === "addph" || k === "addtask") { const r = cleanTpl({ v: 2, rows: [{ kind: k === "addph" ? "phase" : "task", text: "", off: null }] }).rows[0]; t.rows.push(r); save(P); renderTemplates(`tr[data-rid="${r.id}"] [data-f="text"]`); return; }
       const r = R(b); if (!r) return; const i = t.rows.indexOf(r);
       if (k === "del") { t.rows.splice(i, 1); save(P); renderTemplates(); return; }
       if (k === "up" && i > 0) { [t.rows[i - 1], t.rows[i]] = [t.rows[i], t.rows[i - 1]]; save(P); renderTemplates(); return; }
