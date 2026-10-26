@@ -1783,7 +1783,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
   const STATUSES = ["Not Started", "In Progress", "Blocked", "Done"];
   const STATUS_CLASS = { "Not Started": "s-ns", "In Progress": "s-ip", "Blocked": "s-blk", "Done": "s-done" };
   const LS_KEY = "pmbridge-v1";
-  const APP_VERSION = "97 (Oct 25)";
+  const APP_VERSION = "98 (Oct 25)";
   const $ = id => document.getElementById(id);
   const uid = () => Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4);
   const pad2 = n => String(n).padStart(2, "0");
@@ -1970,6 +1970,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
       ...(Array.isArray(p.archive) && p.archive.length ? { archive: p.archive.filter(a => a && a.sub).map(a => { const s = cleanSub(a.sub); return { sub: s, closedAt: +a.closedAt || Date.now(), cards: (Array.isArray(a.cards) ? a.cards : []).filter(Boolean).map(c => ({ ...cleanCard(c), sub: s.id })) }; }) } : {}),
       regSeen: (Array.isArray(p.regSeen) ? p.regSeen : []).map(String),
       ...(Array.isArray(p.templates) ? { templates: p.templates.filter(Boolean).map(cleanTpl) } : {}),
+      ...(Array.isArray(p.tplSeen) ? { tplSeen: p.tplSeen.map(String) } : {}),
       ...(Array.isArray(p.caps) ? { caps: p.caps.filter(Boolean).map(r => { const o = { id: String(r.id || uid()) }; CAP_COLS.forEach(([k]) => (o[k] = String(r[k] || ""))); return o; }) } : {}),
       ...(() => {
         const boxes = (Array.isArray(p.boxes) ? p.boxes : []).filter(b => b && b.id).map(b => ({ id: String(b.id), name: String(b.name || "Box").slice(0, 40), color: /^#[0-9a-f]{6}$/i.test(b.color || "") ? b.color : "#8e8e93", created: b.created || Date.now(), ...(b.sid ? { sid: String(b.sid) } : {}) }));
@@ -4526,9 +4527,10 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
   }
 
   /* ================= Templates: phases + tasks with owners and T± days from a milestone ================= */
+  const BUILTIN_TPL = "builtin-standard-project-v1";
   function sampleTemplate() {
     const T = (text, owner) => ({ kind: "task", text, owner: owner || "" }), P = (text, off) => ({ kind: "phase", text, off });
-    return cleanTpl({ v: 2, name: "STANDARD PROJECT", anchor: "Installation", rows: [
+    return cleanTpl({ v: 2, id: BUILTIN_TPL, name: "STANDARD PROJECT", anchor: "Installation", rows: [
       P("PLANNING", -56), T("Gather Requirements"), T("Create Design Quote"), T("Create Design Diagram"), T("Develop Bill of Materials"),
       P("CONTRACTS", -38), T("Confirm NDA and MSA"), T("Connect with Site PM/PC"), T("Redline Subcontractor Agreement / Rider A"), T("Submit Material and Labor Schedule of Values"), T("Finalize Exhibit A"), T("Route Exhibit A for Signature"),
       P("PROCUREMENT", -31), T("Order Fiber Circuit"), T("Order Starlink/LEO Services"), T("Order Hardware / Materials"), T("Schedule Labor"), T("Staging and Shipping"),
@@ -4538,7 +4540,14 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
   }
   function allTemplates() {
     const p = programCampus();
-    if (!Array.isArray(p.templates)) { p.templates = [sampleTemplate()]; save(p); }
+    if (!Array.isArray(p.templates)) p.templates = [];
+    // a built-in template is added once to every copy, even one that already has its own templates;
+    // after that it's yours to edit or delete (tplSeen remembers it was offered)
+    p.tplSeen = Array.isArray(p.tplSeen) ? p.tplSeen : [];
+    if (!p.tplSeen.includes(BUILTIN_TPL)) {
+      if (!p.templates.some(t => t.id === BUILTIN_TPL || t.name.trim().toUpperCase() === "STANDARD PROJECT")) p.templates.unshift(sampleTemplate());
+      p.tplSeen.push(BUILTIN_TPL); save(p);
+    }
     return p.templates;
   }
   const offLabel = o => (o == null ? "—" : o === 0 ? "T-0" : o < 0 ? "T" + o : "T+" + o);
