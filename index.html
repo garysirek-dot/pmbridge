@@ -1783,7 +1783,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
   const STATUSES = ["Not Started", "In Progress", "Blocked", "Done"];
   const STATUS_CLASS = { "Not Started": "s-ns", "In Progress": "s-ip", "Blocked": "s-blk", "Done": "s-done" };
   const LS_KEY = "pmbridge-v1";
-  const APP_VERSION = "96 (Oct 25)";
+  const APP_VERSION = "97 (Oct 25)";
   const $ = id => document.getElementById(id);
   const uid = () => Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4);
   const pad2 = n => String(n).padStart(2, "0");
@@ -4529,9 +4529,9 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
   function sampleTemplate() {
     const T = (text, owner) => ({ kind: "task", text, owner: owner || "" }), P = (text, off) => ({ kind: "phase", text, off });
     return cleanTpl({ v: 2, name: "STANDARD PROJECT", anchor: "Installation", rows: [
-      P("PLANNING", -60), T("Gather Requirements"), T("Create Design Quote"), T("Create Design Diagram"), T("Develop Bill of Materials"),
-      P("CONTRACTS", -45), T("Confirm NDA and MSA"), T("Connect with Site PM/PC"), T("Redline Subcontractor Agreement / Rider A"), T("Submit Material and Labor Schedule of Values"), T("Finalize Exhibit A"), T("Route Exhibit A for Signature"),
-      P("PROCUREMENT", -30), T("Order Fiber Circuit"), T("Order Starlink/LEO Services"), T("Order Hardware / Materials"), T("Schedule Labor"), T("Staging and Shipping"),
+      P("PLANNING", -56), T("Gather Requirements"), T("Create Design Quote"), T("Create Design Diagram"), T("Develop Bill of Materials"),
+      P("CONTRACTS", -38), T("Confirm NDA and MSA"), T("Connect with Site PM/PC"), T("Redline Subcontractor Agreement / Rider A"), T("Submit Material and Labor Schedule of Values"), T("Finalize Exhibit A"), T("Route Exhibit A for Signature"),
+      P("PROCUREMENT", -31), T("Order Fiber Circuit"), T("Order Starlink/LEO Services"), T("Order Hardware / Materials"), T("Schedule Labor"), T("Staging and Shipping"),
       P("PRE-INSTALLATION", -3), T("Conduct Coordination Meeting"), T("Receive Delivery"), T("Perform Inventory"), T("Perform PreWalk with Sup"), T("Complete 80% Electrical"),
       P("INSTALLATION", 0), T("Install Network and Cabling"), T("Install AV Systems"), T("Install Workstations / Monitors"), T("Install Printers"), T("Complete 20% Electrical"), T("Conduct Testing"),
       P("TURNOVER", null), T("Develop Punchlist"), T("Perform Site Walk with Sup"), T("Knowledge Transfer"), T("Signoff by Sup")] });
@@ -4543,12 +4543,12 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
   }
   const offLabel = o => (o == null ? "—" : o === 0 ? "T-0" : o < 0 ? "T" + o : "T+" + o);
   // the T-0 task got a date: every other task from the same template moves with it
-  // template dates are workdays: T-0 is the milestone itself; every other T-date moves to the nearest Friday
+  // template dates are workdays: T-0 is the milestone itself; a T-minus date moves back to the Friday on or before it,
+  // a T-plus date forward to the Friday on or after it (so a Monday install: T-3 is the Friday before, T-31 four Fridays before that)
   function tplDate(zero, off) {
     if (!off) return zero;
     const d = addDays(zero, off), dow = parseIso(d).getDay();   // 0 Sun … 5 Fri … 6 Sat
-    const back = (dow - 5 + 7) % 7, fwd = (5 - dow + 7) % 7;
-    return addDays(d, back <= fwd ? -back : fwd);
+    return off < 0 ? addDays(d, -((dow - 5 + 7) % 7)) : addDays(d, (5 - dow + 7) % 7);
   }
   function tplCascade(p, it) {
     if (!it.tgrp || !Number.isFinite(it.toff) || !it.date) return;
@@ -4622,7 +4622,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
           <div class="tp-head"><input class="tp-name" value="${esc(t.name)}" aria-label="Template name" autocapitalize="characters">
             <label class="tp-anchor">T-0 milestone <input class="tp-in" data-tf="anchor" value="${esc(t.anchor)}" placeholder="Installation"></label>
             <button class="foot-btn" data-tp="dup">${ICON.dup}Duplicate</button><button class="foot-btn danger" data-tp="deltpl">${ICON.trash}Delete</button></div>
-          <p class="tp-help">Phases carry the dates. <b>T days</b> count from the <b>${esc(t.anchor)}</b> date: <b>-20</b> is 20 days before, <b>0</b> is the ${esc(t.anchor)} phase itself, <b>7</b> is a week after. Every date except T-0 lands on the nearest Friday. Tasks start with no date; date one on the card when it matters and it joins the Critical Path.</p>
+          <p class="tp-help">Phases carry the dates. <b>T days</b> count from the <b>${esc(t.anchor)}</b> date: <b>-20</b> is 20 days before, <b>0</b> is the ${esc(t.anchor)} phase itself, <b>7</b> is a week after. Every date except T-0 lands on a Friday: T-minus dates on the Friday on or before, T-plus on the Friday on or after. Tasks start with no date; date one on the card when it matters and it joins the Critical Path.</p>
           <div class="st-wrap"><table class="st tpt"><colgroup><col style="width:130px"><col><col style="width:180px"><col style="width:120px"><col style="width:104px"></colgroup><thead><tr><th>Type</th><th>Phase / Task</th><th>Owner</th><th>T days</th><th></th></tr></thead>
             <tbody>${t.rows.map(rowHtml).join("") || `<tr><td colspan="5" class="st-empty">No rows yet. Add a phase, then its tasks.</td></tr>`}</tbody></table></div>
           <div class="cap-add tp-add"><button class="add-task" data-tp="addph">${ICON.plus}Add phase</button><button class="add-task" data-tp="addtask">${ICON.plus}Add task</button></div>
