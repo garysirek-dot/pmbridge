@@ -1760,7 +1760,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
 <nav class="stabs" id="tabs" aria-label="Sections">
   <button class="stab" data-tab="program">Program</button>
   <button class="stab" data-tab="focus">My Stuff</button>
-  <button class="stab" data-tab="home">Infrastructure</button>
+  <button class="stab" data-tab="home">Campuses</button>
   <!-- Applications and Insights are hidden for now; remove style="display:none" to bring them back -->
   <button class="stab" data-tab="applications" style="display:none">Applications</button>
   <button class="stab" data-tab="insight" style="display:none">Insights</button>
@@ -1785,7 +1785,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
   const STATUSES = ["Not Started", "In Progress", "Blocked", "Done"];
   const STATUS_CLASS = { "Not Started": "s-ns", "In Progress": "s-ip", "Blocked": "s-blk", "Done": "s-done" };
   const LS_KEY = "pmbridge-v1";
-  const APP_VERSION = "100 (Oct 27)";
+  const APP_VERSION = "102 (Oct 27)";
   const $ = id => document.getElementById(id);
   const uid = () => Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4);
   const pad2 = n => String(n).padStart(2, "0");
@@ -4421,7 +4421,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
   function closeCampus(p) {
     const snap = snapshot(); p.closed = Date.now(); save(p);
     if (route_.name === "project") go("#/"); else rerender();
-    showUndo(`${p.title} closed. Find it under Closed on Infrastructure`, () => restore(snap));
+    showUndo(`${p.title} closed. Find it under Closed on Campuses`, () => restore(snap));
   }
   function reopenCampus(p) { delete p.closed; save(p); rerender(); showUndo(`${p.title} reopened`, null); }
   function closeSub(p, x) {
