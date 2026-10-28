@@ -1099,6 +1099,7 @@ table.st { width: 100%; border-collapse: collapse; min-width: 860px; font-size: 
 .fo-wide .card-head .title { display: flex; align-items: center; gap: 8px; }
 .fo-wide .card-head .title svg { width: 18px; height: 18px; }
 .fo-for { color: var(--dim); font-weight: 700; }
+.fo-dash { color: #F2F2F2; } .fo-name { color: #FFE135; font-weight: 800; }
 .fo-empty { margin: 10px 0 4px; color: var(--dim); font-size: 14px; line-height: 1.5; }
 .fl-head, .fo-line { display: grid; grid-template-columns: 24px 150px 130px 190px minmax(0, 1fr) 24px 130px 64px 92px; column-gap: 12px; align-items: center; }
 .fl-src { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13px; font-weight: 400; letter-spacing: 0; text-transform: none; color: var(--dim); }
@@ -1760,8 +1761,9 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
   <button class="stab" data-tab="program">Program</button>
   <button class="stab" data-tab="focus">My Stuff</button>
   <button class="stab" data-tab="home">Infrastructure</button>
-  <button class="stab" data-tab="applications">Applications</button>
-  <button class="stab" data-tab="insight">Insights</button>
+  <!-- Applications and Insights are hidden for now; remove style="display:none" to bring them back -->
+  <button class="stab" data-tab="applications" style="display:none">Applications</button>
+  <button class="stab" data-tab="insight" style="display:none">Insights</button>
   <button class="stab" data-tab="status">Status</button>
   <button class="stab" data-tab="calendar">Calendar</button>
   <button class="stab" data-tab="tools">Tools</button>
@@ -1783,7 +1785,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
   const STATUSES = ["Not Started", "In Progress", "Blocked", "Done"];
   const STATUS_CLASS = { "Not Started": "s-ns", "In Progress": "s-ip", "Blocked": "s-blk", "Done": "s-done" };
   const LS_KEY = "pmbridge-v1";
-  const APP_VERSION = "98 (Oct 25)";
+  const APP_VERSION = "100 (Oct 27)";
   const $ = id => document.getElementById(id);
   const uid = () => Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4);
   const pad2 = n => String(n).padStart(2, "0");
@@ -4122,7 +4124,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
         <div class="fo-export"><span class="fo-lbl">Export</span><button class="fo-xb" data-fx="xlsx"${list.length ? "" : " disabled"} title="Download what's showing as an Excel file">${ICON.save}Excel</button><button class="fo-xb" data-fx="pdf"${list.length ? "" : " disabled"} title="Download what's showing as a PDF">${ICON.save}PDF</button></div></div>
       <div class="cal-key fo-filters" role="group" aria-label="Show">${FILTERS.map(([k, l, col]) => `<button class="ck" data-ff="${k}" aria-pressed="${focusFilter === k}" style="--c:${col}"><i></i><span>${l}</span><b class="ck-n">${V.count[k]}</b></button>`).join("")}<span class="fo-ffor">for <b>${sel ? esc(sel.name) : "everyone"}</b></span></div>
       <article class="card task-card fo-wide fo-mine" style="--list-color:#F2F2F2">
-        <header class="card-head" style="color:#F2F2F2"><div class="title">My Checklist${sel ? ` <span class="fo-for">· ${esc(sel.name)}</span>` : ` <span class="fo-for">· everyone</span>`}${focusFilter === "pri" ? ` <span class="fo-for fo-fpri">· priorities</span>` : focusFilter === "past" ? ` <span class="fo-for fo-fpast">· past due</span>` : focusFilter === "soon" ? ` <span class="fo-for fo-fsoon">· next 3 days</span>` : ""}</div><span class="act-count">${list.length}</span></header>
+        <header class="card-head" style="color:#F2F2F2"><div class="title">My Checklist${sel ? ` <span class="fo-dash">-</span> <span class="fo-name">${esc(sel.name)}</span>` : ` <span class="fo-for">- everyone</span>`}${focusFilter === "pri" ? ` <span class="fo-for fo-fpri">· priorities</span>` : focusFilter === "past" ? ` <span class="fo-for fo-fpast">· past due</span>` : focusFilter === "soon" ? ` <span class="fo-for fo-fsoon">· next 3 days</span>` : ""}</div><span class="act-count">${list.length}</span></header>
         <div class="card-body">${list.length ? head + `<ul class="fo-lines">${list.map((x, n) => foLineHtml(x, n, list.length, t, flashRef, canMove)).join("")}</ul>`
           : `<p class="fo-empty">${!owners.length && focusFilter === "all" ? "No open items yet. Give a task or an Action Register item an owner and it shows up here." : focusFilter === "pri" ? "Nothing starred. Tap the star on an item to make it a priority." : focusFilter === "past" ? "Nothing past due." : focusFilter === "soon" ? "Nothing due in the next 3 days." : "Nothing open."}</p>`}</div></article>
     </div>`;
