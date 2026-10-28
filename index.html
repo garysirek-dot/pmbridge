@@ -641,7 +641,7 @@ button.np-boxsq:hover { border-color: var(--c); }
 /* campus page: projects on the left, notes on the right */
 .camp-body { display: grid; grid-template-columns: minmax(0, 1fr); align-items: start; }
 .camp-body.has-side { grid-template-columns: 340px minmax(0, 1fr); padding-left: 20px; }
-@media (min-width: 900px) and (max-width: 1299px) { .camp-body.has-side { grid-template-columns: 360px minmax(0, 1fr) !important; } }
+@media (min-width: 900px) and (max-width: 1299px) { .camp-body.has-side { grid-template-columns: 463px minmax(0, 1fr) !important; } }
 .camp-body.has-side > .pcols { padding-left: 24px; }
 .cnotes { position: relative; padding: 0 24px 60px 0; border-right: 3px dashed rgba(255,255,255,.6); min-width: 0; display: flex; flex-direction: column; gap: 16px; align-self: stretch; }
 .cnotes .cn-head { margin-bottom: -4px; }
@@ -652,8 +652,8 @@ button.np-boxsq:hover { border-color: var(--c); }
 .act-maker .am-title:focus { border-color: var(--list-color); }
 .act-card .ntitle { cursor: text; outline: none; }
 /* Action Register */
-.camp-body.has-side { grid-template-columns: 440px minmax(0, 1fr); }
-@media (min-width: 900px) { .camp-body.has-side .pcols { grid-template-columns: repeat(auto-fill, minmax(440px, 1fr)); } }
+.camp-body.has-side { grid-template-columns: 463px minmax(0, 1fr); }   /* Action Register as wide as a project card */
+@media (min-width: 900px) { .camp-body.has-side .pcols { grid-template-columns: repeat(auto-fill, 436px); column-gap: 28px; } }   /* project cards match the Action Register width */
 .cnotes > .regc { margin: 0; }
 .reg-card .card-head .act-count { margin-left: auto; }
 .rg-cols, .rg-row { display: grid; grid-template-columns: 24px 84px minmax(0, 1fr) 84px 20px; column-gap: 8px; align-items: start; }
@@ -1785,7 +1785,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
   const STATUSES = ["Not Started", "In Progress", "Blocked", "Done"];
   const STATUS_CLASS = { "Not Started": "s-ns", "In Progress": "s-ip", "Blocked": "s-blk", "Done": "s-done" };
   const LS_KEY = "pmbridge-v1";
-  const APP_VERSION = "102 (Oct 27)";
+  const APP_VERSION = "103 (Oct 27)";
   const $ = id => document.getElementById(id);
   const uid = () => Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4);
   const pad2 = n => String(n).padStart(2, "0");
