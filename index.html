@@ -1087,7 +1087,23 @@ table.st { width: 100%; border-collapse: collapse; min-width: 860px; font-size: 
 .fo-wide { max-width: 1400px; margin-bottom: 20px; }
 .fo-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px 24px; flex-wrap: wrap; max-width: 1400px; margin-bottom: 18px; }
 .fo-top .fo-pick { margin: 0; }
-.fo-filters { margin: -4px 0 18px; }
+.fo-filters { margin: 0; }
+/* My Stuff filter rows: Owner / Campuses / Sort by, labels in one column */
+.fo-page .fo-pick { margin: 0 0 12px; }
+.fo-page .fo-top { margin-bottom: 12px; align-items: center; }
+.fo-page .fo-pick > .fo-lbl { width: 92px; flex: none; padding-top: 0; align-self: center; }
+.fo-page .fo-pick:not(.fo-sortrow) .fo-owners { align-items: center; }
+.fo-page .fo-sortrow { margin-bottom: 18px; }
+.fo-camp > i { width: 9px; height: 9px; border-radius: 50%; background: var(--c); flex: none; }
+/* My Stuff: every filter and export button is the same compact rounded rectangle */
+.fo-page .fo-own, .fo-page .fo-filters .ck, .fo-page .fo-xb { height: 30px; padding: 0 11px; border-radius: 7px; gap: 7px; font-size: 12.5px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; line-height: 1; }
+.fo-page .fo-own b, .fo-page .fo-filters .ck b { font-size: 11.5px; }
+.fo-page .fo-xb svg { width: 15px; height: 15px; }
+.fo-page .fo-owners, .fo-page .fo-filters, .fo-page .fo-export { gap: 6px; }
+.fo-page .fo-filters .ck i, .fo-page .fo-camp > i { width: 10px; height: 10px; }
+@media (max-width: 699px) { .fo-page .fo-pick > .fo-lbl { align-self: flex-start; width: auto; } }
+.fo-page .fo-pick { margin-bottom: 8px; } .fo-page .fo-top { margin-bottom: 8px; } .fo-page .fo-top .fo-pick { margin: 0; } .fo-page .fo-export .fo-lbl { padding-top: 0; } .fo-page .fo-sortrow { margin-bottom: 16px; }
+.fo-own.fo-camp[aria-pressed="true"] { border-color: var(--c, var(--accent)); color: var(--ink); background: color-mix(in srgb, var(--c, var(--accent)) 16%, var(--card)); }
 .fo-ffor { font-size: 13px; color: var(--dim); margin-left: 4px; } .fo-ffor b { color: var(--ink); }
 .fo-fpast { color: #FF6B6B !important; } .fo-fsoon { color: #5AA9FF !important; }
 .fo-export { display: flex; align-items: center; gap: 8px; }
@@ -1793,7 +1809,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
   const STATUSES = ["Not Started", "In Progress", "Blocked", "Done"];
   const STATUS_CLASS = { "Not Started": "s-ns", "In Progress": "s-ip", "Blocked": "s-blk", "Done": "s-done" };
   const LS_KEY = "pmbridge-v1";
-  const APP_VERSION = "107 (Oct 29)";
+  const APP_VERSION = "109 (Oct 29)";
   const $ = id => document.getElementById(id);
   const uid = () => Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4);
   const pad2 = n => String(n).padStart(2, "0");
@@ -4097,6 +4113,8 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
     } catch (e) { showMsg("Couldn't build the file. Check your internet connection and try again."); }
   }
   const FF_KEY = "pmbridge-focus-filter";
+  const FC_KEY = "pmbridge-focus-campus";
+  let focusCamp = (() => { try { return localStorage.getItem(FC_KEY) || ""; } catch (e) { return ""; } })();
   let focusFilter = (() => { try { const v = localStorage.getItem(FF_KEY); return ["pri", "past", "soon"].includes(v) ? v : "all"; } catch (e) { return "all"; } })();
   let focusSort = null;   // { col, dir } when sorted by a column; null = your own order
   const FO_COLS = [["campus", "Campus"], ["project", "Project"], ["source", "Source"], ["item", "Item"], ["note", ""], ["owner", "Owner"], ["due", "Due"]];
@@ -4114,14 +4132,18 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
     if (focusOwner && !owners.some(o => o.k === focusOwner)) focusOwner = "";
     const sel = owners.find(o => o.k === focusOwner), t = todayIso(), soon = addDays(t, 3);
     const isPast = x => !!x.it.date && itemEnd(x.it) < t, isSoon = x => !!x.it.date && x.it.date <= soon && itemEnd(x.it) >= t;
-    const scope = focusAll().filter(x => !sel || ownerKey(x.it.bic) === sel.k);
+    const mine = focusAll().filter(x => !sel || ownerKey(x.it.bic) === sel.k);
+    // campus row: every open campus, with how many of this owner's items sit there
+    const campRow = camps().map(p => ({ p, n: mine.filter(x => x.p === p).length }));
+    if (focusCamp && !campRow.some(c => c.p.id === focusCamp)) focusCamp = "";
+    const scope = mine.filter(x => !focusCamp || x.p.id === focusCamp);
     const count = { all: scope.length, pri: scope.filter(x => x.it.star).length, past: scope.filter(isPast).length, soon: scope.filter(isSoon).length };
     let list = scope.filter(x => focusFilter === "pri" ? x.it.star : focusFilter === "past" ? isPast(x) : focusFilter === "soon" ? isSoon(x) : true);
     if (focusSort) {
       const key = { campus: x => x.p.title, project: x => x.project || "", source: x => x.source, item: x => x.it.text, owner: x => x.it.bic || "", due: x => x.it.date || "" }[focusSort.col];
       if (key) list = list.slice().sort((a, b) => { const ka = key(a), kb = key(b); if (!ka !== !kb) return ka ? -1 : 1; return ka.localeCompare(kb, undefined, { numeric: true, sensitivity: "base" }) * focusSort.dir; });   // blanks always last
     }
-    return { owners, sel, t, count, list, pri: [] };
+    return { owners, sel, t, count, list, pri: [], campRow, mineN: mine.length };
   }
   function renderFocus(flashRef) {
     const V = focusView(), { owners, sel, t, list } = V, canMove = !focusSort;
@@ -4130,7 +4152,9 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
     view.innerHTML = `<div class="page-body tab-body fo-page">
       <div class="fo-top">${owners.length ? `<div class="fo-pick"><span class="fo-lbl">Owner</span><div class="fo-owners" role="group" aria-label="Owner">${owners.map(o => `<button class="fo-own" data-k="${esc(o.k)}" aria-pressed="${o.k === focusOwner}">${esc(o.name)}<b>${o.n}</b></button>`).join("")}</div></div>` : "<span></span>"}
         <div class="fo-export"><span class="fo-lbl">Export</span><button class="fo-xb" data-fx="xlsx"${list.length ? "" : " disabled"} title="Download what's showing as an Excel file">${ICON.save}Excel</button><button class="fo-xb" data-fx="pdf"${list.length ? "" : " disabled"} title="Download what's showing as a PDF">${ICON.save}PDF</button></div></div>
-      <div class="cal-key fo-filters" role="group" aria-label="Show">${FILTERS.map(([k, l, col]) => `<button class="ck" data-ff="${k}" aria-pressed="${focusFilter === k}" style="--c:${col}"><i></i><span>${l}</span><b class="ck-n">${V.count[k]}</b></button>`).join("")}<span class="fo-ffor">for <b>${sel ? esc(sel.name) : "everyone"}</b></span></div>
+      <div class="fo-pick fo-camps"><span class="fo-lbl">Campuses</span><div class="fo-owners" role="group" aria-label="Campus">
+        <button class="fo-own fo-camp" data-fc="" aria-pressed="${!focusCamp}">All<b>${V.mineN}</b></button>${V.campRow.map(c => `<button class="fo-own fo-camp" data-fc="${c.p.id}" aria-pressed="${focusCamp === c.p.id}" style="--c:${c.p.color}"><i></i>${esc(c.p.title)}<b>${c.n}</b></button>`).join("")}</div></div>
+      <div class="fo-pick fo-sortrow"><span class="fo-lbl">Sort by</span><div class="cal-key fo-filters" role="group" aria-label="Sort by">${FILTERS.map(([k, l, col]) => `<button class="ck" data-ff="${k}" aria-pressed="${focusFilter === k}" style="--c:${col}"><i></i><span>${l}</span><b class="ck-n">${V.count[k]}</b></button>`).join("")}</div></div>
       <article class="card task-card fo-wide fo-mine" style="--list-color:#F2F2F2">
         <header class="card-head" style="color:#F2F2F2"><div class="title">My Checklist${sel ? ` <span class="fo-dash">-</span> <span class="fo-name">${esc(sel.name)}</span>` : ` <span class="fo-for">- everyone</span>`}${focusFilter === "pri" ? ` <span class="fo-for fo-fpri">· priorities</span>` : focusFilter === "past" ? ` <span class="fo-for fo-fpast">· past due</span>` : focusFilter === "soon" ? ` <span class="fo-for fo-fsoon">· next 3 days</span>` : ""}</div><span class="act-count">${list.length}</span></header>
         <div class="card-body">${list.length ? head + `<ul class="fo-lines">${list.map((x, n) => foLineHtml(x, n, list.length, t, flashRef, canMove)).join("")}</ul>`
@@ -4139,6 +4163,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
     const body = view.querySelector(".fo-page");
     body.addEventListener("click", e => {
       const fx = e.target.closest("[data-fx]"); if (fx) { exportFocus(fx.dataset.fx); return; }
+      const fc = e.target.closest("[data-fc]"); if (fc) { focusCamp = fc.dataset.fc; try { localStorage.setItem(FC_KEY, focusCamp); } catch (err) {} renderFocus(); return; }
       const ff = e.target.closest("[data-ff]"); if (ff) { focusFilter = ff.dataset.ff; try { localStorage.setItem(FF_KEY, focusFilter); } catch (err) {} renderFocus(); return; }
       const so = e.target.closest("[data-sort]");
       if (so) { const k = so.dataset.sort; focusSort = k === "mine" ? null : focusSort && focusSort.col === k ? (focusSort.dir > 0 ? { col: k, dir: -1 } : null) : { col: k, dir: 1 }; renderFocus(); return; }
