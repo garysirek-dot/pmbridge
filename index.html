@@ -80,6 +80,7 @@ input, textarea, select { font: inherit; color: inherit; }
 /* one card per project: Critical Path, Tasks and Blockers become sections of the project card */
 body.combo .pcols .psec { background: var(--card); border: 1px solid var(--card-edge); border-radius: 16px; padding: 16px 18px 8px; box-shadow: 0 8px 26px rgba(0,0,0,.55); }
 body.combo .pcols .psec .psec-head { margin-bottom: 8px; }
+body.combo .pcols { align-items: start; }   /* each project card keeps its own height; opening one doesn't stretch its neighbour */
 body.combo .pcols .psec > .col { gap: 0; }
 body.combo .psec .col > .card { background: transparent; border: 0; border-radius: 0; box-shadow: none; padding: 14px 2px 12px; border-top: 1px solid rgba(255,255,255,.12); }
 body.combo .psec .col > .card:first-child { border-top: 0; }
@@ -1785,7 +1786,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
   const STATUSES = ["Not Started", "In Progress", "Blocked", "Done"];
   const STATUS_CLASS = { "Not Started": "s-ns", "In Progress": "s-ip", "Blocked": "s-blk", "Done": "s-done" };
   const LS_KEY = "pmbridge-v1";
-  const APP_VERSION = "104 (Oct 27)";
+  const APP_VERSION = "105 (Oct 29)";
   const $ = id => document.getElementById(id);
   const uid = () => Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4);
   const pad2 = n => String(n).padStart(2, "0");
