@@ -1118,7 +1118,14 @@ table.st { width: 100%; border-collapse: collapse; min-width: 860px; font-size: 
 .fo-star svg { width: 15px !important; height: 15px !important; }
 .fo-fpri { color: #FFD84D !important; }
 .fo-lines { list-style: none; margin: 0; padding: 0; }
-.fo-line { padding: 7px 0; border-bottom: 1px solid rgba(255,255,255,.06); min-height: 40px; }
+.fo-line { padding: 3px 0; border-bottom: 1px solid rgba(255,255,255,.06); min-height: 0; }
+/* compact My Stuff rows */
+.fo-line .fl-item { line-height: 1.25; padding-top: 0; padding-bottom: 0; }
+.fo-line .date-pill { height: 20px; line-height: 18px; padding-top: 0; padding-bottom: 0; font-size: 11px; }
+.fo-line .fo-arrows button, .fo-line .fo-star { width: 22px; height: 22px; min-height: 0; }
+.fo-line .fo-arrows button svg, .fo-line .fo-star svg { width: 15px; height: 15px; }
+.fo-line .fl-note, .fo-line .fl-note > * { max-height: 20px; }
+.fo-line .fl-note svg { width: 16px; height: 16px; }
 .fo-line:last-child { border-bottom: 0; }
 .fo-line.fresh { animation: freshRow 1.2s ease; }
 .fo-line .check { margin-top: 0; --list-color: var(--pc); }
@@ -1786,7 +1793,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
   const STATUSES = ["Not Started", "In Progress", "Blocked", "Done"];
   const STATUS_CLASS = { "Not Started": "s-ns", "In Progress": "s-ip", "Blocked": "s-blk", "Done": "s-done" };
   const LS_KEY = "pmbridge-v1";
-  const APP_VERSION = "106 (Oct 29)";
+  const APP_VERSION = "107 (Oct 29)";
   const $ = id => document.getElementById(id);
   const uid = () => Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4);
   const pad2 = n => String(n).padStart(2, "0");
