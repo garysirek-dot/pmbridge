@@ -942,6 +942,56 @@ table.st { width: 100%; border-collapse: collapse; min-width: 860px; font-size: 
 .st-card .st:not(.sr) tbody tr:first-child td { padding-top: 14px; }
 /* Program tab + L10 */
 .soon-card { max-width: 760px; }
+/* Punchlist on a project card */
+.pl-card .card-head .title { flex: 1; }
+.pl-prog { width: 70px; height: 5px; border-radius: 3px; background: rgba(255,255,255,.12); overflow: hidden; flex: none; } .pl-prog i { display: block; height: 100%; background: var(--pc); border-radius: 3px; }
+.pl-n { font-size: 12px; font-weight: 800; color: var(--dim); min-width: 32px; text-align: right; }
+.pl-hb svg { width: 16px; height: 16px; } .pl-hb.on { color: var(--pc); }
+.pl-card.pl-collapsed .pl-body { display: none; }
+.pl-card.pl-collapsed .toggle svg { transform: rotate(-90deg); }
+.pl-body { padding-top: 6px; }
+.pl-list, .pl-elist { list-style: none; margin: 0; padding: 0; }
+.pl-groups { list-style: none; margin: 0; padding: 0; }
+.pl-group + .pl-group { margin-top: 6px; border-top: 1px solid rgba(255,255,255,.12); padding-top: 4px; }
+.pl-gh { display: flex; align-items: baseline; gap: 10px; padding: 8px 0 4px; font-weight: 800; font-size: 14px; letter-spacing: .07em; text-transform: uppercase; color: var(--ink); }
+.pl-gh em { font-style: normal; font-size: 11.5px; color: var(--dim); letter-spacing: .02em; font-weight: 700; }
+.pl-row { display: grid; grid-template-columns: 24px minmax(0, 1fr) auto; column-gap: 10px; align-items: center; padding: 4px 0; border-bottom: 1px solid rgba(255,255,255,.05); }
+.pl-row:last-child { border-bottom: 0; }
+.pl-row .check { --list-color: var(--pc); margin-top: 0; }
+.pl-row.done .check { background: var(--pc); border-color: var(--pc); } .pl-row.done .check svg { opacity: 1; }
+.pl-area { font-size: 11px; font-weight: 800; letter-spacing: .07em; text-transform: uppercase; color: var(--pc); padding-top: 3px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pl-main { min-width: 0; display: flex; flex-direction: column; gap: 1px; }
+.pl-line { font-size: 14px; line-height: 1.35; color: var(--ink); min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pl-line .pl-det { font-size: 12.5px; color: var(--dim); margin-left: 10px; } .pl-comp { font-weight: 700; } .pl-sep { font-style: normal; color: var(--faint); margin: 0 6px; }
+.pl-det { font-size: 12.5px; color: var(--dim); line-height: 1.35; }
+.pl-row.done .pl-line, .pl-row.done .pl-det, .pl-row.done .pl-area { text-decoration: line-through; color: var(--faint); }
+.pl-needs { display: flex; gap: 4px; flex: none; }
+.pl-need-x { width: 34px; height: 22px; flex: none; }
+.pl-needs + .pl-det { margin-top: 3px; }
+.pl-need { display: inline-flex; align-items: center; justify-content: center; gap: 4px; width: 34px; height: 22px; padding: 0; border-radius: 5px; border: 1px dashed #8a8a8f; color: var(--dim); font-size: 11.5px; font-weight: 800; flex: none; }
+.pl-need i { width: 12px; height: 12px; border-radius: 3px; border: 1.5px solid currentColor; display: inline-grid; place-items: center; } .pl-need i svg { width: 10px; height: 10px; opacity: 0; }
+.pl-need:hover { color: var(--ink); border-color: var(--ink); }
+.pl-need.ok { border-style: solid; border-color: color-mix(in srgb, var(--pc) 70%, transparent); color: var(--ink); background: color-mix(in srgb, var(--pc) 16%, transparent); }
+.pl-need.ok i { background: var(--pc); border-color: var(--pc); } .pl-need.ok i svg { opacity: 1; color: #0b0b0c; }
+.pl-row.done .pl-need { opacity: .5; }
+.pl-needs-ed { display: inline-flex; gap: 4px; flex: none; }
+.pl-nb { display: inline-flex; align-items: center; gap: 4px; height: 30px; padding: 0 7px; border-radius: 7px; border: 1px solid var(--card-edge); background: #232325; font-size: 11.5px; color: var(--dim); cursor: pointer; white-space: nowrap; }
+.pl-nb input { accent-color: var(--pc, var(--accent)); margin: 0; }
+.pl-nb:has(input:checked) { color: var(--ink); border-color: var(--pc, var(--accent)); }
+.pl-sel { appearance: auto; padding: 0 6px; }
+.pl-ntd .pl-needs-ed { gap: 4px; }
+.pl-erow { padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,.06); display: flex; flex-direction: column; gap: 6px; }
+.pl-e1 { display: grid; grid-template-columns: 31% 28% minmax(0, 1fr); gap: 6px; } .pl-e2 { display: flex; gap: 6px; align-items: center; }
+.pl-e2 .pl-din { flex: 1; font-size: 13px; height: 30px; color: var(--dim); }
+.pl-erow .tp-in { height: 32px; font-size: 13.5px; }
+/* Tools → Punchlists */
+.pl-used-h { margin-top: 22px; }
+.pl-used { display: flex; flex-direction: column; gap: 4px; }
+.pl-u { display: flex; align-items: center; gap: 8px; padding: 7px 10px; border-radius: 9px; color: var(--ink); text-align: left; font-size: 13px; }
+.pl-u:hover { background: rgba(255,255,255,.06); } .pl-u i { width: 8px; height: 8px; border-radius: 50%; background: var(--c); flex: none; }
+.pl-u span { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } .pl-u b { color: var(--c); font-size: 12px; letter-spacing: .05em; } .pl-u em { font-style: normal; color: var(--dim); font-size: 12px; font-weight: 700; }
+.st.plt { min-width: 1020px; }
+@media (max-width: 699px) { .pl-e2 { flex-wrap: wrap; } .pl-e2 .pl-din { flex-basis: 100%; } .pl-e1 { grid-template-columns: minmax(0, 1fr); } }
 /* Closed (archived) */
 .closed-sec { margin-top: 28px; border-top: 1px solid var(--card-edge); padding-top: 14px; }
 .cl-toggle { display: inline-flex; align-items: center; gap: 10px; color: var(--dim); font-size: 13px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; padding: 6px 4px; }
@@ -1103,6 +1153,24 @@ table.st { width: 100%; border-collapse: collapse; min-width: 860px; font-size: 
 .fo-page .fo-filters .ck i, .fo-page .fo-camp > i { width: 10px; height: 10px; }
 @media (max-width: 699px) { .fo-page .fo-pick > .fo-lbl { align-self: flex-start; width: auto; } }
 .fo-page .fo-pick { margin-bottom: 8px; } .fo-page .fo-top { margin-bottom: 8px; } .fo-page .fo-top .fo-pick { margin: 0; } .fo-page .fo-export .fo-lbl { padding-top: 0; } .fo-page .fo-sortrow { margin-bottom: 16px; }
+/* My Stuff: one card per campus */
+.fo-h { display: flex; align-items: baseline; gap: 10px; margin: 4px 0 12px; font-size: 18px; letter-spacing: .08em; text-transform: uppercase; color: #F2F2F2; }
+.fo-h-n { font-size: 13px; color: var(--dim); letter-spacing: 0; }
+.fo-camp-card .card-head .act-count { margin-left: auto; }
+.fo-qadd { display: inline-flex; align-items: center; gap: 5px; height: 26px; padding: 0 10px; margin-left: 12px; border-radius: 7px; border: 1px solid var(--card-edge); color: var(--ink); font-size: 12px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
+.fo-qadd svg { width: 14px; height: 14px; color: var(--accent); } .fo-qadd:hover { border-color: var(--accent); }
+.ga-win { width: min(520px, 100%); } .ga-body { display: flex; flex-direction: column; gap: 6px; }
+.ga-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 6px; } .ga-row > div { display: flex; flex-direction: column; gap: 6px; }
+.ga-more { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--dim); } .ga-more input { accent-color: var(--accent); }
+.fo-tog svg { transition: transform .15s; } .fo-camp-card.fo-closed .fo-tog svg { transform: rotate(-90deg); }
+.fo-camp-card.fo-closed .card-body { display: none; } .fo-camp-card.fo-closed .card-head { border-bottom-color: transparent; padding-bottom: 0; }
+.fo-camp-grid { display: flex; flex-direction: column; gap: 16px; } .fo-camp-grid > .fo-camp-card { margin: 0; }
+.fo-camp-card .fl-camp, .fo-camp-card .fl-head [data-sort="campus"] { display: none; }
+.fo-camp-card .fl-head, .fo-camp-card .fo-line { grid-template-columns: 24px 120px 170px 150px minmax(0, 1fr) 24px 120px 64px 92px; }
+@media (max-width: 1100px) { .fo-camp-card .fl-head, .fo-camp-card .fo-line { grid-template-columns: 24px 96px 130px 110px minmax(0, 1fr) 24px 90px 64px 92px; } }
+.fl-phase { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13px; color: var(--dim); }
+.fo-line .date-pill.ph-due { border-style: dashed; }
+@media (max-width: 899px) { .fo-camp-card .fl-head, .fo-camp-card .fo-line { grid-template-columns: 24px minmax(0, 1fr) auto auto auto; } }
 .fo-own.fo-camp[aria-pressed="true"] { border-color: var(--c, var(--accent)); color: var(--ink); background: color-mix(in srgb, var(--c, var(--accent)) 16%, var(--card)); }
 .fo-ffor { font-size: 13px; color: var(--dim); margin-left: 4px; } .fo-ffor b { color: var(--ink); }
 .fo-fpast { color: #FF6B6B !important; } .fo-fsoon { color: #5AA9FF !important; }
@@ -1118,7 +1186,7 @@ table.st { width: 100%; border-collapse: collapse; min-width: 860px; font-size: 
 .fo-for { color: var(--dim); font-weight: 700; }
 .fo-dash { color: #F2F2F2; } .fo-name { color: #FFE135; font-weight: 800; }
 .fo-empty { margin: 10px 0 4px; color: var(--dim); font-size: 14px; line-height: 1.5; }
-.fl-head, .fo-line { display: grid; grid-template-columns: 24px 150px 130px 190px minmax(0, 1fr) 24px 130px 64px 92px; column-gap: 12px; align-items: center; }
+.fl-head, .fo-line { display: grid; grid-template-columns: 24px 150px 130px 190px 130px minmax(0, 1fr) 24px 130px 64px 92px; column-gap: 12px; align-items: center; }
 .fl-src { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13px; font-weight: 400; letter-spacing: 0; text-transform: none; color: var(--dim); }
 .fl-note { display: flex; justify-content: center; }
 .fl-note-b { width: 24px; height: 24px; border-radius: 6px; display: grid; place-items: center; color: var(--pc, var(--accent)); }
@@ -1155,7 +1223,7 @@ table.st { width: 100%; border-collapse: collapse; min-width: 860px; font-size: 
 .fl-who { font-size: 13px; color: var(--dim); font-weight: 600; }
 .fl-due { display: flex; justify-content: flex-start; }
 .fo-line .fo-arrows { justify-content: flex-end; }
-@media (max-width: 1100px) { .fl-head, .fo-line { grid-template-columns: 24px 120px 100px 140px minmax(0, 1fr) 24px 100px 64px 92px; } }
+@media (max-width: 1100px) { .fl-head, .fo-line { grid-template-columns: 24px 120px 100px 140px 100px minmax(0, 1fr) 24px 100px 64px 92px; } }
 @media (max-width: 899px) {
   .fl-head { display: none; }
   .fl-head, .fo-line { grid-template-columns: 24px minmax(0, 1fr) auto auto auto; grid-template-areas: "chk item note due arr" ". meta meta who who"; row-gap: 2px; column-gap: 8px; }
@@ -1783,8 +1851,8 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
 
 <nav class="stabs" id="tabs" aria-label="Sections">
   <button class="stab" data-tab="program">Program</button>
-  <button class="stab" data-tab="focus">My Stuff</button>
   <button class="stab" data-tab="home">Campuses</button>
+  <button class="stab" data-tab="focus">My Stuff</button>
   <!-- Applications and Insights are hidden for now; remove style="display:none" to bring them back -->
   <button class="stab" data-tab="applications" style="display:none">Applications</button>
   <button class="stab" data-tab="insight" style="display:none">Insights</button>
@@ -1809,7 +1877,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
   const STATUSES = ["Not Started", "In Progress", "Blocked", "Done"];
   const STATUS_CLASS = { "Not Started": "s-ns", "In Progress": "s-ip", "Blocked": "s-blk", "Done": "s-done" };
   const LS_KEY = "pmbridge-v1";
-  const APP_VERSION = "109 (Oct 29)";
+  const APP_VERSION = "120 (Oct 30)";
   const $ = id => document.getElementById(id);
   const uid = () => Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4);
   const pad2 = n => String(n).padStart(2, "0");
@@ -1885,7 +1953,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
       links: (Array.isArray(r.links) ? r.links : []).map(l => ({ id: l.id || uid(), label: String(l.label || ""), url: String(l.url || "") })),
       blockReason: String(r.blockReason || ""), update: String(r.update || ""), star: r.upd !== undefined ? !!r.star : false, upd: r.upd !== undefined ? !!r.upd : !!r.star, stAt: +r.stAt || 0, ...(+r.po > 0 ? { po: +r.po } : {}),
       comments: (Array.isArray(r.comments) ? r.comments : []).map(c => ({ id: c.id || uid(), text: String(c.text || ""), at: c.at || 0 })),
-      created: r.created || Date.now(), ...(+r.fo > 0 ? { fo: +r.fo } : {}), ...(r.mnid ? { mnid: String(r.mnid) } : {}), ...(r.tgrp && Number.isFinite(+r.toff) ? { tgrp: String(r.tgrp), toff: Math.round(+r.toff) } : {}),
+      created: r.created || Date.now(), ...(r.gproj ? { gproj: String(r.gproj) } : {}), ...(r.gphase ? { gphase: String(r.gphase) } : {}), ...(+r.fo > 0 ? { fo: +r.fo } : {}), ...(r.mnid ? { mnid: String(r.mnid) } : {}), ...(r.tgrp && Number.isFinite(+r.toff) ? { tgrp: String(r.tgrp), toff: Math.round(+r.toff) } : {}),
       ...(r.l10 ? { l10: { notes: String(r.l10.notes || ""), acts: (Array.isArray(r.l10.acts) ? r.l10.acts : []).filter(a => a && a.iid).map(a => ({ pid: String(a.pid || ""), iid: String(a.iid) })) } } : {}),
       ...(r.ref && r.ref.aid ? { ref: { nid: String(r.ref.nid || ""), aid: String(r.ref.aid), sig: String(r.ref.sig || "") } } : {})
     };
@@ -1953,7 +2021,17 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
       actTitle: String(n.actTitle || "ACTION ITEMS"), actFiled: !!n.actFiled, actCollapsed: !!n.actCollapsed, actOnly: !!n.actOnly, box: String(n.box || ""), filedAt: Number(n.filedAt) || 0, blocks: cleanBlocks(n.blocks, n.text) };
   };
   const cleanDoc = d => ({ id: d.id || uid(), desc: String(d.desc || ""), link1: String(d.link1 || ""), link2: String(d.link2 || "") });
-  const cleanSub = x => ({ id: x.id || uid(), title: String(x.title || "NEW PROJECT"), sched: cleanSchedView(x.sched) });
+  // a project's punchlist: Area · Component · Action, a short "what's involved", and a done box
+  // what a punch line may need from other trades: a data drop, a faceplate, a power receptacle (n* = needed, d* = done)
+  const PL_NEEDS = [["drop", "Data drop"], ["face", "Faceplate"], ["power", "Power"]];
+  const PL_AREAS = ["IT Room", "Conference Room", "Common Area", "Office", "Printing", "Reception"];
+  const PL_COMPS = ["Rack", "Switch", "Patch Panel", "UPS", "WAP", "Logitech", "TV Display", "HDMI Splitter", "HDMI Cables", "Digital Display", "Desktop Monitors", "Docking Station", "Power Strip", "Room Scheduler", "Printer"];
+  const cleanPlRow = r => { const o = { id: String(r.id || uid()), area: String(r.area || ""), comp: String(r.comp || ""), action: String(r.action || ""), details: String(r.details || "") };
+    PL_NEEDS.forEach(([k]) => { if (r["n_" + k]) { o["n_" + k] = true; if (r["d_" + k]) o["d_" + k] = true; } });
+    if (r.done) { o.done = true; o.doneAt = +r.doneAt || Date.now(); } return o; };
+  const cleanPunch = u => ({ collapsed: !!u.collapsed, hideDone: !!u.hideDone, rows: (Array.isArray(u.rows) ? u.rows : []).filter(Boolean).map(cleanPlRow) });
+  const cleanPlTpl = t => ({ id: String(t.id || uid()), name: String(t.name || "NEW PUNCHLIST").slice(0, 60), rows: (Array.isArray(t.rows) ? t.rows : []).filter(Boolean).map(r => { const o = cleanPlRow(r); delete o.done; delete o.doneAt; PL_NEEDS.forEach(([k]) => delete o["d_" + k]); return o; }) });
+  const cleanSub = x => ({ id: x.id || uid(), title: String(x.title || "NEW PROJECT"), sched: cleanSchedView(x.sched), ...(x.punch ? { punch: cleanPunch(x.punch) } : {}) });
   // contacts, documents and notes belong to the campus; older versions kept them on each project, so gather those up
   function campusLists(p) {
     const raw = (Array.isArray(p.subs) ? p.subs : []).filter(Boolean), uniq = arr => { const seen = new Set(); return arr.filter(x => x && !seen.has(x.id) && seen.add(x.id)); };
@@ -1997,6 +2075,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
       regSeen: (Array.isArray(p.regSeen) ? p.regSeen : []).map(String),
       ...(Array.isArray(p.templates) ? { templates: p.templates.filter(Boolean).map(cleanTpl) } : {}),
       ...(Array.isArray(p.tplSeen) ? { tplSeen: p.tplSeen.map(String) } : {}),
+      ...(Array.isArray(p.punchTpls) ? { punchTpls: p.punchTpls.filter(Boolean).map(cleanPlTpl) } : {}),
       ...(Array.isArray(p.caps) ? { caps: p.caps.filter(Boolean).map(r => { const o = { id: String(r.id || uid()) }; CAP_COLS.forEach(([k]) => (o[k] = String(r[k] || ""))); return o; }) } : {}),
       ...(() => {
         const boxes = (Array.isArray(p.boxes) ? p.boxes : []).filter(b => b && b.id).map(b => ({ id: String(b.id), name: String(b.name || "Box").slice(0, 40), color: /^#[0-9a-f]{6}$/i.test(b.color || "") ? b.color : "#8e8e93", created: b.created || Date.now(), ...(b.sid ? { sid: String(b.sid) } : {}) }));
@@ -2234,6 +2313,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
     if (h === "tools") return { name: "tools" };
     if (h === "templates") return { name: "templates" };
     if (h === "notes") return { name: "notes" };
+    if (h === "punchlists") return { name: "punchlists" };
     if (h === "applications") return { name: "applications" };
     if (h === "insight") return { name: "insight" };
     if (h === "calendar") return { name: "calendar" };
@@ -2269,17 +2349,18 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
     else if (route_.name === "tools") renderTools();
     else if (route_.name === "templates") renderTemplates();
     else if (route_.name === "notes") renderNotesTool();
+    else if (route_.name === "punchlists") renderPunchTool();
     else if (route_.name === "applications" || route_.name === "insight") renderSoon(route_.name);
     else renderHome();
-    { const at = document.querySelector(`#tabs .stab[data-tab="${route_.name === "project" ? "home" : (route_.name === "estimator" || route_.name === "templates" || route_.name === "notes") ? "tools" : route_.name}"]`); if (at && at.scrollIntoView && $("tabs").scrollWidth > $("tabs").clientWidth) at.scrollIntoView({ block: "nearest", inline: "center" }); }
+    { const at = document.querySelector(`#tabs .stab[data-tab="${route_.name === "project" ? "home" : (route_.name === "estimator" || route_.name === "templates" || route_.name === "notes" || route_.name === "punchlists") ? "tools" : route_.name}"]`); if (at && at.scrollIntoView && $("tabs").scrollWidth > $("tabs").clientWidth) at.scrollIntoView({ block: "nearest", inline: "center" }); }
     $("addBtn").classList.toggle("on", route_.name === "focus");
-    const tab = route_.name === "project" ? "home" : (route_.name === "estimator" || route_.name === "templates" || route_.name === "notes") ? "tools" : route_.name;
+    const tab = route_.name === "project" ? "home" : (route_.name === "estimator" || route_.name === "templates" || route_.name === "notes" || route_.name === "punchlists") ? "tools" : route_.name;
     document.querySelectorAll("#tabs .stab").forEach(b => { if (b.dataset.tab === tab) b.setAttribute("aria-current", "page"); else b.removeAttribute("aria-current"); });
     if (prev.name !== route_.name || prev.pid !== route_.pid) scrollTo(0, 0);
   }
   addEventListener("hashchange", route);
   const currentProject = () => (route_.name === "project" ? proj(route_.pid) : route_.name === "program" ? proj(PROG) : null);
-  function rerender() { if (route_.name === "project") { if (!currentProject()) return go("#/"); renderProject(); } else if (route_.name === "calendar") renderGlobalCal(); else if (route_.name === "status") renderStatusPage(); else if (route_.name === "search") renderSearch(); else if (route_.name === "focus") renderFocus(); else if (route_.name === "estimator") renderEst(); else if (route_.name === "program") renderProgram(); else if (route_.name === "tools") renderTools(); else if (route_.name === "templates") renderTemplates(); else if (route_.name === "notes") renderNotesTool(); else if (route_.name === "applications" || route_.name === "insight") renderSoon(route_.name); else renderHome(); }
+  function rerender() { if (route_.name === "project") { if (!currentProject()) return go("#/"); renderProject(); } else if (route_.name === "calendar") renderGlobalCal(); else if (route_.name === "status") renderStatusPage(); else if (route_.name === "search") renderSearch(); else if (route_.name === "focus") renderFocus(); else if (route_.name === "estimator") renderEst(); else if (route_.name === "program") renderProgram(); else if (route_.name === "tools") renderTools(); else if (route_.name === "templates") renderTemplates(); else if (route_.name === "notes") renderNotesTool(); else if (route_.name === "punchlists") renderPunchTool(); else if (route_.name === "applications" || route_.name === "insight") renderSoon(route_.name); else renderHome(); }
 
   /* ================= home: project squares ================= */
   const MAXSUBS = isPhone() ? 3 : 5;
@@ -2446,7 +2527,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
   const blkActive = (p, x) => blockedItems(p, x.id).length > 0;
   function colHtml(p, x) {
     const cp = schedHtml(p, x), bk = blkHtml(p, x), ca = cpActive(p, x), ba = blkActive(p, x);
-    const mid = subCards(p, x.id).map(c => cardHtml(p, c)).join("");
+    const mid = subCards(p, x.id).map(c => cardHtml(p, c)).join("") + (x.punch ? punchHtml(p, x) : "");
     return mid;   // the project card holds its task list only; dates feed the Critical Path card on the Calendar page
   }
   const wasActive = {};
@@ -4000,7 +4081,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
         if (ph && ph.toUpperCase() !== "GENERAL") { const s = p.subs.find(y => y.title.trim().toUpperCase() === ph.toUpperCase()); project = s ? s.title : ph; }
       }
     }
-    return { where, ph, project, source };
+    return { where, ph, project, source, phDate: phase && phase.date ? phase.date : null };
   }
   function focusItems(k) {
     const out = [];
@@ -4040,17 +4121,18 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
   const niceCase = s => String(s || "").split(": ").map(niceCase1).join(": ");
   const niceCase1 = s => { return /[a-z]/.test(s) || !/[A-Z]/.test(s) ? s : s.toLowerCase().replace(/(^|[\s\-\/(&·:])([a-z])/g, (m, a, b) => a + b.toUpperCase()); };
   function foLineHtml(x, n, len, t, flashRef, canMove) {
-    const late = x.it.date && itemEnd(x.it) < t, proj = niceCase(x.project) || "—";
+    const late = x.due && x.dueEnd < t, proj = niceCase(x.project) || "—";
     const ARR_UP = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6-6 6 6"/></svg>', ARR_DN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>';
     return `<li class="fo-line${x.ref === flashRef ? " fresh" : ""}${x.it.status === "Blocked" ? " blocked" : ""}${x.it.star ? " starred" : ""}" data-ref="${x.ref}" style="--pc:${x.p.color}">
       <button class="check" role="checkbox" aria-checked="false" aria-label="Mark done" data-fo="done">${ICON.check}</button>
       <span class="fl-meta"><span class="fl-camp" title="${esc(x.p.title)}"><i></i>${esc(x.p.title)}</span>
       <span class="fl-proj" title="${esc(proj)}">${esc(proj)}</span>
-      <span class="fl-src" title="${esc(niceCase(x.source))}">${esc(niceCase(x.source))}</span></span>
+      <span class="fl-src" title="${esc(niceCase(x.source))}">${esc(niceCase(x.source))}</span>
+      <span class="fl-phase" title="${esc(x.phase)}">${esc(x.phase ? niceCase(x.phase) : "")}</span></span>
       <button class="fl-item" data-fo="open" title="${esc(x.it.text)} · open details">${esc(x.it.text)}</button>
       <span class="fl-note">${(x.it.notes || "").trim() ? `<button data-fo="open" class="fl-note-b" title="${esc(x.it.notes.trim().slice(0, 200))}" aria-label="Has notes. Open details">${ICON.notes}</button>` : ""}</span>
       <span class="fl-who" title="${esc(x.it.bic)}">${esc(x.it.bic)}</span>
-      <span class="fl-due">${x.it.date ? `<span class="date-pill" style="--c:${late ? "var(--danger)" : x.p.color}" title="${late ? "Past due" : "Due"} ${fullDate(x.it.date)}">${shortDate(x.it.date)}</span>` : ""}</span>
+      <span class="fl-due">${x.due ? `<span class="date-pill${x.duePhase ? " ph-due" : ""}" style="--c:${late ? "var(--danger)" : x.p.color}" title="${late ? "Past due" : "Due"} ${fullDate(x.due)}${x.duePhase ? " (phase date)" : ""}">${shortDate(x.due)}</span>` : ""}</span>
       <span class="fo-arrows"><button data-fo="star" class="fo-star${x.it.star ? " on" : ""}" aria-pressed="${x.it.star}" aria-label="${x.it.star ? "Priority. Tap to remove" : "Make it a priority"}" title="${x.it.star ? "Priority (starred)" : "Star as a priority"}">${x.it.star ? ICON_STAR : ICON_STAR_O}</button>${canMove ? `<button data-fo="up" aria-label="Move up" title="Move up"${n ? "" : " disabled"}>${ARR_UP}</button><button data-fo="down" aria-label="Move down" title="Move down"${n < len - 1 ? "" : " disabled"}>${ARR_DN}</button>` : ""}</span>
     </li>`;
   }
@@ -4067,12 +4149,12 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
     const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click();
     setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1500); showMsg("Downloaded " + name);
   }
-  const FX_HEAD = ["#", "Campus", "Project", "Source", "Item", "Owner", "Due", "Flag", "Update"];
+  const FX_HEAD = ["#", "Campus", "Project", "Source", "Phase", "Item", "Owner", "Due", "Flag", "Update"];
   function focusExportData() {
     const V = focusView(), sel = V.sel, t = V.t;
-    const row = (x, n) => { const late = x.it.date && itemEnd(x.it) < t;
-      return [n + 1, x.p.title, niceCase(x.project), niceCase(x.source), x.it.text, x.it.bic || "", x.it.date ? parseIso(x.it.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) : "", x.it.status === "Blocked" ? "Blocker" : late ? "Past due" : x.it.upd ? "Update" : "", (x.it.status === "Blocked" ? x.it.blockReason : x.it.update || "").replace(/\s+/g, " ").trim()]; };
-    return { owner: (sel ? sel.name : "Everyone") + (focusFilter === "past" ? " · Past due" : focusFilter === "soon" ? " · Next 3 days" : focusFilter === "pri" ? " · Priorities" : ""), pri: [], mine: V.list.map(row) };
+    const row = (x, n) => { const late = x.due && x.dueEnd < t;
+      return [n + 1, x.p.title, niceCase(x.project), niceCase(x.source), x.phase ? niceCase(x.phase) : "", x.it.text, x.it.bic || "", x.due ? parseIso(x.due).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) : "", x.it.status === "Blocked" ? "Blocker" : late ? "Past due" : x.it.upd ? "Update" : "", (x.it.status === "Blocked" ? x.it.blockReason : x.it.update || "").replace(/\s+/g, " ").trim()]; };
+    return { owner: (sel ? sel.name : "Everyone") + (focusFilter === "past" ? " · Past due" : focusFilter === "soon" ? " · Next 7 days" : focusFilter === "pri" ? " · Priorities" : ""), pri: [], mine: V.list.map(row) };
   }
   const fxName = (d, ext) => "my-stuff-" + (d.owner ? d.owner.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") + "-" : "") + todayIso() + "." + ext;
   async function exportFocus(kind) {
@@ -4084,7 +4166,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
       if (kind === "xlsx") {
         await loadScript(LIB.xlsx);
         const X = window.XLSX, wb = X.utils.book_new();
-        const sheet = (title, rows) => { const ws = X.utils.aoa_to_sheet([[title], [stamp], [], FX_HEAD, ...rows]); ws["!cols"] = [{ wch: 4 }, { wch: 24 }, { wch: 18 }, { wch: 30 }, { wch: 48 }, { wch: 16 }, { wch: 13 }, { wch: 10 }, { wch: 44 }]; ws["!autofilter"] = { ref: "A4:I" + (4 + rows.length) }; return ws; };
+        const sheet = (title, rows) => { const ws = X.utils.aoa_to_sheet([[title], [stamp], [], FX_HEAD, ...rows]); ws["!cols"] = [{ wch: 4 }, { wch: 20 }, { wch: 16 }, { wch: 26 }, { wch: 18 }, { wch: 44 }, { wch: 16 }, { wch: 13 }, { wch: 10 }, { wch: 40 }]; ws["!autofilter"] = { ref: "A4:J" + (4 + rows.length) }; return ws; };
         X.utils.book_append_sheet(wb, sheet("My Checklist" + (d.owner ? " · " + d.owner : ""), d.mine), "My Checklist");
         const out = X.write(wb, { bookType: "xlsx", type: "array" });
         await saveBlob(new Blob([out], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }), fxName(d, "xlsx"));
@@ -4103,8 +4185,8 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
             styles: { fontSize: 9, cellPadding: 5, overflow: "linebreak", textColor: [30, 30, 30], lineColor: [215, 215, 215], lineWidth: 0.5 },
             headStyles: { fillColor: [40, 40, 42], textColor: [95, 214, 138], fontStyle: "bold" },
             alternateRowStyles: { fillColor: [246, 247, 246] },
-            columnStyles: { 0: { cellWidth: 22, halign: "right" }, 1: { cellWidth: 92 }, 2: { cellWidth: 70 }, 3: { cellWidth: 100 }, 4: { cellWidth: "auto" }, 5: { cellWidth: 66 }, 6: { cellWidth: 62 }, 7: { cellWidth: 50 }, 8: { cellWidth: 120 } },
-            didParseCell: c => { if (c.section === "body" && c.column.index === 7 && c.cell.raw) c.cell.styles.textColor = c.cell.raw === "Update" ? [40, 150, 80] : [210, 50, 50]; } });
+            columnStyles: { 0: { cellWidth: 22, halign: "right" }, 1: { cellWidth: 72 }, 2: { cellWidth: 62 }, 3: { cellWidth: 90 }, 4: { cellWidth: 74 }, 5: { cellWidth: "auto" }, 6: { cellWidth: 60 }, 7: { cellWidth: 60 }, 8: { cellWidth: 48 }, 9: { cellWidth: 104 } },
+            didParseCell: c => { if (c.section === "body" && c.column.index === 8 && c.cell.raw) c.cell.styles.textColor = c.cell.raw === "Update" ? [40, 150, 80] : [210, 50, 50]; } });
           y = doc.lastAutoTable.finalY + 34;
         };
         section("My Checklist" + (d.owner ? " · " + d.owner : ""), d.mine);
@@ -4117,21 +4199,24 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
   let focusCamp = (() => { try { return localStorage.getItem(FC_KEY) || ""; } catch (e) { return ""; } })();
   let focusFilter = (() => { try { const v = localStorage.getItem(FF_KEY); return ["pri", "past", "soon"].includes(v) ? v : "all"; } catch (e) { return "all"; } })();
   let focusSort = null;   // { col, dir } when sorted by a column; null = your own order
-  const FO_COLS = [["campus", "Campus"], ["project", "Project"], ["source", "Source"], ["item", "Item"], ["note", ""], ["owner", "Owner"], ["due", "Due"]];
+  const FO_COLS = [["campus", "Campus"], ["project", "Project"], ["source", "Source"], ["phase", "Phase"], ["item", "Item"], ["note", ""], ["owner", "Owner"], ["due", "Due"]];
   // every open item (starred or not) in your order
   function focusAll() {
     const out = [];
     liveProjects().forEach(p => p.cards.forEach(c => c.items.forEach(it => {
       if (it.kind === "phase" || it.done || !it.text.trim()) return;
-      out.push({ p, c, it, ref: p.id + "|" + c.id + "|" + it.id, ...focusCat(p, c, it) });
+      const cat = focusCat(p, c, it), tl = c.sub !== REG;
+      if (isProg(p) && !tl) { cat.project = it.gproj || cat.project; cat.ph = it.gphase || ""; cat.source = it.ref ? cat.source : "General"; }
+      // a task with no date of its own is due on its phase's date
+      out.push({ p, c, it, ref: p.id + "|" + c.id + "|" + it.id, ...cat, phase: tl || isProg(p) ? cat.ph : "", due: it.date || (tl ? cat.phDate : null), dueEnd: it.date ? itemEnd(it) : tl ? cat.phDate : null, duePhase: !it.date && tl && !!cat.phDate });
     })));
     return out.sort((a, b) => ((a.it.fo || 1e9) - (b.it.fo || 1e9)) || (a.it.date || "9999").localeCompare(b.it.date || "9999") || ((a.it.created || 0) - (b.it.created || 0)));
   }
   function focusView() {
     const owners = focusOwners();
     if (focusOwner && !owners.some(o => o.k === focusOwner)) focusOwner = "";
-    const sel = owners.find(o => o.k === focusOwner), t = todayIso(), soon = addDays(t, 3);
-    const isPast = x => !!x.it.date && itemEnd(x.it) < t, isSoon = x => !!x.it.date && x.it.date <= soon && itemEnd(x.it) >= t;
+    const sel = owners.find(o => o.k === focusOwner), t = todayIso(), soon = addDays(t, 7)   /* Next 7 days: due today through a week out */;
+    const isPast = x => !!x.due && x.dueEnd < t, isSoon = x => !!x.due && x.due <= soon && x.dueEnd >= t;
     const mine = focusAll().filter(x => !sel || ownerKey(x.it.bic) === sel.k);
     // campus row: every open campus, with how many of this owner's items sit there
     const campRow = camps().map(p => ({ p, n: mine.filter(x => x.p === p).length }));
@@ -4140,28 +4225,70 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
     const count = { all: scope.length, pri: scope.filter(x => x.it.star).length, past: scope.filter(isPast).length, soon: scope.filter(isSoon).length };
     let list = scope.filter(x => focusFilter === "pri" ? x.it.star : focusFilter === "past" ? isPast(x) : focusFilter === "soon" ? isSoon(x) : true);
     if (focusSort) {
-      const key = { campus: x => x.p.title, project: x => x.project || "", source: x => x.source, item: x => x.it.text, owner: x => x.it.bic || "", due: x => x.it.date || "" }[focusSort.col];
+      const key = { campus: x => x.p.title, project: x => x.project || "", source: x => x.source, phase: x => x.phase || "", item: x => x.it.text, owner: x => x.it.bic || "", due: x => x.due || "" }[focusSort.col];
       if (key) list = list.slice().sort((a, b) => { const ka = key(a), kb = key(b); if (!ka !== !kb) return ka ? -1 : 1; return ka.localeCompare(kb, undefined, { numeric: true, sensitivity: "base" }) * focusSort.dir; });   // blanks always last
     }
     return { owners, sel, t, count, list, pri: [], campRow, mineN: mine.length };
   }
+  // Quick add a General item: project, phase, item, owner and due date, not tied to any campus
+  function openGeneralAdd(owner) {
+    closeModal();
+    const names = focusOwners().map(o => o.name);
+    const m = document.createElement("div"); m.className = "modal pj-modal x-modal";
+    m.innerHTML = `<div class="ev ut-win ga-win" role="dialog" aria-label="Quick add" style="--c:var(--accent)">
+      <div class="ev-head"><div class="ev-title" style="padding-top:4px">QUICK ADD · GENERAL</div><button class="ev-x" aria-label="Close">×</button></div>
+      <div class="ev-body ga-body">
+        <label class="pj-lbl" for="ga-item">Item</label><input class="field" id="ga-item" placeholder="What needs to get done" autocomplete="off">
+        <div class="ga-row"><div><label class="pj-lbl" for="ga-proj">Project</label><input class="field" id="ga-proj" placeholder="Optional" autocapitalize="words"></div>
+          <div><label class="pj-lbl" for="ga-phase">Phase</label><input class="field" id="ga-phase" placeholder="Optional" autocapitalize="words"></div></div>
+        <div class="ga-row"><div><label class="pj-lbl" for="ga-own">Owner</label><input class="field" id="ga-own" list="ga-owners" value="${esc(owner)}" placeholder="Who" autocapitalize="words"><datalist id="ga-owners">${names.map(n => `<option value="${esc(n)}">`).join("")}</datalist></div>
+          <div><label class="pj-lbl" for="ga-date">Due date</label><input class="field" id="ga-date" type="date"></div></div>
+      </div>
+      <div class="ev-foot"><label class="ga-more"><input type="checkbox" id="ga-again"> Add another</label><span class="grow"></span><button class="done-btn ga-go">Add</button></div></div>`;
+    document.body.appendChild(m);
+    const $q = sel => m.querySelector(sel);
+    $q("#ga-item").focus();
+    const add = () => {
+      const text = $q("#ga-item").value.trim(); if (!text) { $q("#ga-item").focus(); return; }
+      const P = programCampus(), c = regCard(P), d = $q("#ga-date").value;
+      c.items.unshift(cleanItem({ text, bic: $q("#ga-own").value.trim(), gproj: $q("#ga-proj").value.trim(), gphase: $q("#ga-phase").value.trim(), date: isIso(d) ? d : null, end: isIso(d) ? d : null }));
+      save(P);
+      if ($q("#ga-again").checked) { $q("#ga-item").value = ""; $q("#ga-item").focus(); showMsg("Added to General"); renderFocusKeep(); return; }
+      closeModal(); renderFocus(); showMsg("Added to General");
+    };
+    const renderFocusKeep = () => { const keep = m; renderFocus(); if (!document.body.contains(keep)) document.body.appendChild(keep); };
+    m.addEventListener("click", e => { if (e.target === m || e.target.closest(".ev-x")) closeModal(); else if (e.target.closest(".ga-go")) add(); });
+    m.addEventListener("keydown", e => { if (e.key === "Enter" && e.target.tagName === "INPUT" && e.target.type !== "checkbox") { e.preventDefault(); add(); } });
+  }
+  const FOC_KEY = "pmbridge-focus-collapsed";
+  const foCollapsed = new Set((() => { try { const a = JSON.parse(localStorage.getItem(FOC_KEY) || "[]"); return Array.isArray(a) ? a : []; } catch (e) { return []; } })());
   function renderFocus(flashRef) {
+    focusCamp = "";   // My Stuff shows one card per campus instead of a campus filter
     const V = focusView(), { owners, sel, t, list } = V, canMove = !focusSort;
-    const FILTERS = [["all", "All", "#8e8e93"], ["pri", "Priorities", "#FFD84D"], ["past", "Past due", "#FF6B6B"], ["soon", "Next 3 days", "#5AA9FF"]];
+    const groups = [];
+    list.forEach(x => { let g = groups.find(z => z.p === x.p); if (!g) groups.push(g = { p: x.p, rows: [] }); g.rows.push(x); });
+    const order = [...camps(), ...state.projects.filter(p => !camps().includes(p))];
+    groups.sort((a, b) => order.indexOf(a.p) - order.indexOf(b.p));
+    // General: things to do that aren't tied to a campus (they live on the Program record); always first so Quick add is at hand
+    const P = programCampus(); let gi = groups.findIndex(g => g.p === P);
+    const gen = gi >= 0 ? groups.splice(gi, 1)[0] : { p: P, rows: [] }; groups.unshift(gen);
+    const FILTERS = [["all", "All", "#8e8e93"], ["pri", "Priorities", "#FFD84D"], ["past", "Past due", "#FF6B6B"], ["soon", "Next 7 days", "#5AA9FF"]];
     const head = `<div class="fl-head">${["<span></span>", ...FO_COLS.map(([k, l]) => l ? `<button class="fl-sort${focusSort && focusSort.col === k ? " on" : ""}" data-sort="${k}" title="Sort by ${l}">${l}${focusSort && focusSort.col === k ? (focusSort.dir > 0 ? " ▲" : " ▼") : ""}</button>` : "<span></span>"), focusSort ? `<button class="fl-sort fl-myorder" data-sort="mine" title="Back to your own order">My order</button>` : "<span></span>"].join("")}</div>`;
     view.innerHTML = `<div class="page-body tab-body fo-page">
       <div class="fo-top">${owners.length ? `<div class="fo-pick"><span class="fo-lbl">Owner</span><div class="fo-owners" role="group" aria-label="Owner">${owners.map(o => `<button class="fo-own" data-k="${esc(o.k)}" aria-pressed="${o.k === focusOwner}">${esc(o.name)}<b>${o.n}</b></button>`).join("")}</div></div>` : "<span></span>"}
         <div class="fo-export"><span class="fo-lbl">Export</span><button class="fo-xb" data-fx="xlsx"${list.length ? "" : " disabled"} title="Download what's showing as an Excel file">${ICON.save}Excel</button><button class="fo-xb" data-fx="pdf"${list.length ? "" : " disabled"} title="Download what's showing as a PDF">${ICON.save}PDF</button></div></div>
-      <div class="fo-pick fo-camps"><span class="fo-lbl">Campuses</span><div class="fo-owners" role="group" aria-label="Campus">
-        <button class="fo-own fo-camp" data-fc="" aria-pressed="${!focusCamp}">All<b>${V.mineN}</b></button>${V.campRow.map(c => `<button class="fo-own fo-camp" data-fc="${c.p.id}" aria-pressed="${focusCamp === c.p.id}" style="--c:${c.p.color}"><i></i>${esc(c.p.title)}<b>${c.n}</b></button>`).join("")}</div></div>
       <div class="fo-pick fo-sortrow"><span class="fo-lbl">Sort by</span><div class="cal-key fo-filters" role="group" aria-label="Sort by">${FILTERS.map(([k, l, col]) => `<button class="ck" data-ff="${k}" aria-pressed="${focusFilter === k}" style="--c:${col}"><i></i><span>${l}</span><b class="ck-n">${V.count[k]}</b></button>`).join("")}</div></div>
-      <article class="card task-card fo-wide fo-mine" style="--list-color:#F2F2F2">
-        <header class="card-head" style="color:#F2F2F2"><div class="title">My Checklist${sel ? ` <span class="fo-dash">-</span> <span class="fo-name">${esc(sel.name)}</span>` : ` <span class="fo-for">- everyone</span>`}${focusFilter === "pri" ? ` <span class="fo-for fo-fpri">· priorities</span>` : focusFilter === "past" ? ` <span class="fo-for fo-fpast">· past due</span>` : focusFilter === "soon" ? ` <span class="fo-for fo-fsoon">· next 3 days</span>` : ""}</div><span class="act-count">${list.length}</span></header>
-        <div class="card-body">${list.length ? head + `<ul class="fo-lines">${list.map((x, n) => foLineHtml(x, n, list.length, t, flashRef, canMove)).join("")}</ul>`
-          : `<p class="fo-empty">${!owners.length && focusFilter === "all" ? "No open items yet. Give a task or an Action Register item an owner and it shows up here." : focusFilter === "pri" ? "Nothing starred. Tap the star on an item to make it a priority." : focusFilter === "past" ? "Nothing past due." : focusFilter === "soon" ? "Nothing due in the next 3 days." : "Nothing open."}</p>`}</div></article>
+      <h2 class="fo-h">My Checklist${sel ? ` <span class="fo-dash">-</span> <span class="fo-name">${esc(sel.name)}</span>` : ` <span class="fo-for">- everyone</span>`}${focusFilter === "pri" ? ` <span class="fo-for fo-fpri">· priorities</span>` : focusFilter === "past" ? ` <span class="fo-for fo-fpast">· past due</span>` : focusFilter === "soon" ? ` <span class="fo-for fo-fsoon">· next 7 days</span>` : ""}<span class="fo-h-n">${list.length}</span></h2>
+      ${groups.length ? `<div class="fo-camp-grid">${groups.map(g => `<article class="card task-card fo-wide fo-mine fo-camp-card${foCollapsed.has(g.p.id) ? " fo-closed" : ""}" data-pid="${g.p.id}" style="--list-color:${isProg(g.p) ? "#B8C1CC" : g.p.color}">
+        <header class="card-head" style="color:${isProg(g.p) ? "#B8C1CC" : g.p.color}"><div class="title">${esc(isProg(g.p) ? "General" : g.p.title)}</div>${isProg(g.p) ? `<button class="fo-qadd" data-fqa>${ICON.plus}Quick add</button>` : ""}<span class="act-count">${g.rows.length}</span><button class="head-btn toggle fo-tog" data-foc="${g.p.id}" aria-expanded="${!foCollapsed.has(g.p.id)}" aria-label="Collapse or expand" title="Collapse or expand">${ICON.chev}</button></header>
+        <div class="card-body">${g.rows.length ? `${head}<ul class="fo-lines">${g.rows.map((x, n) => foLineHtml(x, n, g.rows.length, t, flashRef, canMove)).join("")}</ul>` : `<p class="fo-empty">Nothing here${focusFilter === "all" ? "" : " for this filter"}. Use Quick add for anything that isn't tied to a campus.</p>`}</div></article>`).join("")}</div>`
+        : `<article class="card task-card fo-wide fo-mine" style="--list-color:#F2F2F2"><div class="card-body">${`<p class="fo-empty">${!owners.length && focusFilter === "all" ? "No open items yet. Give a task or an Action Register item an owner and it shows up here." : focusFilter === "pri" ? "Nothing starred. Tap the star on an item to make it a priority." : focusFilter === "past" ? "Nothing past due." : focusFilter === "soon" ? "Nothing due in the next 7 days." : "Nothing open."}</p>`}</div></article>`}
     </div>`;
     const body = view.querySelector(".fo-page");
     body.addEventListener("click", e => {
+      if (e.target.closest("[data-fqa]")) { openGeneralAdd(sel ? sel.name : ""); return; }
+      const tg = e.target.closest("[data-foc]");
+      if (tg) { const id = tg.dataset.foc, card = tg.closest(".fo-camp-card"); if (foCollapsed.has(id)) foCollapsed.delete(id); else foCollapsed.add(id); try { localStorage.setItem(FOC_KEY, JSON.stringify([...foCollapsed])); } catch (err) {} card.classList.toggle("fo-closed", foCollapsed.has(id)); tg.setAttribute("aria-expanded", String(!foCollapsed.has(id))); return; }
       const fx = e.target.closest("[data-fx]"); if (fx) { exportFocus(fx.dataset.fx); return; }
       const fc = e.target.closest("[data-fc]"); if (fc) { focusCamp = fc.dataset.fc; try { localStorage.setItem(FC_KEY, focusCamp); } catch (err) {} renderFocus(); return; }
       const ff = e.target.closest("[data-ff]"); if (ff) { focusFilter = ff.dataset.ff; try { localStorage.setItem(FF_KEY, focusFilter); } catch (err) {} renderFocus(); return; }
@@ -4175,7 +4302,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
       if (k === "open") { openEditor(ref); return; }
       if (k === "done") { const snap = snapshot(); toggleDone(f.it); save(f.p); renderFocus(); showUndo(`Done: ${f.it.text}`, () => { restore(snap); }); return; }
       if (k === "star") { f.it.star = !f.it.star; f.it.stAt = Date.now(); save(f.p); renderFocus(ref); return; }
-      if (k === "up" || k === "down") moveShown(focusAll(), list, ref, k === "up" ? -1 : 1, "fo");
+      if (k === "up" || k === "down") { const g = groups.find(z => z.rows.some(x => x.ref === ref)); moveShown(focusAll(), g ? g.rows : list, ref, k === "up" ? -1 : 1, "fo"); }
     });
   }
 
@@ -4440,6 +4567,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
   }
   // Tools tab: a shelf of tools; the Estimator is the first
   const TOOLS = [
+    { id: "punchlists", name: "Punchlists", desc: "Jobsite punchlists for technology installs: Area, Component, Action and what it involves. Build reusable lists here, then add one to any project and it shows under that project's tasks.", icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3.5" width="16" height="17.5" rx="2.5"/><path d="M9 3.5h6v3H9z"/><path d="M8 11.5l1.6 1.6L12.5 10M8 16.5l1.6 1.6 2.9-3.1M14.5 12h2.5M14.5 17h2.5"/></svg>' },
     { id: "notes", name: "Notepad", desc: "Every note from every campus in one place, searchable, including closed campuses and projects. Write general program notes here too.", icon: ICON.notes },
     { id: "templates", name: "Templates", desc: "Reusable phase and task lists for projects. Set each task's owner and its T-minus days from a milestone (like Installation), then use the template on any project card and the dates fill in.", icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2.5"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>' },
     { id: "estimator", name: "Estimator", desc: "Technology estimates for trailers and buildings: ISP, network, AV, printing and workstations, with materials and labor kept apart and a shared price list.", icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2.5"/><path d="M8.5 7h7M8.5 11h1M12 11h1M15.5 11h0M8.5 14.5h1M12 14.5h1M8.5 18h1M12 18h1M15.5 14.5v3.5"/></svg>' }
@@ -4449,6 +4577,258 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
     const t = k === "applications" ? { name: "Applications", p: "This tab is ready for the Applications section. Tell me what it should hold and it gets built here." } : { name: "Insights", p: "This tab is ready for the Insights section. Tell me what it should show and it gets built here." };
     view.innerHTML = `<div class="page-body tab-body"><article class="card soon-card" style="--list-color:var(--accent)"><header class="card-head" style="color:var(--accent)"><div class="title">${t.name}</div></header><div class="card-body"><p class="fo-empty">${t.p}</p></div></article></div>`;
   }
+  /* ================= Punchlists ================= */
+  const PL_BUILTIN = "builtin-tech-install-punch-v2", PL_OLD = "builtin-tech-install-punch-v1";
+  function samplePunch() {
+    const R = (area, comp, action, details, needs) => { const o = { area, comp, action, details: details || "" }; (needs || "").split(" ").filter(Boolean).forEach(k => (o["n_" + k] = true)); return o; };
+    return cleanPlTpl({ id: PL_BUILTIN, name: "TECHNOLOGY INSTALL", rows: [
+      R("IT Room", "Rack", "Install and secure", "Anchored or braced, ground bar bonded"),
+      R("IT Room", "Patch Panel", "Terminate and label", "Labels match drawings"),
+      R("IT Room", "Switch", "Mount, power and uplink", "Uplinks green", "power"),
+      R("IT Room", "UPS", "Install and test runtime", "Alerts reach the right email", "power"),
+      R("Conference Room", "TV Display", "Mount and test inputs", "", "drop face power"),
+      R("Conference Room", "Logitech", "Install and test a call", "Camera, mic and speakers", "drop"),
+      R("Conference Room", "HDMI Splitter", "Install and test", "", "power"),
+      R("Conference Room", "HDMI Cables", "Run to the table", ""),
+      R("Conference Room", "Room Scheduler", "Mount and pair to the room", "", "drop face"),
+      R("Common Area", "WAP", "Mount and verify coverage", "Walk test, no dead zones", "drop"),
+      R("Common Area", "Digital Display", "Mount and load content", "", "drop power"),
+      R("Office", "Desktop Monitors", "Install and cable manage", ""),
+      R("Office", "Docking Station", "Test power and display", "", "drop face"),
+      R("Office", "Power Strip", "Install", "", "power"),
+      R("Printing", "Printer", "Install, test print and scan", "Scan to email works", "drop face power"),
+      R("Reception", "Docking Station", "Install and test", "", "drop face power"),
+      R("Reception", "Desktop Monitors", "Install and cable manage", "") ] });
+  }
+  const PL_OLD_SIG = "IDF / MDF|Network Rack|Verify rack secured and grounded";
+  function allPunchTpls() {
+    const p = programCampus();
+    if (!Array.isArray(p.punchTpls)) p.punchTpls = [];
+    p.tplSeen = Array.isArray(p.tplSeen) ? p.tplSeen : [];
+    if (!p.tplSeen.includes(PL_BUILTIN)) {
+      // the first Technology Install list is swapped for the new one unless it has been edited
+      const old = p.punchTpls.find(t => t.id === PL_OLD), at = old ? p.punchTpls.indexOf(old) : 0;
+      if (old && old.rows.length === 15 && old.rows[0] && [old.rows[0].area, old.rows[0].comp, old.rows[0].action].join("|") === PL_OLD_SIG) p.punchTpls.splice(at, 1);
+      if (!p.punchTpls.some(t => t.id === PL_BUILTIN)) p.punchTpls.splice(Math.max(0, at), 0, samplePunch());
+      p.tplSeen.push(PL_BUILTIN, PL_OLD); save(p);
+    }
+    return p.punchTpls;
+  }
+  const plAreaList = `<datalist id="plAreas">${PL_AREAS.map(a => `<option value="${a}">`).join("")}</datalist>`;
+  const plCompSel = (v, attr) => `<select class="tp-in pl-sel" ${attr} aria-label="Component"><option value=""${v ? "" : " selected"}>Component…</option>${[...PL_COMPS, ...(v && !PL_COMPS.includes(v) ? [v] : [])].map(c => `<option${c === v ? " selected" : ""}>${esc(c)}</option>`).join("")}</select>`;
+  const plNeedBoxes = (r, attr) => `<span class="pl-needs-ed">${PL_NEEDS.map(([k, l]) => `<label class="pl-nb" title="Needs a ${l.toLowerCase()}"><input type="checkbox" ${attr}="n_${k}"${r["n_" + k] ? " checked" : ""}>${l}</label>`).join("")}</span>`;
+  const plOpenEdit = new Set();   // project ids whose punchlist is in edit mode
+  const plCount = u => { const rows = u.rows.filter(r => (r.area + r.comp + r.action).trim()); return { n: rows.length, d: rows.filter(r => r.done).length }; };
+  function punchHtml(p, x) {
+    const u = x.punch, { n, d } = plCount(u), ed = plOpenEdit.has(x.id);
+    const rows = u.rows.filter(r => ed || !(u.hideDone && r.done));
+    // on the card the punchlist reads by Area: a heading, then that area's lines (component · action, needs, notes)
+    const viewRow = r => `<li class="pl-row${r.done ? " done" : ""}" data-rid="${r.id}" title="${esc([r.comp, r.action].filter(Boolean).join(" · ") + (r.details ? " — " + r.details : ""))}">
+        <button class="check" role="checkbox" aria-checked="${!!r.done}" aria-label="Done" data-pl="done">${ICON.check}</button>
+        <span class="pl-line"><b class="pl-comp">${esc(r.comp)}</b>${r.comp && r.action ? '<i class="pl-sep">·</i>' : ""}<span class="pl-act">${esc(r.action)}</span>${r.details ? `<span class="pl-det">${esc(r.details)}</span>` : ""}</span>
+        <span class="pl-needs">${PL_NEEDS.map(([k, l]) => r["n_" + k] ? `<button class="pl-need${r["d_" + k] ? " ok" : ""}" data-pl="need" data-k="${k}" aria-pressed="${!!r["d_" + k]}" aria-label="${l}" title="${l}${r["d_" + k] ? " done. Tap to undo" : ": tap when it's in"}"><i>${ICON.check}</i>${l[0]}</button>` : `<span class="pl-need-x"></span>`).join("")}</span></li>`;
+    const groups = [];
+    rows.forEach(r => { const name = r.area.trim() || "Other", g = groups.find(z => z.key === name.toLowerCase()); if (g) g.rows.push(r); else groups.push({ key: name.toLowerCase(), name, rows: [r] }); });
+    const groupHtml = g => { const gd = g.rows.filter(r => r.done).length; return `<li class="pl-group"><div class="pl-gh"><span>${esc(g.name)}</span><em>${gd}/${g.rows.length}</em></div><ul class="pl-list">${g.rows.map(viewRow).join("")}</ul></li>`; };
+    const editRow = (r, i) => `<li class="pl-erow" data-rid="${r.id}">
+        <div class="pl-e1"><input class="tp-in" data-pf="area" list="plAreas" value="${esc(r.area)}" placeholder="Area" autocapitalize="words">${plCompSel(r.comp, 'data-pf="comp"')}<input class="tp-in" data-pf="action" value="${esc(r.action)}" placeholder="Action"></div>
+        <div class="pl-e2">${plNeedBoxes(r, "data-pn")}<input class="tp-in pl-din" data-pf="details" value="${esc(r.details)}" placeholder="Notes (optional)">
+          <span class="tp-ctl"><button data-pl="up" aria-label="Move up"${i ? "" : " disabled"}>${ICON.up}</button><button data-pl="down" aria-label="Move down"${i < u.rows.length - 1 ? "" : " disabled"}>${ICON.down}</button><button data-pl="del" class="tp-x" aria-label="Delete line">×</button></span></div></li>`;
+    return `<article class="card pl-card${u.collapsed ? " pl-collapsed" : ""}${ed ? " pl-editing" : ""}" data-plsid="${x.id}" data-plpid="${p.id}" style="--list-color:${p.color};--pc:${p.color}">
+      <header class="card-head" style="color:${p.color}"><div class="title">Punchlist</div>
+        <span class="pl-prog" title="${d} of ${n} done"><i style="width:${n ? Math.round(d / n * 100) : 0}%"></i></span><span class="pl-n">${d}/${n}</span>
+        <button class="head-btn pl-hb${ed ? " on" : ""}" data-pl="edit" title="${ed ? "Done editing" : "Edit lines"}" aria-label="${ed ? "Done editing" : "Edit lines"}">${ed ? ICON.check : ICON.pencil}</button>
+        <button class="head-btn more-btn" data-pl="menu" data-pop aria-label="Punchlist options" title="Punchlist options">${ICON_DOTS}</button>
+        <button class="head-btn toggle" data-pl="collapse" aria-label="Collapse or expand" title="Collapse or expand">${ICON.chev}</button></header>
+      <div class="pl-body">
+        ${ed ? `${plAreaList}<ul class="pl-elist">${u.rows.map(editRow).join("")}</ul>` : rows.length ? `<ul class="pl-groups">${groups.map(groupHtml).join("")}</ul>` : `<p class="sched-empty">${u.rows.length ? "Everything's done. Turn off Hide done in ⋯ to see the list." : "No lines yet. Tap the pencil to add them, or add a punchlist from Tools."}</p>`}
+        ${ed ? `<div class="add-btns"><button class="add-task" data-pl="add">${ICON.plus}Add line</button></div>` : ""}
+      </div></article>`;
+  }
+  const plFind = el => { const card = el.closest(".pl-card"); if (!card) return {}; const p = proj(card.dataset.plpid), x = p && (p.subs.find(s => s.id === card.dataset.plsid)); return { card, p, x, u: x && x.punch }; };
+  function plRepaint(p, x, focusSel) {
+    const old = view.querySelector(`.pl-card[data-plsid="${x.id}"]`); if (!old) return;
+    if (!x.punch) { old.remove(); return; }
+    old.insertAdjacentHTML("afterend", punchHtml(p, x)); old.remove();
+    if (focusSel) { const f = view.querySelector(`.pl-card[data-plsid="${x.id}"] ${focusSel}`); if (f) f.focus(); }
+  }
+  function plAddRow(p, x, after) {
+    const r = cleanPlRow({}); const i = after ? x.punch.rows.indexOf(after) + 1 : x.punch.rows.length;
+    x.punch.rows.splice(i, 0, r); save(p); plRepaint(p, x, `.pl-erow[data-rid="${r.id}"] [data-pf="area"]`);
+  }
+  document.addEventListener("click", e => {
+    const b = e.target.closest("[data-pl]"); if (!b || !b.closest(".pl-card")) return;
+    const { p, x, u } = plFind(b); if (!u) return;
+    const k = b.dataset.pl, row = b.closest("[data-rid]"), r = row && u.rows.find(z => z.id === row.dataset.rid);
+    e.stopPropagation();
+    if (k === "collapse") { u.collapsed = !u.collapsed; save(p); plRepaint(p, x); return; }
+    if (k === "edit") { if (plOpenEdit.has(x.id)) { plOpenEdit.delete(x.id); u.rows = u.rows.filter(z => (z.area + z.comp + z.action + z.details).trim()); save(p); } else { plOpenEdit.add(x.id); u.collapsed = false; if (!u.rows.length) u.rows.push(cleanPlRow({})); } plRepaint(p, x, plOpenEdit.has(x.id) ? '[data-pf="area"]' : null); return; }
+    if (k === "add") { plAddRow(p, x); return; }
+    if (k === "need" && r) { const key = "d_" + b.dataset.k; if (r[key]) delete r[key]; else r[key] = true; save(p); plRepaint(p, x); return; }
+    if (k === "done" && r) { if (r.done) { delete r.done; delete r.doneAt; } else { r.done = true; r.doneAt = Date.now(); } save(p); plRepaint(p, x); return; }
+    if (k === "del" && r) { u.rows = u.rows.filter(z => z !== r); save(p); plRepaint(p, x); return; }
+    if ((k === "up" || k === "down") && r) { const i = u.rows.indexOf(r), j = i + (k === "up" ? -1 : 1); if (j < 0 || j >= u.rows.length) return; [u.rows[i], u.rows[j]] = [u.rows[j], u.rows[i]]; save(p); plRepaint(p, x); return; }
+    if (k === "menu") {
+      if (popOpen(".pop")) { closePops(); return; }
+      openEditMenu(b, { actions: [
+        { icon: ICON.check, text: u.hideDone ? "Show done lines" : "Hide done lines", run: () => { u.hideDone = !u.hideDone; save(p); plRepaint(p, x); } },
+        { icon: ICON.plus, text: "Add lines from a punchlist…", run: () => openUsePunch(p, x) },
+        { icon: ICON.save, text: "Export to Excel", run: () => exportPunch("xlsx", { title: p.title, sub: x.title, rows: u.rows, live: true }) },
+        { icon: ICON.save, text: "Export to PDF", run: () => exportPunch("pdf", { title: p.title, sub: x.title, rows: u.rows, live: true }) } ],
+        del: { text: "Remove punchlist", ask: "Remove this punchlist from the project?", run: () => { const snap = snapshot(); delete x.punch; plOpenEdit.delete(x.id); save(p); renderProject(); showUndo("Punchlist removed", () => restore(snap)); } } });
+    }
+  }, true);
+  document.addEventListener("input", e => {
+    const el = e.target; if (!el.dataset || !(el.dataset.pf || el.dataset.pn) || !el.closest(".pl-card")) return;
+    const { p, u } = plFind(el), row = el.closest("[data-rid]"), r = u && row && u.rows.find(z => z.id === row.dataset.rid); if (!r) return;
+    if (el.dataset.pn) { if (el.checked) r[el.dataset.pn] = true; else { delete r[el.dataset.pn]; delete r["d_" + el.dataset.pn.slice(2)]; } } else r[el.dataset.pf] = el.value;
+    save(p);
+  });
+  // Enter jumps along the line, then to a new line
+  document.addEventListener("keydown", e => {
+    const el = e.target; if (e.key !== "Enter" || e.isComposing || !el.dataset || !el.dataset.pf || !el.closest(".pl-card")) return;
+    e.preventDefault();
+    const order = ["area", "comp", "action", "details"], li = el.closest(".pl-erow"), i = order.indexOf(el.dataset.pf);
+    if (i < 3) { li.querySelector(`[data-pf="${order[i + 1]}"]`).focus(); return; }
+    const nx = li.nextElementSibling; if (nx) { nx.querySelector('[data-pf="area"]').focus(); return; }
+    const { p, x, u } = plFind(el); if (u) plAddRow(p, x, u.rows.find(z => z.id === li.dataset.rid));
+  });
+  // export a punchlist (a project's, with what's done; or a saved list from Tools) to Excel or PDF
+  async function exportPunch(kind, { title, sub, rows, live }) {
+    const list = rows.filter(r => (r.area + r.comp + r.action + r.details).trim());
+    if (!list.length) { showMsg("Nothing to export yet."); return; }
+    const stamp = "Exported " + new Date().toLocaleString("en-US", { month: "short", day: "numeric", year: "numeric", hour: "numeric", minute: "2-digit" });
+    const need = (r, k) => !r["n_" + k] ? "" : !live ? "Yes" : r["d_" + k] ? "Done" : "Needed";
+    const head = [...(live ? ["Done"] : []), "Area", "Component", "Action", "Data drop", "Faceplate", "Power", "Notes"];
+    const body = list.map(r => [...(live ? [r.done ? "Yes" : ""] : []), r.area, r.comp, r.action, need(r, "drop"), need(r, "face"), need(r, "power"), r.details]);
+    const done = list.filter(r => r.done).length, summary = live ? `${done} of ${list.length} lines done` : `${list.length} lines`;
+    const fname = ("Punchlist " + title + (sub ? " " + sub : "")).replace(/[^\w\- ]+/g, "").replace(/\s+/g, "-") + "-" + todayIso() + "." + kind;
+    showMsg(kind === "xlsx" ? "Building the Excel file…" : "Building the PDF…");
+    try {
+      if (kind === "xlsx") {
+        await loadScript(LIB.xlsx);
+        const X = window.XLSX, wb = X.utils.book_new();
+        const ws = X.utils.aoa_to_sheet([["Punchlist · " + title + (sub ? " · " + sub : "")], [summary + " · " + stamp], [], head, ...body]);
+        ws["!cols"] = [...(live ? [{ wch: 7 }] : []), { wch: 18 }, { wch: 18 }, { wch: 32 }, { wch: 11 }, { wch: 11 }, { wch: 9 }, { wch: 44 }];
+        X.utils.book_append_sheet(wb, ws, "Punchlist");
+        await saveBlob(new Blob([X.write(wb, { bookType: "xlsx", type: "array" })], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }), fname);
+      } else {
+        await loadScript(LIB.jspdf); await loadScript(LIB.autotable);
+        const doc = new window.jspdf.jsPDF({ orientation: "landscape", unit: "pt", format: "letter" });
+        doc.setFont("helvetica", "bold"); doc.setFontSize(20); doc.setTextColor(30, 30, 30); doc.text("Punchlist · " + title + (sub ? " · " + sub : ""), 40, 48);
+        doc.setFont("helvetica", "normal"); doc.setFontSize(10); doc.setTextColor(110, 110, 110); doc.text("PMBridge · " + summary + " · " + stamp, 40, 66);
+        const o = live ? 1 : 0, cs = { [o]: { cellWidth: 100 }, [o + 1]: { cellWidth: 100 }, [o + 2]: { cellWidth: 170 }, [o + 3]: { cellWidth: 58, halign: "center" }, [o + 4]: { cellWidth: 58, halign: "center" }, [o + 5]: { cellWidth: 50, halign: "center" }, [o + 6]: { cellWidth: "auto" } };
+        if (live) cs[0] = { cellWidth: 38, halign: "center" };
+        doc.autoTable({ startY: 84, head: [head], body, theme: "grid", margin: { left: 40, right: 40 },
+          styles: { fontSize: 9, cellPadding: 5, overflow: "linebreak", textColor: [30, 30, 30], lineColor: [215, 215, 215], lineWidth: 0.5 },
+          headStyles: { fillColor: [40, 40, 42], textColor: [95, 214, 138], fontStyle: "bold" }, alternateRowStyles: { fillColor: [246, 247, 246] }, columnStyles: cs,
+          didParseCell: c => { if (c.section !== "body") return; const v = c.cell.raw; if (v === "Done" || (live && c.column.index === 0 && v === "Yes")) { c.cell.styles.textColor = [40, 150, 80]; c.cell.styles.fontStyle = "bold"; } else if (v === "Needed") c.cell.styles.textColor = [210, 50, 50]; } });
+        await saveBlob(doc.output("blob"), fname);
+      }
+    } catch (e) { showMsg("Couldn't build the file. Check your internet connection and try again."); }
+  }
+  function openUsePunch(p, x) {
+    const list = allPunchTpls(), has = x.punch && x.punch.rows.length;
+    closeModal();
+    const m = document.createElement("div"); m.className = "modal pj-modal x-modal";
+    let sel = list[0] ? list[0].id : "", mode = "add";
+    const prev = t => t ? `<ul class="ut-prev">${t.rows.map(r => `<li><span><b>${esc(r.area)}</b> · ${esc(r.comp)} · ${esc(r.action)}</span></li>`).join("")}</ul>` : `<p class="ut-hint">Starts empty. Tap the pencil on the punchlist to add lines.</p>`;
+    m.innerHTML = `<div class="ev ut-win" role="dialog" aria-label="Add punchlist" style="--c:${p.color}">
+      <div class="ev-head"><div class="ev-title" style="padding-top:4px">${has ? "ADD TO PUNCHLIST" : "ADD PUNCHLIST"}</div><button class="ev-x" aria-label="Close">×</button></div>
+      <div class="ev-proj"><b style="--pc:${p.color}">${esc(p.title)}</b> · ${esc(x.title)}</div>
+      <div class="ev-body"><span class="pj-lbl">Start from</span><div class="ut-list">${list.map(t => `<button class="ut-t" data-tid="${t.id}" aria-pressed="${t.id === sel}"><b>${esc(t.name)}</b><span>${t.rows.length} lines</span></button>`).join("")}<button class="ut-t" data-tid="" aria-pressed="${!sel}"><b>BLANK</b><span>add your own lines</span></button></div>
+        ${has ? `<span class="pj-lbl">This project already has a punchlist</span><div class="seg ut-mode"><button data-m="add" aria-pressed="true">Add below</button><button data-m="replace" aria-pressed="false">Replace it</button></div>` : ""}
+        <div class="ut-pv">${prev(list.find(t => t.id === sel))}</div></div>
+      <div class="ev-foot"><button class="foot-btn ut-edit">${ICON.pencil}Edit punchlists</button><span class="grow"></span><button class="done-btn ut-go">${has ? "Add lines" : "Add punchlist"}</button></div></div>`;
+    document.body.appendChild(m);
+    m.addEventListener("click", e => {
+      const t = e.target;
+      if (t === m || t.closest(".ev-x")) { closeModal(); return; }
+      const tb = t.closest(".ut-t"); if (tb) { sel = tb.dataset.tid; m.querySelectorAll(".ut-t").forEach(z => z.setAttribute("aria-pressed", String(z === tb))); m.querySelector(".ut-pv").innerHTML = prev(list.find(z => z.id === sel)); return; }
+      const mb = t.closest(".ut-mode [data-m]"); if (mb) { mode = mb.dataset.m; m.querySelectorAll(".ut-mode [data-m]").forEach(z => z.setAttribute("aria-pressed", String(z === mb))); return; }
+      if (t.closest(".ut-edit")) { closeModal(); go("#/punchlists"); return; }
+      if (t.closest(".ut-go")) {
+        closeModal();
+        const snap = snapshot(), tpl = list.find(z => z.id === sel);
+        if (!x.punch || mode === "replace") x.punch = cleanPunch({ rows: [] });
+        (tpl ? tpl.rows : []).forEach(r => x.punch.rows.push(cleanPlRow({ ...r, id: "" })));
+        x.punch.collapsed = false;
+        if (!tpl) plOpenEdit.add(x.id);
+        if (!x.punch.rows.length) x.punch.rows.push(cleanPlRow({}));
+        save(p); renderProject();
+        const card = view.querySelector(`.pl-card[data-plsid="${x.id}"]`); if (card) card.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        if (!tpl) { const f = card && card.querySelector('[data-pf="area"]'); if (f) f.focus(); }
+        showUndo(tpl ? `“${tpl.name}” punchlist added to ${x.title}` : `Punchlist added to ${x.title}`, () => restore(snap));
+      }
+    });
+  }
+  // Tools → Punchlists: build reusable punchlists, and see the ones running on projects
+  let plTplOpen = null;
+  function renderPunchTool(focusSel) {
+    const P = programCampus(), list = allPunchTpls();
+    if (!list.some(t => t.id === plTplOpen)) plTplOpen = list[0] ? list[0].id : null;
+    const t = list.find(z => z.id === plTplOpen);
+    const used = [];
+    camps().forEach(p => p.subs.forEach(x => { if (x.punch) used.push({ p, x, ...plCount(x.punch) }); }));
+    const rowHtml = (r, i) => `<tr data-rid="${r.id}">
+        <td><input class="tp-in" data-f="area" list="plAreas" value="${esc(r.area)}" placeholder="Area" autocapitalize="words"></td>
+        <td>${plCompSel(r.comp, 'data-f="comp"')}</td>
+        <td><input class="tp-in" data-f="action" value="${esc(r.action)}" placeholder="Action"></td>
+        <td class="pl-ntd">${plNeedBoxes(r, "data-tn")}</td>
+        <td><input class="tp-in" data-f="details" value="${esc(r.details)}" placeholder="Notes"></td>
+        <td class="tp-ctl"><button data-tp="up" aria-label="Move up"${i ? "" : " disabled"}>${ICON.up}</button><button data-tp="down" aria-label="Move down"${i < t.rows.length - 1 ? "" : " disabled"}>${ICON.down}</button><button data-tp="del" class="tp-x" aria-label="Delete line">×</button></td></tr>`;
+    view.innerHTML = `<div class="page-body tab-body tp-page pl-page"><button class="tools-crumb">‹ Tools</button>
+      <div class="tp-layout">
+        <aside class="tp-side"><div class="nbx-head"><span>Punchlists</span></div><div class="tp-tlist">${list.map(z => `<button class="nbx-tile tp-pick" data-tid="${z.id}" aria-pressed="${z.id === plTplOpen}" style="--bc:var(--accent)"><span class="nbx-ic">${ICON.check}</span><span class="nbx-name">${esc(z.name)}</span><span class="nbx-n">${z.rows.length}</span></button>`).join("")}
+          <button class="nbx-tile nbx-new" data-tp="new"><span class="nbx-ic">${ICON.plus}</span><span class="nbx-name">New punchlist</span></button></div>
+          <p class="nbx-hint">Add one to a project from its ⋯ menu: <b>Add punchlist…</b></p>
+          ${used.length ? `<div class="nbx-head pl-used-h"><span>On projects</span></div><div class="pl-used">${used.map(u => `<button class="pl-u" data-go="${u.p.id}" style="--c:${u.p.color}"><i></i><span><b>${esc(u.p.title)}</b> · ${esc(u.x.title)}</span><em>${u.d}/${u.n}</em></button>`).join("")}</div>` : ""}</aside>
+        ${t ? `<article class="card st-card tp-card">
+          <div class="tp-head"><input class="tp-name" value="${esc(t.name)}" aria-label="Punchlist name" autocapitalize="characters">
+            <button class="foot-btn" data-tp="xlsx">${ICON.save}Excel</button><button class="foot-btn" data-tp="pdf">${ICON.save}PDF</button><button class="foot-btn" data-tp="dup">${ICON.dup}Duplicate</button><button class="foot-btn danger" data-tp="deltpl">${ICON.trash}Delete</button></div>
+          <p class="tp-help">One line per check: the <b>Area</b>, the <b>Component</b>, the <b>Action</b>, then tick <b>Needs</b> when the line also needs a data drop, faceplate or power receptacle (each one gets its own check-off on the project), and add any <b>Notes</b>. Press Enter to move across and down.</p>
+          <div class="st-wrap">${plAreaList}<table class="st tpt plt"><colgroup><col style="width:14%"><col style="width:15%"><col style="width:20%"><col style="width:250px"><col><col style="width:96px"></colgroup><thead><tr><th>Area</th><th>Component</th><th>Action</th><th>Needs</th><th>Notes</th><th></th></tr></thead>
+            <tbody>${t.rows.map(rowHtml).join("") || `<tr><td colspan="6" class="st-empty">No lines yet. Tap Add line.</td></tr>`}</tbody></table></div>
+          <div class="cap-add tp-add"><button class="add-task" data-tp="addrow">${ICON.plus}Add line</button></div>
+        </article>` : `<p class="sr-hint">No punchlists yet. Tap New punchlist.</p>`}
+      </div></div>`;
+    view.querySelector(".tools-crumb").addEventListener("click", () => go("#/tools"));
+    if (focusSel) { const f = view.querySelector(focusSel); if (f) f.focus(); }
+    const pg = view.querySelector(".pl-page");
+    const cur = () => { const P = programCampus(), list = allPunchTpls(); return { P, list, t: list.find(z => z.id === plTplOpen) }; };
+    pg.addEventListener("input", e => {
+      const el = e.target, { P, t } = cur(); if (!t) return;
+      if (el.classList.contains("tp-name")) { t.name = el.value.toUpperCase(); save(P); const n = view.querySelector(`.tp-pick[data-tid="${t.id}"] .nbx-name`); if (n) n.textContent = t.name; return; }
+      const tr = el.closest("tr"), r = (el.dataset.f || el.dataset.tn) && tr && t.rows.find(z => z.id === tr.dataset.rid); if (!r) return;
+      if (el.dataset.tn) { if (el.checked) r[el.dataset.tn] = true; else delete r[el.dataset.tn]; } else r[el.dataset.f] = el.value;
+      save(P);
+    });
+    pg.addEventListener("keydown", e => {
+      const el = e.target; if (e.key !== "Enter" || e.isComposing || !el.dataset.f) return;
+      e.preventDefault();
+      const order = ["area", "comp", "action", "details"], i = order.indexOf(el.dataset.f), tr = el.closest("tr");
+      if (i < 3) { tr.querySelector(`[data-f="${order[i + 1]}"]`).focus(); return; }
+      if (tr.nextElementSibling && tr.nextElementSibling.querySelector('[data-f="area"]')) { tr.nextElementSibling.querySelector('[data-f="area"]').focus(); return; }
+      const { P, t } = cur(); if (!t) return; const r = cleanPlRow({}); t.rows.push(r); delete r.done; save(P); renderPunchTool(`tr[data-rid="${r.id}"] [data-f="area"]`);
+    });
+    pg.addEventListener("click", e => {
+      const gb = e.target.closest("[data-go]"); if (gb) { go("#/p/" + gb.dataset.go); return; }
+      const pk = e.target.closest(".tp-pick"); if (pk) { plTplOpen = pk.dataset.tid; renderPunchTool(); return; }
+      const b = e.target.closest("[data-tp]"); if (!b) return;
+      const k = b.dataset.tp, { P, list, t } = cur();
+      if (k === "new") { const n = cleanPlTpl({ name: "NEW PUNCHLIST", rows: [{}] }); list.push(n); plTplOpen = n.id; save(P); renderPunchTool(".tp-name"); view.querySelector(".tp-name").select(); return; }
+      if (!t) return;
+      if (k === "xlsx" || k === "pdf") { exportPunch(k, { title: t.name, rows: t.rows, live: false }); return; }
+      if (k === "dup") { const n = cleanPlTpl({ ...JSON.parse(JSON.stringify(t)), id: "", name: t.name + " COPY" }); n.rows.forEach(r => (r.id = uid())); list.splice(list.indexOf(t) + 1, 0, n); plTplOpen = n.id; save(P); renderPunchTool(); return; }
+      if (k === "deltpl") { const snap = snapshot(); P.punchTpls = list.filter(z => z !== t); save(P); renderPunchTool(); showUndo("Punchlist deleted", () => restore(snap)); return; }
+      if (k === "addrow") { const r = cleanPlRow({}); t.rows.push(r); save(P); renderPunchTool(`tr[data-rid="${r.id}"] [data-f="area"]`); return; }
+      const tr = b.closest("tr"), r = tr && t.rows.find(z => z.id === tr.dataset.rid); if (!r) return; const i = t.rows.indexOf(r);
+      if (k === "del") { t.rows.splice(i, 1); save(P); renderPunchTool(); return; }
+      if (k === "up" && i > 0) { [t.rows[i - 1], t.rows[i]] = [t.rows[i], t.rows[i - 1]]; save(P); renderPunchTool(); return; }
+      if (k === "down" && i < t.rows.length - 1) { [t.rows[i + 1], t.rows[i]] = [t.rows[i], t.rows[i + 1]]; save(P); renderPunchTool(); return; }
+    });
+  }
+
   /* ================= Close (archive) campuses and projects ================= */
   const fmtDay = ms => new Date(ms).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
   function closeCampus(p) {
@@ -5376,6 +5756,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
         const el = cardEl(c.id); el.scrollIntoView({ behavior: "smooth", block: "center" }); editTitle(el); } },
       { icon: ICON.dup, text: "Duplicate project (tasks only)", run: () => duplicateSub(p, x) },
       { icon: ICON.task, text: "Use template…", run: () => openUseTemplate(p, x) },
+      { icon: ICON.check, text: x.punch ? "Add to punchlist…" : "Add punchlist…", run: () => openUsePunch(p, x) },
       { icon: ICON.archive, text: "Close project (archive)", run: () => closeSub(p, x) }
     ];
     if (p.subs.length > 1) {
