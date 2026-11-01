@@ -288,11 +288,11 @@ button.np-boxsq:hover { border-color: var(--c); }
 .erow.e2 .er-name { display: flex; flex-direction: row; align-items: baseline; gap: 10px; min-width: 0; white-space: nowrap; overflow: hidden; }
 .erow.e2 .er-noprice { height: 24px; padding: 0 8px; font-size: 12px; }
 .erow.e2 + .ecomp { margin-top: 4px; }
-.erow.e2 .er-t { font-size: 14px; overflow: hidden; text-overflow: ellipsis; } .erow.e2 .er-part { font-size: 11.5px; color: var(--faint); overflow: hidden; text-overflow: ellipsis; }
+.erow.e2 .er-t { font-size: 14px; overflow: hidden; text-overflow: ellipsis; } .erow.e2 .er-part { font-size: 11.5px; color: #a9a9ae; overflow: hidden; text-overflow: ellipsis; }
 .erow.e2 .er-unit { text-align: right; font-variant-numeric: tabular-nums; font-size: 13.5px; color: var(--dim); display: block; }
 .erow.e2 .qty { height: 28px; justify-self: center; border-radius: 7px; } .erow.e2 .qty button { width: 26px; font-size: 16px; } .erow.e2 .qty-in { width: 40px; font-size: 14px; }
 .erow.e2 .er-tot { font-size: 14px; } .erow.e2.on .er-tot { color: var(--c); } .erow.e2.on .er-t { color: var(--ink); font-weight: 700; }
-.erow.e2:not(.on) .er-t { color: var(--dim); }
+.erow.e2:not(.on) .er-t { color: #d6d6da; }
 .ecomp { padding: 9px 18px 2px 42px; font-size: 11px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--dim); }
 .ec-t { width: 96px; text-align: right; font-weight: 800; font-size: 14px; font-variant-numeric: tabular-nums; flex: none; color: var(--c); }
 .ec-head { padding-top: 9px !important; padding-bottom: 9px !important; }
@@ -353,7 +353,7 @@ button.np-boxsq:hover { border-color: var(--c); }
 .pl-row.flash { animation: freshRow 1.6s ease; --list-color: var(--c); }
 .pl-desc { display: flex; flex-direction: column; min-width: 0; }
 .pl-t { font-size: 14.5px; font-weight: 600; }
-.pl-t i { font-style: normal; font-weight: 500; color: var(--faint); font-size: 12px; margin-left: 8px; }
+.pl-t i { font-style: normal; font-weight: 500; color: #a9a9ae; font-size: 12px; margin-left: 8px; }
 .pl-row .er-part { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .pl-in { display: flex; align-items: center; height: 36px; padding: 0 10px; border-radius: 9px; background: #1f1f21; border: 1px solid var(--card-edge); color: var(--dim); font-size: 14px; }
 .pl-in:focus-within { border-color: var(--c); }
@@ -385,7 +385,7 @@ button.np-boxsq:hover { border-color: var(--c); }
 .er-name { display: flex; flex-direction: column; min-width: 0; }
 .er-t { font-size: 14.5px; color: var(--dim); line-height: 1.3; }
 .erow.on .er-t { color: var(--ink); font-weight: 600; }
-.er-part { font-size: 11.5px; color: var(--faint); letter-spacing: .02em; margin-top: 1px; font-variant-numeric: tabular-nums; }
+.er-part { font-size: 11.5px; color: #a9a9ae; letter-spacing: .02em; margin-top: 1px; font-variant-numeric: tabular-nums; }
 .er-unit { display: flex; flex-direction: column; font-size: 12.5px; color: var(--dim); font-variant-numeric: tabular-nums; text-align: right; }
 .er-unit i { font-style: normal; color: var(--faint); margin-left: 5px; font-size: 11px; }
 .qty { display: inline-flex; align-items: center; height: 34px; border-radius: 10px; background: #1f1f21; border: 1px solid var(--card-edge); overflow: hidden; }
@@ -552,6 +552,14 @@ button.np-boxsq:hover { border-color: var(--c); }
 .psec-title { flex: 1; min-width: 0; font-weight: 800; font-size: 19px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink); outline: none; overflow-wrap: anywhere; }
 .psec-title[contenteditable="true"] { cursor: text; }
 .psec-head .edit-btn { color: var(--c); }
+.psec-sub { display: flex; align-items: center; gap: 10px; margin: -6px 0 12px; padding-left: 16px; }
+.psec-desc { flex: 1; min-width: 0; height: 26px; padding: 0 8px; margin-left: -8px; border: 1px solid transparent; border-radius: 6px; background: transparent; color: var(--dim); font: inherit; font-size: 13.5px; }
+.psec-desc::placeholder { color: var(--faint); font-style: italic; }
+.psec-desc:hover { border-color: rgba(255,255,255,.08); } .psec-desc:focus { outline: none; border-color: var(--c); color: var(--ink); background: rgba(255,255,255,.03); }
+.psec-due { flex: none; display: inline-flex; align-items: center; gap: 6px; height: 26px; padding: 0 4px 0 9px; border: 1px solid rgba(255,255,255,.12); border-radius: 7px; font-size: 11px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--c); cursor: pointer; }
+.psec-due input { height: 24px; border: 0; background: transparent; color: var(--ink); font: inherit; font-size: 12.5px; font-weight: 600; letter-spacing: 0; color-scheme: dark; padding: 0 2px; }
+.psec-due input:focus { outline: none; } .psec-due:focus-within { border-color: var(--c); }
+.psec-due.late { border-color: var(--danger); } .psec-due.late input { color: var(--danger); }
 /* ===== Canvas note card (from Canvas v25) ===== */
 .note-blocks {
   margin-top: 12px; min-height: 96px; display: flex; flex-direction: column; gap: 8px; line-height: 1.45; white-space: pre-wrap; overflow-wrap: anywhere; outline: none; cursor: text;
@@ -677,6 +685,13 @@ button.np-boxsq:hover { border-color: var(--c); }
 .cl-title { display: flex; align-items: center; gap: 10px; }
 .cl-title svg { width: 20px; height: 20px; }
 .cl-modal .xlist { margin: 4px 0 6px; }
+.cl-site { display: flex; flex-direction: column; }
+.cl-site .field { width: 100%; }
+.cl-site textarea.field { min-height: 74px; resize: vertical; }
+.cl-sh { margin: 4px 0 2px; font-size: 11.5px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--c); }
+.cl-site .cl-sh:last-child { margin-top: 16px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,.1); }
+.cl-coord { display: flex; gap: 8px; align-items: center; } .cl-coord .field { flex: 1; min-width: 0; }
+.cl-map { flex: none; text-decoration: none; } .cl-map[hidden] { display: none; }
 /* campus page: projects on the left, notes on the right */
 .camp-body { display: grid; grid-template-columns: minmax(0, 1fr); align-items: start; }
 .camp-body.has-side { grid-template-columns: 340px minmax(0, 1fr); padding-left: 20px; }
@@ -1005,8 +1020,15 @@ table.st { width: 100%; border-collapse: collapse; min-width: 860px; font-size: 
 .chip.ph-chip .t { font-weight: 800; letter-spacing: .05em; text-transform: uppercase; }
 .item.phase.ph-dated { margin-left: 0; gap: 10px; }
 .item.phase .ph-date { flex: none; display: inline-block !important; }
+.item.phase .ph-end { margin-left: -4px; min-width: 0; } .item.phase .ph-end.no-date { opacity: .45; border-style: dashed; } .item.phase .ph-end.no-date:hover { opacity: 1; }
+.chip.cal-span { --cg: 7px; opacity: 1; }
+.chip.cal-span.runs { border-top-right-radius: 0; border-bottom-right-radius: 0; width: calc(100% + var(--cg)); }
+.chip.cal-span.cont { border-top-left-radius: 0; border-bottom-left-radius: 0; margin-left: calc(-1 * var(--cg)); width: calc(100% + var(--cg)); }
+.chip.cal-span.cont.runs { width: calc(100% + 2 * var(--cg)); }
+@media (max-width: 699px) { .chip.cal-span { --cg: 3px; } }
 .card.no-dates .item.phase .ph-date { display: inline-block !important; }
 .gcp-line .date-pill { white-space: nowrap; }
+.gcp-line .date-pill.gcp-late { background: var(--danger); border-color: var(--danger); color: #fff; }
 .gcp-item { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 15px; color: var(--ink); }
 @media (max-width: 899px) {
   .gcp-head { display: none; }
@@ -1154,10 +1176,14 @@ table.st { width: 100%; border-collapse: collapse; min-width: 860px; font-size: 
 .tool-soon { min-height: 230px; aspect-ratio: auto; cursor: default; }
 .tools-crumb { display: inline-block; margin: 0 0 12px; font-size: 12.5px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--dim); }
 .tools-crumb:hover { color: var(--accent); }
-.prog-page { display: flex; flex-direction: column; gap: 20px; }
-.prog-grid { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: 20px; align-items: stretch; }
+.prog-page { display: flex; flex-direction: column; gap: 20px; width: min(100%, max(50%, 760px)); }   /* half the page: Welcome + Contacts as squares, Capabilities below at the same width */
+.prog-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 20px; align-items: stretch; }
+.prog-grid > .card { aspect-ratio: 2 / 1; min-height: 0; overflow: auto; }   /* half-height: wide, short cards */
 .prog-wrap { max-width: none !important; }
-.st.capt { min-width: 960px; }
+.st.capt { min-width: 0; }
+.st.capt th { font-size: 10px; letter-spacing: .05em; padding-left: 8px; padding-right: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.st.capt th:nth-child(1) { width: 17% !important; } .st.capt th:nth-child(2) { width: 17% !important; } .st.capt th:nth-child(3) { width: 19% !important; } .st.capt th:nth-child(4) { width: 15% !important; } .st.capt th:nth-child(5) { width: 14% !important; } .st.capt th:nth-child(6) { width: 14% !important; } .st.capt th:nth-child(7) { width: 4% !important; } .st.capt td { padding-left: 8px; padding-right: 8px; font-size: 13px; overflow-wrap: anywhere; }
+@media (max-width: 899px) { .st.capt { min-width: 640px; } }
 .st.capt th:nth-child(1) { width: 15%; } .st.capt th:nth-child(2) { width: 14%; } .st.capt th:nth-child(3) { width: 27%; } .st.capt th:nth-child(4) { width: 15%; } .st.capt th:nth-child(5) { width: 14%; } .st.capt th:nth-child(6) { width: 12%; } .st.capt th.capx-h { width: 40px; }
 .st.capt td:first-child .cap-edit { font-weight: 700; color: var(--ink); }
 .cap-edit { white-space: pre-wrap; }
@@ -1173,7 +1199,14 @@ table.st { width: 100%; border-collapse: collapse; min-width: 860px; font-size: 
 .prog-wrap .regc { --list-color: var(--accent) !important; }
 .prog-wrap .regc > .card-head { color: var(--accent) !important; }
 .pg-contacts .xlist { margin: 4px 0 6px; }
-@media (max-width: 899px) { .prog-grid { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 899px) { .prog-grid { grid-template-columns: minmax(0, 1fr); } .prog-grid > .card { aspect-ratio: auto; } }
+/* Status table: as wide as the My Stuff board, last column follows Update / Blockers */
+.page-body .st-sec, .tab-body .st-sec, .st-sec { max-width: 75%; }
+@media (max-width: 899px) { .page-body .st-sec, .tab-body .st-sec, .st-sec { max-width: none; } }
+table.st.st6 { min-width: 720px; }
+table.st.st6 th, table.st.st6 td { padding-left: 10px; padding-right: 10px; }
+table.st.st6 th:first-child, table.st.st6 td:first-child { padding-left: 18px; }
+table.st.st6 th:nth-child(1) { width: 14%; } table.st.st6 th:nth-child(2) { width: 13%; } table.st.st6 th:nth-child(3) { width: 28%; } table.st.st6 th.st-l10h { width: 64px; } table.st.st6 th:nth-child(5) { width: 12%; } table.st.st6 th:nth-child(6) { width: auto; }
 .st:not(.sr) th:nth-child(1) { width: 14%; } .st:not(.sr) th:nth-child(2) { width: 12%; } .st:not(.sr) th:nth-child(3) { width: 22%; } .st:not(.sr) th.st-l10h { width: 76px; } .st:not(.sr) th:nth-child(5) { width: 20%; } .st:not(.sr) th:nth-child(6) { width: 14%; } .st:not(.sr) th:nth-child(7) { width: 10%; }
 .l10-btn { display: inline-flex; align-items: center; gap: 5px; height: 26px; padding: 0 10px; border-radius: 13px; font-size: 11.5px; font-weight: 800; letter-spacing: .08em; color: var(--dim); background: var(--card); border: 1px solid var(--card-edge); }
 .l10-btn:hover { color: var(--ink); border-color: var(--accent); }
@@ -1234,6 +1267,54 @@ table.st { width: 100%; border-collapse: collapse; min-width: 860px; font-size: 
 .fo-h { display: flex; align-items: baseline; gap: 10px; margin: 4px 0 12px; font-size: 18px; letter-spacing: .08em; text-transform: uppercase; color: #F2F2F2; }
 .fo-h-n { font-size: 13px; color: var(--dim); letter-spacing: 0; }
 .fo-camp-card .card-head .act-count { margin-left: auto; }
+/* My Stuff board */
+.fo-layout { display: inline-flex; border: 1px solid var(--card-edge); border-radius: 7px; overflow: hidden; margin-left: auto; margin-right: 14px; }
+.fo-layout button { height: 30px; padding: 0 12px; font-size: 12.5px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--dim); }
+.fo-layout button[aria-pressed="true"] { background: rgba(255,255,255,.1); color: var(--ink); }
+.fb-board { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; align-items: start; max-width: 75%; }
+.fb-col { display: flex; flex-direction: column; gap: 16px; min-height: 80px; }
+.fb-card { margin: 0 !important; }
+.fb-card .card-head { gap: 8px; }
+.fb-grip { display: grid; place-items: center; width: 18px; height: 22px; color: var(--faint); cursor: grab; touch-action: none; flex: none; } .fb-grip svg { width: 14px; height: 14px; } .fb-grip:hover { color: var(--ink); }
+.fb-drag { box-shadow: 0 18px 50px rgba(0,0,0,.6); opacity: .95; pointer-events: none; }
+.fb-ph { border: 2px dashed var(--card-edge); border-radius: 14px; }
+.fb-board .fb-card .fo-line { grid-template-columns: 24px minmax(0, 1fr) auto auto auto; grid-template-areas: "chk item note due arr" ". meta meta meta who"; row-gap: 1px; column-gap: 8px; padding: 5px 0; }
+.fb-board .fo-line .check { grid-area: chk; } .fb-board .fo-line .fl-item { grid-area: item; white-space: normal; } .fb-board .fo-line .fl-note { grid-area: note; } .fb-board .fo-line .fl-due { grid-area: due; }
+.fb-board .fo-line .fo-arrows { grid-area: arr; } .fb-board .fo-line .fo-arrows [data-fo="up"], .fb-board .fo-line .fo-arrows [data-fo="down"] { display: none; }
+.fb-board .fo-line .fl-meta { grid-area: meta; display: flex; gap: 8px; min-width: 0; font-size: 12px; } .fb-board .fo-line .fl-camp, .fb-board .fo-line .fl-src { display: none; }
+.fb-board .fo-line .fl-proj, .fb-board .fo-line .fl-phase { font-size: 12px; } .fb-board .fo-line .fl-who { grid-area: who; font-size: 12px; text-align: right; }
+.qn-card .card-head .fo-qadd { margin-left: auto; }
+.fb-proj + .fb-proj { margin-top: 10px; border-top: 1px solid rgba(255,255,255,.12); padding-top: 4px; }
+.fb-ph1 { display: flex; align-items: baseline; gap: 8px; padding: 8px 0 2px; font-size: 13.5px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--ink); }
+.fb-ph1 b { font-size: 11px; color: var(--faint); letter-spacing: 0; }
+.fb-ph2 { padding: 6px 0 0 12px; font-size: 11.5px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--list-color); }
+.fb-proj .fo-lines { padding-left: 12px; }
+.fb-proj .fo-line .fl-proj, .fb-proj .fo-line .fl-phase { display: none; }
+.fb-proj .fo-line .fl-src { display: block !important; font-size: 12px; color: var(--faint); }
+.fb-proj .fo-line[data-tl] .fl-src { display: none !important; }
+.fb-board .fb-proj .fo-line { grid-template-columns: 22px minmax(80px, 1fr) minmax(0, max-content) auto max-content auto auto; grid-template-areas: "chk item meta note who due arr"; row-gap: 0; column-gap: 8px; padding: 3px 0; align-items: center; }
+.fb-board .fb-proj .fo-line > * { white-space: nowrap; }
+.fb-board .fb-proj .fo-line .fl-item { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: left; }
+.fb-board .fb-proj .fo-line .fl-meta { max-width: 96px; min-width: 0; overflow: hidden; }
+.fb-board .fb-proj .fo-line[data-tl] { grid-template-columns: 22px minmax(80px, 1fr) 0 auto max-content auto auto; column-gap: 6px; }
+.fb-board .fb-proj .fo-line .fl-src { overflow: hidden; text-overflow: ellipsis; }
+.fb-board .fb-proj .fo-line .fl-who { max-width: 96px; overflow: hidden; text-overflow: ellipsis; }
+.fb-board .fb-proj .fo-line .fl-note:empty, .fb-board .fb-proj .fo-line[data-tl] .fl-meta { display: none; }
+.qn-sec + .qn-sec { margin-top: 8px; border-top: 1px solid rgba(255,255,255,.08); padding-top: 6px; }
+.qn-h { display: flex; align-items: center; gap: 6px; } .qn-hin { flex: 1; min-width: 0; background: transparent; border: 0; border-bottom: 1px dashed transparent; color: var(--ink); font: inherit; font-weight: 800; font-size: 13px; letter-spacing: .07em; text-transform: uppercase; padding: 6px 2px; outline: none; }
+.qn-hin:focus, .qn-hin:hover { border-bottom-color: var(--card-edge); }
+.qn-list { list-style: none; margin: 0; padding: 0; }
+.qn-row { display: grid; grid-template-columns: 22px minmax(0, 1fr) 112px 74px 20px; gap: 4px; align-items: center; padding: 2px 0; }
+.qn-row .check { width: 16px; height: 16px; --list-color: #B8C1CC; }
+.qn-in { min-width: 0; height: 28px; background: transparent; border: 1px solid transparent; border-radius: 6px; color: var(--ink); font: inherit; font-size: 13px; padding: 0 5px; outline: none; }
+.qn-in:hover { border-color: rgba(255,255,255,.08); } .qn-in:focus { border-color: var(--accent); background: #1f1f21; }
+.qn-d { font-size: 12px; color: var(--dim); } .qn-o { font-size: 12px; color: var(--dim); }
+.qn-row.qn-add { grid-template-columns: 22px minmax(0, 1fr) minmax(0, 1fr) 20px; grid-template-areas: "c t t x" ". d o ."; row-gap: 4px; } .qn-add .qn-plus { grid-area: c; } .qn-add .qn-t { grid-area: t; } .qn-add .qn-d { grid-area: d; } .qn-add .qn-o { grid-area: o; }
+.qn-add .qn-in { border-color: rgba(255,255,255,.06); background: rgba(255,255,255,.02); } .qn-plus { display: grid; place-items: center; color: var(--faint); } .qn-plus svg { width: 14px; height: 14px; }
+.qn-x { width: 20px; height: 20px; color: var(--faint); font-size: 16px; border-radius: 5px; opacity: 0; } .qn-row:hover .qn-x, .qn-h:hover .qn-x { opacity: 1; } .qn-x:hover { color: var(--danger); }
+@media (hover: none) { .qn-x { opacity: .6; } }
+@media (max-width: 1100px) { .qn-row { grid-template-columns: 22px minmax(0, 1fr) 20px; grid-template-areas: "c t x" ". d o"; } .qn-row .check, .qn-row .qn-plus { grid-area: c; } .qn-t { grid-area: t; } .qn-x { grid-area: x; } .qn-d { grid-area: d; } .qn-o { grid-area: o; } .qn-row { grid-template-columns: 22px minmax(0, 1fr) minmax(0, 1fr) 20px; grid-template-areas: "c t t x" ". d o ."; } }
+@media (max-width: 899px) { .fb-board { grid-template-columns: minmax(0, 1fr); max-width: none; } .fo-layout { margin-left: 0; } }
 .fo-qadd { display: inline-flex; align-items: center; gap: 5px; height: 26px; padding: 0 10px; margin-left: 12px; border-radius: 7px; border: 1px solid var(--card-edge); color: var(--ink); font-size: 12px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
 .fo-qadd svg { width: 14px; height: 14px; color: var(--accent); } .fo-qadd:hover { border-color: var(--accent); }
 .ga-win { width: min(520px, 100%); } .ga-body { display: flex; flex-direction: column; gap: 6px; }
@@ -1646,7 +1727,11 @@ body.row-drag, body.row-drag * { cursor: grabbing !important; user-select: none;
 .month { background: var(--card); border: 1px solid var(--card-edge); border-radius: 12px; overflow: hidden; box-shadow: 0 6px 20px rgba(0,0,0,.5); touch-action: pan-y; }
 .dow { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); border-bottom: 1px solid var(--card-edge); }
 .dow span { padding: 9px 10px; font-size: 11.5px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--dim); }
-.weeks { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); }
+.weeks { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); grid-auto-rows: 1fr; }   /* every week grows to the tallest, so the month stays even */
+.chip.chip-gap { visibility: hidden; pointer-events: none; }
+.chip.cal-span { overflow: visible; }
+.chip.cal-span.cont, .chip.cal-span.runs { opacity: 1; }
+.chip.cal-span .t { position: relative; z-index: 2; max-width: calc(var(--span, 1) * 100% + (var(--span, 1) - 1) * 13px); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: none; }
 .cell { min-height: 116px; padding: 6px 6px 8px; border-right: 1px solid var(--card-edge); border-bottom: 1px solid var(--card-edge); cursor: pointer; display: flex; flex-direction: column; gap: 3px; min-width: 0; transition: background .12s; -webkit-user-select: none; user-select: none; }
 .cell:nth-child(7n) { border-right: 0; }
 .cell.last-row { border-bottom: 0; }
@@ -1914,7 +1999,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
 <body>
 
 <header class="topbar">
-  <div class="brand" id="brand" role="link" tabindex="0" aria-label="PMBridge home">
+  <div class="brand" id="brand" role="link" tabindex="0" aria-label="Open the Program page" title="Program page">
     <svg class="brand-icon" viewBox="0 0 64 64" aria-hidden="true"><g fill="#3CB371"><rect x="29" y="5" width="6" height="51" rx="1.5"/><rect x="2" y="38" width="60" height="5" rx="1.5"/></g><g stroke="#3CB371" stroke-width="2" stroke-linecap="round"><path d="M32 9L5 38M32 13L13 38M32 17L21 38M32 9L59 38M32 13L51 38M32 17L43 38"/></g></svg>
     <div class="brand-text"><span class="brand-name">PMBridge</span><span class="brand-sub">Projects, Tasks &amp; Dates</span></div>
   </div>
@@ -1927,7 +2012,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
 </header>
 
 <nav class="stabs" id="tabs" aria-label="Sections">
-  <button class="stab" data-tab="program">Program</button>
+  <!-- the Program page opens from the PMBridge logo, not a tab -->
   <button class="stab" data-tab="home">Campuses</button>
   <button class="stab" data-tab="focus">My Stuff</button>
   <!-- Applications and Insights are hidden for now; remove style="display:none" to bring them back -->
@@ -1954,7 +2039,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
   const STATUSES = ["Not Started", "In Progress", "Blocked", "Done"];
   const STATUS_CLASS = { "Not Started": "s-ns", "In Progress": "s-ip", "Blocked": "s-blk", "Done": "s-done" };
   const LS_KEY = "pmbridge-v1";
-  const APP_VERSION = "131 (Oct 31)";
+  const APP_VERSION = "148 (Nov 1)";
   const $ = id => document.getElementById(id);
   const uid = () => Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4);
   const pad2 = n => String(n).padStart(2, "0");
@@ -2036,7 +2121,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
     };
     if (r.done && it.status !== "Done") { it.prev = it.status; it.status = "Done"; }
     it.done = it.status === "Done";
-    if (it.kind === "phase") { it.sub = false; it.imp = false; it.end = it.date; it.done = false; it.status = "Not Started"; }   // a phase keeps its milestone date
+    if (it.kind === "phase") { it.sub = false; it.imp = false; it.end = it.date && it.end && it.end > it.date ? it.end : it.date; it.done = false; it.status = "Not Started"; }   /* a phase keeps its start date and an optional end date */
     return it;
   };
   const cleanTask = cleanItem, cleanSched = cleanItem;
@@ -2108,7 +2193,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
     if (r.done) { o.done = true; o.doneAt = +r.doneAt || Date.now(); } return o; };
   const cleanPunch = u => ({ collapsed: !!u.collapsed, hideDone: !!u.hideDone, rows: (Array.isArray(u.rows) ? u.rows : []).filter(Boolean).map(cleanPlRow) });
   const cleanPlTpl = t => ({ id: String(t.id || uid()), name: String(t.name || "NEW PUNCHLIST").slice(0, 60), rows: (Array.isArray(t.rows) ? t.rows : []).filter(Boolean).map(r => { const o = cleanPlRow(r); delete o.done; delete o.doneAt; PL_NEEDS.forEach(([k]) => delete o["d_" + k]); return o; }) });
-  const cleanSub = x => ({ id: x.id || uid(), title: String(x.title || "NEW PROJECT"), sched: cleanSchedView(x.sched), ...(x.punch ? { punch: cleanPunch(x.punch) } : {}) });
+  const cleanSub = x => ({ id: x.id || uid(), title: String(x.title || "NEW PROJECT"), sched: cleanSchedView(x.sched), ...(x.desc ? { desc: String(x.desc) } : {}), ...(isIso(x.due) ? { due: x.due } : {}), ...(x.punch ? { punch: cleanPunch(x.punch) } : {}) });
   // contacts, documents and notes belong to the campus; older versions kept them on each project, so gather those up
   function campusLists(p) {
     const raw = (Array.isArray(p.subs) ? p.subs : []).filter(Boolean), uniq = arr => { const seen = new Set(); return arr.filter(x => x && !seen.has(x.id) && seen.add(x.id)); };
@@ -2152,6 +2237,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
       regSeen: (Array.isArray(p.regSeen) ? p.regSeen : []).map(String),
       ...(Array.isArray(p.templates) ? { templates: p.templates.filter(Boolean).map(cleanTpl) } : {}),
       ...(Array.isArray(p.tplSeen) ? { tplSeen: p.tplSeen.map(String) } : {}),
+      ...(p.site && typeof p.site === "object" && (p.site.address || p.site.coords || p.site.details) ? { site: { address: String(p.site.address || ""), coords: String(p.site.coords || ""), details: String(p.site.details || "") } } : {}),
       ...(Array.isArray(p.punchTpls) ? { punchTpls: p.punchTpls.filter(Boolean).map(cleanPlTpl) } : {}),
       ...(Array.isArray(p.caps) ? { caps: p.caps.filter(Boolean).map(r => { const o = { id: String(r.id || uid()) }; CAP_COLS.forEach(([k]) => (o[k] = String(r[k] || ""))); return o; }) } : {}),
       ...(() => {
@@ -2169,9 +2255,9 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
     { k: "ws", name: "Workstations", icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="11" rx="1.5"/><path d="M2 19h20l-2-4H4z"/></svg>' }
   ];
   // Catalog from Trailer_Workbook.xlsx: part -> [manufacturer, description, short label]
-  const EST_PARTS = {"C8121-G2-MX": ["Cisco", "12 port Cisco secure router", "C8121-G2-MX · 12-port"], "C8111-G2-MX": ["Cisco", "6 port Cisco secure router", "C8111-G2-MX · 6-port"], "MG52E-HW": ["Cisco", "Meraki MG52E cellular gateway with support for 5G standalone", "Meraki MG52E 5G"], "CW9162I-MR": ["Cisco", "Catalyst 9162I AP (W6E, tri-band 2x2) w/Meraki", "CW9162I · indoor 2x2"], "CW9164I-MR": ["Cisco", "Catalyst 9164I AP (W6E, tri-band 4x4) w/Meraki", "CW9164I · indoor 4x4"], "MR76-HW": ["Cisco", "Meraki MR76 WiFi 6 outdoor AP", "MR76 · outdoor"], "ATS-01122": ["AccelTex", "Antenna patch WiFi 84NP", "AccelTex patch antenna"], "MS130-48P": ["Cisco", "Meraki MS130-48P cloud managed 48GE 740W PoE switch", "MS130-48P"], "MS150-48FP-4G": ["Cisco", "Meraki MS150-48FP-4G L2 stackable cloud managed 48GE 740W PoE switch", "MS150-48FP-4G · stackable"], "MA-PWR-CORD-US-FR": ["Cisco", "Meraki AC power cord (US plug)", "Meraki AC power cord"], "MA-SFP-1GB-TX": ["Cisco", "Meraki 1 GbE SFP copper module", "Meraki 1GbE SFP"], "EWMWG242425": ["Hoffman", "12U network cabinet (24H x 24W x 25D)", "Hoffman 12U enclosed cabinet"], "RK919WALLO": ["StarTech", "2-post 9U heavy-duty wall-mount open frame network rack, 19\"", "StarTech 9U open wall rack"], "EWMF2": ["Hoffman", "Access II 4in fan kit, 115V 100CFM, fits 25in - 30in deep cabinets", "Hoffman fan kit"], "AFLTR4LD": ["Hoffman", "Fan filter and finger guard kit", "Hoffman fan filter"], "AS1032": ["Hoffman", "Rack screws (pack of 20)", "Rack screws (20 pk)"], "AR8600A": ["Schneider", "APC NetShelter horizontal cable manager, 2U, single", "APC 2U cable manager"], "SMT1500RM2UCNC": ["Schneider", "APC Smart-UPS 1500VA LCD RM 2U 120V with network card", "APC 1500VA · 2U"], "SMART750RM1U": ["Tripp Lite", "Eaton Tripp Lite Smart UPS 750VA 600W rackmount AVR 120V 1U", "Tripp Lite 750VA · 1U"], "RM-CI-T24": ["Rackmount.IT", "Rackmount for Meraki MX68 - MX75 series", "RM-CI-T24 · MX68-MX75"], "RM-CI-T30": ["Rackmount.IT", "Rackmount for Cisco 8111-G2-MX", "RM-CI-T30 · C8111"], "ESH1915V": ["Hoffman", "Single-sided shelf, vented, black", "Hoffman vented shelf"], "CABSHELFV1U": ["StarTech", "1U vented cantilever rack shelf, 10\" deep, 44lb", "StarTech 1U shelf"], "CAT6-RUN": ["—", "Cat6 cable run (terminated drop)", "Cat6 cable run"], "86PK640S0UA": ["LG Electronics", "86in LG UHD TV, ATSC / Clear QAM, Global IPTV", "LG 86\" · 86PK"], "86UR640S9UD": ["LG Electronics", "86in LCD TV 3840x2160 UHD, WiFi, 120Hz", "LG 86\" · 86UR"], "75UR640S9UD": ["LG Electronics", "75in UHD TV, HDMI(3), USB, WiFi, RS-232C, RJ45", "LG 75\""], "65UR640S9UD": ["LG Electronics", "65in UHD TV, HDMI(3), USB, WiFi, RS-232C, RJ45", "LG 65\""], "K-50S20M2": ["Sony", "BRAVIA 2 II 50\" class 4K HDR LED Google TV (2025)", "Sony 50\" Google TV"], "K-55S20M2": ["Sony", "BRAVIA 2 II 55\" class 4K HDR LED Google TV (2025)", "Sony 55\" Google TV"], "K-65S20M2": ["Sony", "BRAVIA 2 II 65\" class 4K HDR LED Google TV (2025)", "Sony 65\" Google TV"], "K-75S20M2": ["Sony", "BRAVIA 2 II 75\" class 4K HDR LED Google TV (2025)", "Sony 75\" Google TV"], "LTM1U": ["Chief", "Large Fusion micro-adjustable tilt wall mount, black", "Chief tilt wall mount"], "TS525TU": ["Chief", "Low-profile full-motion wall mount for 42-75\" TVs", "Chief full-motion mount"], "RFCUB": ["Chief", "Fit mobile cart for 55-89\" displays, height adjustable", "Chief mobile cart"], "HDPMM06F": ["Liberty AV", "6ft HDMI cable", "6 ft"], "HDPMM10F": ["Liberty AV", "10ft HDMI premium cable", "10 ft"], "HDMM50": ["StarTech", "50ft (15m) high speed HDMI cable, 4K @ 30Hz", "50 ft"], "ST128HD20": ["StarTech", "HDMI splitter, same image with sound on 8 screens", "StarTech 1x8 HDMI splitter"], "HD-EXT-USB-2000-C": ["Crestron", "4K HDMI & USB over HDBaseT extender", "Crestron HDBaseT extender"], "960-001225": ["Logitech", "Rally Plus Ultra-HD ConferenceCam, black", "Logitech Rally Plus"], "991-000534": ["Logitech", "Logitech Rally Bar", "Logitech Rally Bar"], "MTW405-1000": ["Owl Labs", "Meeting Owl 4+", "Meeting Owl 4+"], "989-000430": ["Logitech", "Rally mic pod, graphite", "Rally mic pod"], "939-001644": ["Logitech", "Rally mounting kit for the Rally Ultra-HD ConferenceCam", "Rally mounting kit"], "952-000044": ["Logitech", "Rally Bar mount", "Rally Bar mount"], "952-000181": ["Logitech", "Rally mic coupler", "Mic coupler"], "939-001799": ["Logitech", "Rally USB cable", "USB cable"], "952-000188": ["Logitech", "Rally connection extension", "Connection extension"], "ACCMTW201-0004": ["Owl Labs", "Owl tripod", "Owl tripod"], "9X481UT#ABA": ["HP", "HP Thunderbolt 4 Ultra 180W G6 dock", "HP TB4 180W dock"], "U436-06N-GB-C": ["Tripp Lite", "USB-C to Gigabit network adapter with 60W USB-C PD charging", "USB-C to Gigabit adapter"], "E-DPM-HDM-06F": ["Liberty AV", "DisplayPort to HDMI 6ft cable", "DP to HDMI 6 ft"], "CS-T10-WM-L-K9=": ["Cisco", "Cisco Room Navigator wall mount, First Light (white)", "Room Navigator · wall mount"], "CS-T10-TS-L-K9=": ["Cisco", "Cisco Room Navigator table stand, First Light (white)", "Room Navigator · table stand"], "PRN-TBD": ["—", "Printer / MFP, model to be selected", "Printer (model TBD)"], "UM.HV7AA.L01": ["Acer", "Acer 27in 3840x2160 IPS display", "Acer 27\" 4K"], "ARMSLMBARDUO": ["StarTech", "Heavy-duty dual monitor desk arm, VESA 75/100, up to 32\"", "StarTech dual arm"], "5TW10AA#ABA": ["HP", "USB-C dock with power supply", "HP USB-C dock"], "VI-SZJ-1": ["Vilong", "Dual layer desk clamp power strip surge protector", "Desk clamp power strip"]};
+  const EST_PARTS = {"B0CG8UT#ABA": ["HP", "HP 327ph 27\" Class Full HD LCD monitor", "HP 327ph 27\" FHD"], "960-001691": ["Logitech", "Logitech MeetUp 2 conference camera", "Logitech MeetUp 2"], "952-000198": ["Logitech", "Logitech Extend", "Logitech Extend"], "C8121-G2-MX": ["Cisco", "12 port Cisco secure router", "C8121-G2-MX · 12-port"], "C8111-G2-MX": ["Cisco", "6 port Cisco secure router", "C8111-G2-MX · 6-port"], "MG52E-HW": ["Cisco", "Meraki MG52E cellular gateway with support for 5G standalone", "Meraki MG52E 5G"], "CW9162I-MR": ["Cisco", "Catalyst 9162I AP (W6E, tri-band 2x2) w/Meraki", "CW9162I · indoor 2x2"], "CW9164I-MR": ["Cisco", "Catalyst 9164I AP (W6E, tri-band 4x4) w/Meraki", "CW9164I · indoor 4x4"], "MR76-HW": ["Cisco", "Meraki MR76 WiFi 6 outdoor AP", "MR76 · outdoor"], "ATS-01122": ["AccelTex", "Antenna patch WiFi 84NP", "AccelTex patch antenna"], "MS130-48P": ["Cisco", "Meraki MS130-48P cloud managed 48GE 740W PoE switch", "MS130-48P"], "MS150-48FP-4G": ["Cisco", "Meraki MS150-48FP-4G L2 stackable cloud managed 48GE 740W PoE switch", "MS150-48FP-4G · stackable"], "MA-PWR-CORD-US-FR": ["Cisco", "Meraki AC power cord (US plug)", "Meraki AC power cord"], "MA-SFP-1GB-TX": ["Cisco", "Meraki 1 GbE SFP copper module", "Meraki 1GbE SFP"], "EWMWG242425": ["Hoffman", "12U network cabinet (24H x 24W x 25D)", "Hoffman 12U enclosed cabinet"], "RK919WALLO": ["StarTech", "2-post 9U heavy-duty wall-mount open frame network rack, 19\"", "StarTech 9U open wall rack"], "EWMF2": ["Hoffman", "Access II 4in fan kit, 115V 100CFM, fits 25in - 30in deep cabinets", "Hoffman fan kit"], "AFLTR4LD": ["Hoffman", "Fan filter and finger guard kit", "Hoffman fan filter"], "AS1032": ["Hoffman", "Rack screws (pack of 20)", "Rack screws (20 pk)"], "AR8600A": ["Schneider", "APC NetShelter horizontal cable manager, 2U, single", "APC 2U cable manager"], "SMT1500RM2UCNC": ["Schneider", "APC Smart-UPS 1500VA LCD RM 2U 120V with network card", "APC 1500VA · 2U"], "SMART750RM1U": ["Tripp Lite", "Eaton Tripp Lite Smart UPS 750VA 600W rackmount AVR 120V 1U", "Tripp Lite 750VA · 1U"], "RM-CI-T24": ["Rackmount.IT", "Rackmount for Meraki MX68 - MX75 series", "RM-CI-T24 · MX68-MX75"], "RM-CI-T30": ["Rackmount.IT", "Rackmount for Cisco 8111-G2-MX", "RM-CI-T30 · C8111"], "ESH1915V": ["Hoffman", "Single-sided shelf, vented, black", "Hoffman vented shelf"], "CABSHELFV1U": ["StarTech", "1U vented cantilever rack shelf, 10\" deep, 44lb", "StarTech 1U shelf"], "CAT6-RUN": ["—", "Cat6 cable run (terminated drop)", "Cat6 cable run"], "86PK640S0UA": ["LG Electronics", "86in LG UHD TV, ATSC / Clear QAM, Global IPTV", "LG 86\" · 86PK"], "86UR640S9UD": ["LG Electronics", "86in LCD TV 3840x2160 UHD, WiFi, 120Hz", "LG 86\" · 86UR"], "75UR640S9UD": ["LG Electronics", "75in UHD TV, HDMI(3), USB, WiFi, RS-232C, RJ45", "LG 75\""], "65UR640S9UD": ["LG Electronics", "65in UHD TV, HDMI(3), USB, WiFi, RS-232C, RJ45", "LG 65\""], "K-50S20M2": ["Sony", "BRAVIA 2 II 50\" class 4K HDR LED Google TV (2025)", "Sony 50\" Google TV"], "K-55S20M2": ["Sony", "BRAVIA 2 II 55\" class 4K HDR LED Google TV (2025)", "Sony 55\" Google TV"], "K-65S20M2": ["Sony", "BRAVIA 2 II 65\" class 4K HDR LED Google TV (2025)", "Sony 65\" Google TV"], "K-75S20M2": ["Sony", "BRAVIA 2 II 75\" class 4K HDR LED Google TV (2025)", "Sony 75\" Google TV"], "LTM1U": ["Chief", "Large Fusion micro-adjustable tilt wall mount, black", "Chief tilt wall mount"], "TS525TU": ["Chief", "Low-profile full-motion wall mount for 42-75\" TVs", "Chief full-motion mount"], "RFCUB": ["Chief", "Fit mobile cart for 55-89\" displays, height adjustable", "Chief mobile cart"], "HDPMM06F": ["Liberty AV", "6ft HDMI cable", "6 ft"], "HDPMM10F": ["Liberty AV", "10ft HDMI premium cable", "10 ft"], "HDMM50": ["StarTech", "50ft (15m) high speed HDMI cable, 4K @ 30Hz", "50 ft"], "ST128HD20": ["StarTech", "HDMI splitter, same image with sound on 8 screens", "StarTech 1x8 HDMI splitter"], "HD-EXT-USB-2000-C": ["Crestron", "4K HDMI & USB over HDBaseT extender", "Crestron HDBaseT extender"], "960-001225": ["Logitech", "Rally Plus Ultra-HD ConferenceCam, black", "Logitech Rally Plus"], "991-000534": ["Logitech", "Logitech Rally Bar", "Logitech Rally Bar"], "MTW405-1000": ["Owl Labs", "Meeting Owl 4+", "Meeting Owl 4+"], "989-000430": ["Logitech", "Rally mic pod, graphite", "Rally mic pod"], "939-001644": ["Logitech", "Rally mounting kit for the Rally Ultra-HD ConferenceCam", "Rally mounting kit"], "952-000044": ["Logitech", "Rally Bar mount", "Rally Bar mount"], "952-000181": ["Logitech", "Rally mic coupler", "Mic coupler"], "939-001799": ["Logitech", "Rally USB cable", "USB cable"], "952-000188": ["Logitech", "Rally connection extension", "Connection extension"], "ACCMTW201-0004": ["Owl Labs", "Owl tripod", "Owl tripod"], "9X481UT#ABA": ["HP", "HP Thunderbolt 4 Ultra 180W G6 dock", "HP TB4 180W dock"], "U436-06N-GB-C": ["Tripp Lite", "USB-C to Gigabit network adapter with 60W USB-C PD charging", "USB-C to Gigabit adapter"], "E-DPM-HDM-06F": ["Liberty AV", "DisplayPort to HDMI 6ft cable", "DP to HDMI 6 ft"], "CS-T10-WM-L-K9=": ["Cisco", "Cisco Room Navigator wall mount, First Light (white)", "Room Navigator · wall mount"], "CS-T10-TS-L-K9=": ["Cisco", "Cisco Room Navigator table stand, First Light (white)", "Room Navigator · table stand"], "PRN-TBD": ["—", "Printer / MFP, model to be selected", "Printer (model TBD)"], "UM.HV7AA.L01": ["Acer", "Acer 27in 3840x2160 IPS display", "Acer 27\" 4K"], "ARMSLMBARDUO": ["StarTech", "Heavy-duty dual monitor desk arm, VESA 75/100, up to 32\"", "StarTech dual arm"], "5TW10AA#ABA": ["HP", "USB-C dock with power supply", "HP USB-C dock"], "VI-SZJ-1": ["Vilong", "Dual layer desk clamp power strip surge protector", "Desk clamp power strip"]};
   // line types: [id, section, label, [model options]] - the first option is the default
-  const EST_GROUPS = [["rtr", "isp", "Secure router", ["C8121-G2-MX", "C8111-G2-MX"]], ["cell", "isp", "5G cellular gateway", ["MG52E-HW"]], ["ap", "net", "Wi-Fi access point", ["CW9162I-MR", "CW9164I-MR", "MR76-HW"]], ["ant", "net", "AP patch antenna", ["ATS-01122"]], ["sw", "net", "48-port PoE switch", ["MS130-48P", "MS150-48FP-4G"]], ["pwr", "net", "Switch power cord", ["MA-PWR-CORD-US-FR"]], ["sfp", "net", "SFP module", ["MA-SFP-1GB-TX"]], ["rack", "net", "Network rack / cabinet", ["EWMWG242425", "RK919WALLO"]], ["fan", "net", "Cabinet fan kit", ["EWMF2"]], ["filt", "net", "Fan filter & finger guard", ["AFLTR4LD"]], ["scr", "net", "Rack screws", ["AS1032"]], ["cm", "net", "Horizontal cable manager", ["AR8600A"]], ["ups", "net", "Rack UPS", ["SMT1500RM2UCNC", "SMART750RM1U"]], ["rmk", "net", "Router rackmount kit", ["RM-CI-T24", "RM-CI-T30"]], ["shelf", "net", "Rack shelf", ["ESH1915V", "CABSHELFV1U"]], ["cat6", "net", "Cat6 cable run", ["CAT6-RUN"]], ["disp", "av", "Display", ["86PK640S0UA", "86UR640S9UD", "75UR640S9UD", "65UR640S9UD", "K-50S20M2", "K-55S20M2", "K-65S20M2", "K-75S20M2"]], ["mnt", "av", "Display mount / cart", ["LTM1U", "TS525TU", "RFCUB"]], ["hdmi", "av", "HDMI cable", ["HDPMM06F", "HDPMM10F", "HDMM50"]], ["split", "av", "HDMI splitter", ["ST128HD20"]], ["ext", "av", "HDMI / USB extender", ["HD-EXT-USB-2000-C"]], ["cam", "av", "Conference camera", ["960-001225", "991-000534", "MTW405-1000"]], ["mic", "av", "Mic pod", ["989-000430"]], ["rkit", "av", "Rally mounting kit", ["939-001644"]], ["bmnt", "av", "Rally Bar mount", ["952-000044"]], ["mcpl", "av", "Rally mic coupler", ["952-000181"]], ["rusb", "av", "Rally USB cable", ["939-001799"]], ["rext", "av", "Rally connection extension", ["952-000188"]], ["owlt", "av", "Owl tripod", ["ACCMTW201-0004"]], ["rdock", "av", "Room dock", ["9X481UT#ABA"]], ["usbc", "av", "USB-C network adapter", ["U436-06N-GB-C"]], ["rdp", "av", "Room DP to HDMI cable", ["E-DPM-HDM-06F"]], ["nav", "av", "Room scheduler", ["CS-T10-WM-L-K9=", "CS-T10-TS-L-K9="]], ["prn", "print", "Printer", ["PRN-TBD"]], ["mon", "ws", "Monitor", ["UM.HV7AA.L01"]], ["arm", "ws", "Dual monitor arm", ["ARMSLMBARDUO"]], ["dock", "ws", "Docking station", ["5TW10AA#ABA"]], ["strip", "ws", "Desk power strip", ["VI-SZJ-1"]], ["wdp", "ws", "DP to HDMI cable", ["E-DPM-HDM-06F"]]];
+  const EST_GROUPS = [["rtr", "isp", "Secure router", ["C8121-G2-MX", "C8111-G2-MX"]], ["cell", "isp", "5G cellular gateway", ["MG52E-HW"]], ["ap", "net", "Wi-Fi access point", ["CW9162I-MR", "CW9164I-MR", "MR76-HW"]], ["ant", "net", "AP patch antenna", ["ATS-01122"]], ["sw", "net", "48-port PoE switch", ["MS130-48P", "MS150-48FP-4G"]], ["pwr", "net", "Switch power cord", ["MA-PWR-CORD-US-FR"]], ["sfp", "net", "SFP module", ["MA-SFP-1GB-TX"]], ["rack", "net", "Network rack / cabinet", ["EWMWG242425", "RK919WALLO"]], ["fan", "net", "Cabinet fan kit", ["EWMF2"]], ["filt", "net", "Fan filter & finger guard", ["AFLTR4LD"]], ["scr", "net", "Rack screws", ["AS1032"]], ["cm", "net", "Horizontal cable manager", ["AR8600A"]], ["ups", "net", "Rack UPS", ["SMT1500RM2UCNC", "SMART750RM1U"]], ["rmk", "net", "Router rackmount kit", ["RM-CI-T24", "RM-CI-T30"]], ["shelf", "net", "Rack shelf", ["ESH1915V", "CABSHELFV1U"]], ["cat6", "net", "Cat6 cable run", ["CAT6-RUN"]], ["disp", "av", "Display", ["86PK640S0UA", "86UR640S9UD", "75UR640S9UD", "65UR640S9UD", "K-50S20M2", "K-55S20M2", "K-65S20M2", "K-75S20M2"]], ["mnt", "av", "Display mount / cart", ["LTM1U", "TS525TU", "RFCUB"]], ["hdmi", "av", "HDMI cable", ["HDPMM06F", "HDPMM10F", "HDMM50"]], ["split", "av", "HDMI splitter", ["ST128HD20"]], ["ext", "av", "HDMI / USB extender", ["HD-EXT-USB-2000-C"]], ["cam", "av", "Conference camera", ["960-001225", "991-000534", "MTW405-1000", "960-001691"]], ["lext", "av", "Logitech Extend", ["952-000198"]], ["mic", "av", "Mic pod", ["989-000430"]], ["rkit", "av", "Rally mounting kit", ["939-001644"]], ["bmnt", "av", "Rally Bar mount", ["952-000044"]], ["mcpl", "av", "Rally mic coupler", ["952-000181"]], ["rusb", "av", "Rally USB cable", ["939-001799"]], ["rext", "av", "Rally connection extension", ["952-000188"]], ["owlt", "av", "Owl tripod", ["ACCMTW201-0004"]], ["rdock", "av", "Room dock", ["9X481UT#ABA"]], ["usbc", "av", "USB-C network adapter", ["U436-06N-GB-C"]], ["rdp", "av", "Room DP to HDMI cable", ["E-DPM-HDM-06F"]], ["nav", "av", "Room scheduler", ["CS-T10-WM-L-K9=", "CS-T10-TS-L-K9="]], ["prn", "print", "Printer", ["PRN-TBD"]], ["mon", "ws", "Monitor", ["B0CG8UT#ABA", "UM.HV7AA.L01"]], ["arm", "ws", "Dual monitor arm", ["ARMSLMBARDUO"]], ["dock", "ws", "Docking station", ["5TW10AA#ABA"]], ["strip", "ws", "Desk power strip", ["VI-SZJ-1"]], ["wdp", "ws", "DP to HDMI cable", ["E-DPM-HDM-06F"]]];
   // starting points from the workbook's trailer tabs: [name, [[line, part, qty]], freight]
   const EST_TEMPLATES = [["22-WIDE (A-101)", [["cm", "AR8600A", 1], ["ups", "SMART750RM1U", 1], ["rack", "RK919WALLO", 1], ["shelf", "CABSHELFV1U", 2], ["disp", "86PK640S0UA", 5], ["disp", "K-65S20M2", 6], ["mnt", "LTM1U", 11], ["hdmi", "HDPMM06F", 11], ["hdmi", "HDPMM10F", 11], ["mic", "989-000430", 8], ["rkit", "939-001644", 4], ["cam", "960-001225", 4], ["rdock", "9X481UT#ABA", 4], ["nav", "CS-T10-WM-L-K9=", 4]], 950], ["SAFETY 6-WIDE (A-102)", [["cm", "AR8600A", 1], ["ups", "SMART750RM1U", 1], ["rack", "RK919WALLO", 1], ["shelf", "CABSHELFV1U", 1], ["cat6", "CAT6-RUN", 11], ["disp", "86UR640S9UD", 3], ["disp", "K-65S20M2", 9], ["mnt", "LTM1U", 12], ["hdmi", "HDPMM06F", 3], ["hdmi", "HDPMM10F", 3], ["hdmi", "HDMM50", 3], ["split", "ST128HD20", 1], ["mic", "989-000430", 3], ["rkit", "939-001644", 1], ["cam", "960-001225", 1], ["rdock", "9X481UT#ABA", 1]], 0], ["MEETING TRAILER (A-103)", [["rtr", "C8111-G2-MX", 1], ["ap", "CW9162I-MR", 2], ["sw", "MS130-48P", 1], ["cm", "AR8600A", 1], ["ups", "SMART750RM1U", 1], ["rack", "RK919WALLO", 1], ["shelf", "CABSHELFV1U", 1], ["cat6", "CAT6-RUN", 2], ["disp", "86UR640S9UD", 10], ["mnt", "RFCUB", 10], ["hdmi", "HDPMM06F", 2], ["hdmi", "HDPMM10F", 2], ["hdmi", "HDMM50", 12], ["split", "ST128HD20", 2], ["mic", "989-000430", 2], ["rkit", "939-001644", 2], ["cam", "960-001225", 2], ["rdock", "9X481UT#ABA", 2]], 0]];
   // material unit prices from ePlus quote 23581013 (Aug 3, 2026). Anything typed in the Price list overrides these.
@@ -2296,6 +2382,22 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
     return x;
   }
   // dated lines from a project's task cards (or the whole campus), in date order
+  /* how long each phase runs: its own end date when set, otherwise until the day before the next phase starts */
+  function phaseEnds(rows) {
+    const ph = rows.filter(z => z.it.kind === "phase" && z.it.date).sort((a, b) => a.it.date.localeCompare(b.it.date)), out = new Map();
+    ph.forEach(z => { const own = z.it.end && z.it.end > z.it.date ? z.it.end : null, nx = ph.find(q => q.it.date > z.it.date); out.set(z.it, own || (nx ? addDays(nx.it.date, -1) : z.it.date)); });
+    return out;
+  }
+  /* the Calendar tab only shows each project's Contracts date (one day) and its whole Installation */
+  const CAL_PHASE = /contract|install/i, CAL_NOT = /pre[\s-]*install/i, CAL_ONEDAY = /contract/i;
+  function calPhaseItems(all) {
+    const out = [];
+    liveProjects().filter(q => all || calShows(q)).forEach(p => p.subs.forEach(x => {
+      const rows = datedItems(p, x.id), ends = phaseEnds(rows);
+      rows.forEach(({ c, it }) => { if (it.kind === "phase" && CAL_PHASE.test(it.text) && !CAL_NOT.test(it.text)) out.push({ p, c, it, x, ref: p.id + "|" + c.id + "|" + it.id, e: CAL_ONEDAY.test(it.text) ? it.date : ends.get(it) || it.date }); });
+    }));
+    return out;
+  }
   function datedItems(p, sid) {
     const out = [];
     p.cards.forEach(c => { if (sid && c.sub !== sid) return; c.items.forEach(it => { if (it.date) out.push({ c, it }); }); });
@@ -2535,15 +2637,14 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
     const cnt = { cp: 0, blk: 0 };
     liveProjects().forEach(p => [...p.subs.map(x => x.id), REG].forEach(sid => subCards(p, sid).forEach(c => c.items.forEach(it => { if (it.kind === "phase" || it.done || !it.text.trim()) return; if (it.status === "Blocked") cnt.blk++; else if (it.upd) cnt.cp++; }))));
     return `<div class="st-sec"><div class="home-head st-modes"><div class="cal-key" role="group" aria-label="Show">${[["cp", "Update", "#5FD68A"], ["blk", "Blockers", "#FF5A5A"]].map(([k, l, col]) => `<button class="ck" data-act="tbl-mode" data-m="${k}" aria-pressed="${tblMode === k}" style="--c:${col}"><i></i><span>${l}</span><b class="ck-n">${cnt[k]}</b></button>`).join("")}</div></div>
-      <section class="card st-card" aria-label="Status"><div class="st-wrap"><table class="st"><thead><tr><th>Campus</th><th>Project</th><th>Item</th><th class="st-l10h">L10</th><th>Update</th><th>Blocker</th><th>Owner</th></tr></thead>
+      <section class="card st-card" aria-label="Status"><div class="st-wrap"><table class="st st6"><thead><tr><th>Campus</th><th>Project</th><th>Item</th><th class="st-l10h">L10</th><th>Owner</th><th>${tblMode === "blk" ? "Blocker" : "Update"}</th></tr></thead>
       <tbody>${rows.length ? rows.map(r => { const ref = r.p.id + "|" + r.c.id + "|" + r.it.id, blk = r.it.status === "Blocked"; return `<tr data-ref="${ref}">
         <td><span class="st-camp" style="--c:${r.p.color}"><i></i>${esc(r.p.title)}</span></td>
         <td class="st-proj">${esc(r.s.title)}</td>
         <td>${blk ? "" : `<button class="st-upd" data-act="st-upd" data-ref="${ref}" title="Update. Tap to take it off the Status table"><i></i></button>`}<button class="st-item" data-act="open-item" data-ref="${ref}">${r.it.date ? `<span class="np" style="--c:${r.p.color}">${shortDate(r.it.date)}</span>` : ""}${esc(r.it.text)}</button></td>
         <td class="st-l10c">${l10BtnHtml(r.p, r.it, ref)}</td>
-        <td><div class="st-edit" contenteditable="true" spellcheck="true" data-tfield="update" data-ph="Add update"></div></td>
-        <td>${blk ? `<div class="st-blk"><i></i><div class="st-edit" contenteditable="true" spellcheck="true" data-tfield="blockReason" data-ph="Add reason"></div></div>` : `<span class="st-none">—</span>`}</td>
-        <td><div class="st-edit" contenteditable="true" spellcheck="false" autocapitalize="words" data-tfield="bic" data-ph="Owner"></div></td></tr>`; }).join("") : `<tr><td colspan="7" class="st-empty">${empty}</td></tr>`}</tbody></table></div>
+        <td><div class="st-edit" contenteditable="true" spellcheck="false" autocapitalize="words" data-tfield="bic" data-ph="Owner"></div></td>
+        <td>${tblMode === "blk" ? `<div class="st-blk"><i></i><div class="st-edit" contenteditable="true" spellcheck="true" data-tfield="blockReason" data-ph="Add reason"></div></div>` : `<div class="st-edit" contenteditable="true" spellcheck="true" data-tfield="update" data-ph="Add update"></div>`}</td></tr>`; }).join("") : `<tr><td colspan="6" class="st-empty">${empty}</td></tr>`}</tbody></table></div>
     </section></div>`;
   }
   function fillTable() {
@@ -2559,6 +2660,18 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
     f.it[t.dataset.tfield] = t.textContent.replace(/\s+/g, " ").trim(); f.it.stAt = Date.now(); save(f.p);
   });
   view.addEventListener("keydown", e => { if (e.target.dataset && e.target.dataset.tfield && e.key === "Enter") { e.preventDefault(); e.target.blur(); } });
+  /* project description and due date, right under the project name */
+  const subField = t => { const p = currentProject(), sec = t.closest(".psec[data-sid]"); return p && sec ? [p, subById(p, sec.dataset.sid)] : []; };
+  view.addEventListener("input", e => {
+    const t = e.target; if (!t.matches || !t.matches("[data-sdesc]")) return;
+    const [p, sb] = subField(t); if (!sb) return; const v = t.value.trim(); if (v) sb.desc = t.value; else delete sb.desc; save(p);
+  });
+  view.addEventListener("change", e => {
+    const t = e.target; if (!t.matches || !t.matches("[data-sdue]")) return;
+    const [p, sb] = subField(t); if (!sb) return; if (isIso(t.value)) sb.due = t.value; else delete sb.due; save(p);
+    t.closest(".psec-due").classList.toggle("late", !!sb.due && sb.due < todayIso());
+  });
+  view.addEventListener("keydown", e => { if (e.target.matches && e.target.matches("[data-sdesc]") && e.key === "Enter") { e.preventDefault(); e.target.blur(); } });
 
   /* ================= project view ================= */
   const qaEntry = { pid: null, date: null, color: null, cid: null };
@@ -2597,7 +2710,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
       <nav class="proj-head">
         <button class="nav-btn" data-act="go-home" aria-label="All campuses" title="All campuses">${ICON.back}</button>
         <div class="ph-main"><span class="ph-crumb" data-act="go-home">All campuses</span><div class="ph-row"><h1 class="ph-title ph-camp" style="color:${p.color}">${esc(p.title)}</h1>
-          <div class="ph-links" style="--c:${p.color}"><button class="ph-link" data-cl="contacts" title="Campus contacts">${ICON.user}<span>Contacts</span><b>${p.contacts.length || ""}</b></button><button class="ph-link" data-cl="docs" title="Campus documents">${ICON.link}<span>Documents</span><b>${p.docs.length || ""}</b></button><button class="ph-link" data-cl="notes" title="Campus notepad">${ICON.notes}<span>Notepad</span><b class="np-count">${p.notes.filter(n => !n.filed && !n.actOnly).length || ""}</b></button><button class="ph-link ph-add" data-act="add-sub" title="Add a project">${ICON.plus}<span>Add project</span></button></div></div></div>
+          <div class="ph-links" style="--c:${p.color}"><button class="ph-link" data-cl="contacts" title="Campus contact: site address, coordinates, details and people">${ICON.user}<span>Contact</span><b>${p.contacts.length || ""}</b></button><button class="ph-link" data-cl="docs" title="Campus documents">${ICON.link}<span>Documents</span><b>${p.docs.length || ""}</b></button><button class="ph-link" data-cl="notes" title="Campus notepad">${ICON.notes}<span>Notepad</span><b class="np-count">${p.notes.filter(n => !n.filed && !n.actOnly).length || ""}</b></button><button class="ph-link ph-add" data-act="add-sub" title="Add a project">${ICON.plus}<span>Add project</span></button></div></div></div>
         <div class="ph-stats" id="phStats">${statsHtml(p)}</div>
         <button class="head-btn edit-btn" style="color:${p.color}" data-act="project-menu" data-pid="${p.id}" data-pop aria-label="Edit campus">EDIT</button>
       </nav>
@@ -2617,6 +2730,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
   function subHtml(p, x) {
     return `<section class="psec" data-sid="${x.id}">
       <header class="psec-head"><div class="psec-title">${esc(x.title)}</div><button class="head-btn more-btn" data-act="sub-menu" data-sid="${x.id}" data-pop aria-label="Edit project" title="Edit project">${ICON_DOTS}</button></header>
+      <div class="psec-sub"><input class="psec-desc" data-sdesc value="${esc(x.desc || "")}" placeholder="Add a short description of this project" aria-label="Project description" autocomplete="off"><label class="psec-due${x.due && x.due < todayIso() ? " late" : ""}"><span>Due</span><input type="date" data-sdue value="${x.due || ""}" aria-label="Project due date"></label></div>
       <div class="col">${colHtml(p, x)}</div>
       </section>`;
   }
@@ -3756,12 +3870,25 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
     const isC = k === "contacts", list = isC ? p.contacts : p.docs;
     const m = document.createElement("div");
     m.className = "modal pj-modal x-modal cl-modal";
-    m.innerHTML = `<div class="ev" role="dialog" aria-label="${isC ? "Contacts" : "Documents"}" style="--c:${p.color}">
-      <div class="ev-head"><div class="ev-title cl-title" style="padding-top:4px">${isC ? ICON.user + "CONTACTS" : ICON.link + "DOCUMENTS"}</div><button class="ev-x" aria-label="Close">×</button></div>
-      <div class="ev-proj"><b style="--pc:${p.color}">${esc(p.title)}</b> · ${list.length} ${isC ? (list.length === 1 ? "contact" : "contacts") : (list.length === 1 ? "document" : "documents")}</div>
-      <div class="ev-body">${list.length ? `<ul class="xlist">${list.map(isC ? contactRow : docRow).join("")}</ul>` : `<p class="sched-empty">${isC ? "No contacts yet. Add the people for this campus: name, company, role and phone." : "No documents yet. Add a name and one or two links for each."}</p>`}</div>
+    const st = p.site || {}, mapQ = s => s.coords || s.address ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((s.coords || s.address).trim())}` : "";
+    const siteHtml = isC ? `<section class="cl-site">
+        <div class="cl-sh">Site</div>
+        <label class="pj-lbl" for="cs-address">Address</label><input class="field" id="cs-address" data-site="address" placeholder="Street, city, state, ZIP" value="${esc(st.address || "")}" autocomplete="off">
+        <label class="pj-lbl" for="cs-coords">Coordinates</label><div class="cl-coord"><input class="field" id="cs-coords" data-site="coords" placeholder="e.g. 33.4152, -111.8315" value="${esc(st.coords || "")}" autocomplete="off" inputmode="decimal" spellcheck="false"><a class="foot-btn cl-map" target="_blank" rel="noopener" href="${mapQ(st) || "#"}"${mapQ(st) ? "" : " hidden"}>Map</a></div>
+        <label class="pj-lbl" for="cs-details">Site details</label><textarea class="field" id="cs-details" data-site="details" placeholder="Access, parking, gate codes, where the IT room is, power, hours…">${esc(st.details || "")}</textarea>
+        <div class="cl-sh">People</div></section>` : "";
+    m.innerHTML = `<div class="ev" role="dialog" aria-label="${isC ? "Contact" : "Documents"}" style="--c:${p.color}">
+      <div class="ev-head"><div class="ev-title cl-title" style="padding-top:4px">${isC ? ICON.user + "CONTACT" : ICON.link + "DOCUMENTS"}</div><button class="ev-x" aria-label="Close">×</button></div>
+      <div class="ev-proj"><b style="--pc:${p.color}">${esc(p.title)}</b> · ${list.length} ${isC ? (list.length === 1 ? "person" : "people") : (list.length === 1 ? "document" : "documents")}</div>
+      <div class="ev-body">${siteHtml}${list.length ? `<ul class="xlist">${list.map(isC ? contactRow : docRow).join("")}</ul>` : `<p class="sched-empty">${isC ? "No contacts yet. Add the people for this campus: name, company, role and phone." : "No documents yet. Add a name and one or two links for each."}</p>`}</div>
       <div class="ev-foot"><button class="foot-btn cl-add">${ICON.plus}${isC ? "Add contact" : "Add document"}</button><span class="grow"></span><button class="done-btn cl-done">Done</button></div></div>`;
     document.body.appendChild(m);
+    const sta = m.querySelector("#cs-details"); if (sta) { sizeNotes(sta); sta.addEventListener("input", () => sizeNotes(sta)); }
+    m.addEventListener("input", e => {
+      const k = e.target.dataset.site; if (!k) return;
+      const q = proj(p.id) || p; q.site = { address: "", coords: "", details: "", ...(q.site || {}) }; q.site[k] = e.target.value; save(q);
+      const a = m.querySelector(".cl-map"), u = mapQ(q.site); a.hidden = !u; a.href = u || "#";
+    });
     m.addEventListener("click", e => {
       if (e.target === m || e.target.closest(".ev-x, .cl-done")) { closeModal(); return; }
       if (e.target.closest(".cl-add")) { openXForm(p, k); return; }
@@ -3822,7 +3949,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
   function taskHtml(p, c, it) {
     const col = itemColor(it, p);
     if (it.kind === "phase") return `<li class="item phase${c.sub === REG ? "" : " ph-dated"}" data-iid="${it.id}" data-cid="${c.id}">
-      ${c.sub === REG ? "" : `<button class="date-pill ph-date${it.date ? "" : " no-date"}${it.date && itemEnd(it) < todayIso() ? " overdue" : ""}" style="--c:${col}" data-act="date" data-pop title="${it.date ? "Phase date " + fullDate(it.date) : "Add a phase date"}">${it.date ? shortDate(it.date) : "DATE"}</button>`}
+      ${c.sub === REG ? "" : `<button class="date-pill ph-date${it.date ? "" : " no-date"}${it.date && itemEnd(it) < todayIso() ? " overdue" : ""}" style="--c:${col}" data-act="date" data-pop title="${it.date ? "Phase start " + fullDate(it.date) : "Add a phase date"}">${it.date ? shortDate(it.date) : "DATE"}</button>${it.date ? `<button class="date-pill ph-date ph-end${it.end > it.date ? "" : " no-date"}" style="--c:${col}" data-act="ph-end" data-pop title="${it.end > it.date ? "Phase ends " + fullDate(it.end) + ". Tap to change" : "Add an end date so the phase runs across the Gantt and Calendar"}">${it.end > it.date ? "→ " + shortDate(it.end) : "END"}</button>` : ""}`}
       <div class="phase-text" contenteditable="true" spellcheck="true" autocapitalize="words" data-ph="${c.sub === REG ? "Category" : "Phase name"}" data-field="text"></div>
       <button class="phase-x" data-act="del-phase" aria-label="Remove phase" title="Remove phase">×</button>
     </li>`;
@@ -3982,12 +4109,13 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
     return out;
   }
   const sortKey = x => (isAllDay(x.it) ? "0" : "1" + x.it.startTime) + (x.it.text || "").toLowerCase();
-  function itemsOn(list, d) { return list.filter(x => x.it.date <= d && itemEnd(x.it) >= d).sort((a, b) => sortKey(a).localeCompare(sortKey(b))); }
+  function itemsOn(list, d) { return list.filter(x => x.it.date <= d && (x.e || itemEnd(x.it)) >= d).sort((a, b) => sortKey(a).localeCompare(sortKey(b))); }
   function chipHtml(x, d, global) {
     const col = global || x.c.sub === REG ? x.p.color : itemColor(x.it, x.p), cont = x.it.date < d && d !== weekStart(d);
     const t = esc(x.it.text || "Untitled"), tip = esc((x.it.text || "Untitled") + (x.it.bic ? " · " + x.it.bic : ""));
     const done = (x.it.done ? " done" : "") + (x.c.sub === REG ? " reg" : "");   // Action Register due dates: outlined
-    if (x.it.kind === "phase") return `<button class="chip allday ph-chip${done}" style="--c:${col}" data-act="open-project" data-pid="${x.p.id}" title="${tip} (phase)"><span class="t">${t}</span></button>`;
+    if (x.it.kind === "phase") { const e = x.e || x.it.date, first = x.it.date === d || d === weekStart(d); const wkEnd = addDays(weekStart(d), 6), span = dayDiff(d, e < wkEnd ? e : wkEnd) + 1;
+      return `<button class="chip allday ph-chip cal-span${done}${x.it.date < d ? " cont" : ""}${e > d && parseIso(d).getDay() !== 6 ? " runs" : ""}" style="--c:${col};--span:${span}" data-act="open-project" data-pid="${x.p.id}" title="${esc(niceCase(x.p.title) + (x.x ? " " + niceCase(x.x.title) : ""))} · ${tip} · ${fullDate(x.it.date)}${e !== x.it.date ? " – " + fullDate(e) : ""}"><span class="t">${first ? esc((global ? niceCase(x.p.title) + " " : "") + (x.x ? niceCase(x.x.title) + " " : "") + niceCase(x.it.text || "Phase")) : "&nbsp;"}</span></button>`; }
     if (isAllDay(x.it)) return `<button class="chip allday${done}${x.it.date < d ? " cont" : ""}" style="--c:${col}" data-act="open-item" data-ref="${x.ref}" title="${tip}"><span class="t">${t}</span></button>`;
     return `<button class="chip timed${done}" style="--c:${col}" data-act="open-item" data-ref="${x.ref}" title="${tip}"><span class="d"></span><span class="tm">${shortTime(x.it.startTime)}</span><span class="t">${t}</span></button>`;
   }
@@ -3997,7 +4125,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
   const saveCalHidden = () => { try { localStorage.setItem(CAL_HIDE_KEY, JSON.stringify([...calHidden])); } catch (e) {} };
   const calShows = p => !calHidden.has(p.id);
   function keyHtml() {
-    const counts = new Map(liveProjects().map(q => [q.id, collectItems(q.id).length]));
+    const cp = calPhaseItems(true), counts = new Map(liveProjects().map(q => [q.id, cp.filter(z => z.p === q).length]));
     return `<div class="cal-key" role="group" aria-label="Campuses shown on the calendar">
       ${liveProjects().map(q => `<button class="ck" data-act="cal-toggle" data-pid="${q.id}" aria-pressed="${calShows(q)}" style="--c:${q.color}" title="${calShows(q) ? "Hide" : "Show"} ${esc(q.title)}"><i></i><span>${esc(q.title)}</span><b class="ck-n">${counts.get(q.id) || 0}</b></button>`).join("")}
       ${state.projects.length > 1 ? `<span class="ck-quick"><button data-act="cal-all">ALL</button><button data-act="cal-none">NONE</button></span>` : ""}
@@ -4007,16 +4135,25 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
     paintGantt(); paintGcp();
     const box = $("cal"); if (!box) return;
     const p = currentProject(), global = !p;
-    const list = global ? collectItems(null).filter(x => calShows(x.p)) : collectItems(p.id);
+    const list = global ? calPhaseItems() : collectItems(p.id);
     const first = new Date(calView.y, calView.m, 1), days = new Date(calView.y, calView.m + 1, 0).getDate();
     const lead = first.getDay(), weeks = Math.ceil((lead + days) / 7), start = iso(new Date(calView.y, calView.m, 1 - lead)), t = todayIso();
     const maxChips = isPhone() ? 3 : 4;
     let cells = "";
+    /* Calendar tab: every bar shows (no "+ more") and each bar keeps the same lane all week so it reads as one line */
+    const lane = new Map();
+    if (global) for (let w = 0; w < weeks; w++) {
+      const ws = addDays(start, w * 7), we = addDays(ws, 6), ends = [];
+      list.filter(x => x.it.date <= we && (x.e || x.it.date) >= ws).sort((a, b) => a.it.date.localeCompare(b.it.date) || (b.e || "").localeCompare(a.e || "") || sortKey(a).localeCompare(sortKey(b))).forEach(x => {
+        const s = x.it.date < ws ? ws : x.it.date; let l = ends.findIndex(e => e < s); if (l < 0) l = ends.length; ends[l] = x.e || x.it.date; lane.set(w + "|" + x.ref, l);
+      });
+    }
     for (let i = 0; i < weeks * 7; i++) {
       const d = addDays(start, i), dd = parseIso(d), other = dd.getMonth() !== calView.m;
-      const on = itemsOn(list, d), show = on.length > maxChips ? on.slice(0, maxChips - 1) : on;
+      let on = itemsOn(list, d), show = on.length > maxChips ? on.slice(0, maxChips - 1) : on;
+      if (global) { const w = Math.floor(i / 7), slots = []; on.forEach(x => (slots[lane.get(w + "|" + x.ref)] = x)); on = show = Array.from(slots, x => x || null); }
       cells += `<div class="cell${other ? " other" : ""}${d === t ? " today" : ""}${i >= (weeks - 1) * 7 ? " last-row" : ""}" data-act="day" data-d="${d}">
-        <span class="num">${dd.getDate()}</span>${show.map(x => chipHtml(x, d, global)).join("")}${on.length > show.length ? `<button class="more" data-act="day" data-d="${d}">+${on.length - show.length} more</button>` : ""}</div>`;
+        <span class="num">${dd.getDate()}</span>${show.map(x => x ? chipHtml(x, d, global) : `<button class="chip allday ph-chip chip-gap" tabindex="-1" aria-hidden="true"><span class="t">&nbsp;</span></button>`).join("")}${on.length > show.length ? `<button class="more" data-act="day" data-d="${d}">+${on.length - show.length} more</button>` : ""}</div>`;
     }
     const shown = global ? liveProjects().filter(calShows).length : 0;
     box.innerHTML = `<div class="cal-top"><div class="cal-month">${MONTHS[calView.m]} <span>${calView.y}</span></div>
@@ -4053,10 +4190,10 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
       p.subs.forEach(x => {
         const items = datedItems(p, x.id).map(({ c, it }) => ({ c, it })); if (!items.length) return;
         // a phase runs from its date to the day before the next phase; a dated task is a milestone (or a bar if it spans days)
-        const phases = items.filter(z => z.it.kind === "phase");
+        const ends = phaseEnds(items);
         const rows = items.map(z => {
           let s = z.it.date, e = itemEnd(z.it);
-          if (z.it.kind === "phase") { const nx = phases.find(q => q.it.date > z.it.date); e = nx ? addDays(nx.it.date, -1) : z.it.date; }
+          if (z.it.kind === "phase") e = ends.get(z.it) || z.it.date;
           return { ...z, s, e: e < s ? s : e, ph: z.it.kind === "phase" };
         });
         const s = rows.reduce((m, r) => r.s < m ? r.s : m, rows[0].s), e = rows.reduce((m, r) => r.e > m ? r.e : m, rows[0].e);
@@ -4132,7 +4269,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
     box.innerHTML = groups.length ? `<div class="gcp-grid">${groups.map(g => `<article class="card task-card gcp-card" style="--list-color:${g.p.color}">
       <header class="card-head" style="color:${g.p.color}"><div class="title">${esc(g.p.title)} <span class="gcp-sub">· Critical Path</span></div><span class="act-count">${g.rows.length}</span></header>
       <div class="card-body"><div class="gcp-head" aria-hidden="true"><span>Date</span><span>Project</span><span>Task</span><span>Owner</span></div><ul class="fo-lines">${g.rows.map(r => { const late = itemEnd(r.it) < t; return `<li class="gcp-line${r.it.kind === "phase" ? " gcp-ph" : ""}" style="--pc:${r.p.color}">
-          <span class="gcp-date"><span class="date-pill" style="--c:${late ? "var(--danger)" : r.p.color}" title="${late ? "Past due " : ""}${fullDate(r.it.date)}">${shortDate(r.it.date)}</span></span>
+          <span class="gcp-date"><span class="date-pill${late ? " gcp-late" : ""}" style="--c:${late ? "var(--danger)" : r.p.color}" title="${late ? "Past due " : ""}${fullDate(r.it.date)}">${shortDate(r.it.date)}</span></span>
           <span class="fl-proj" title="${esc(r.x.title)}">${esc(r.x.title)}</span>
           <span class="gcp-item" title="${esc(r.it.text)}">${esc(r.it.text || "Untitled")}</span>
           <span class="fl-who" title="${esc(r.it.bic)}">${esc(r.it.bic)}</span></li>`; }).join("")}</ul></div></article>`).join("")}</div>`
@@ -4303,7 +4440,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
   function foLineHtml(x, n, len, t, flashRef, canMove) {
     const late = x.due && x.dueEnd < t, proj = niceCase(x.project) || "—";
     const ARR_UP = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6-6 6 6"/></svg>', ARR_DN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>';
-    return `<li class="fo-line${x.ref === flashRef ? " fresh" : ""}${x.it.status === "Blocked" ? " blocked" : ""}${x.it.star ? " starred" : ""}" data-ref="${x.ref}" style="--pc:${x.p.color}">
+    return `<li class="fo-line${x.ref === flashRef ? " fresh" : ""}${x.it.status === "Blocked" ? " blocked" : ""}${x.it.star ? " starred" : ""}" data-ref="${x.ref}"${/task list/i.test(x.source || "") ? " data-tl" : ""} style="--pc:${x.p.color}">
       <button class="check" role="checkbox" aria-checked="false" aria-label="Mark done" data-fo="done">${ICON.check}</button>
       <span class="fl-meta"><span class="fl-camp" title="${esc(x.p.title)}"><i></i>${esc(x.p.title)}</span>
       <span class="fl-proj" title="${esc(proj)}">${esc(proj)}</span>
@@ -4386,7 +4523,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
     liveProjects().forEach(p => p.cards.forEach(c => c.items.forEach(it => {
       if (it.kind === "phase" || it.done || !it.text.trim()) return;
       const cat = focusCat(p, c, it), tl = c.sub !== REG;
-      if (isProg(p) && !tl) { cat.project = it.gproj || cat.project; cat.ph = it.gphase || ""; cat.source = it.ref ? cat.source : "General"; }
+      if (isProg(p) && !tl) { cat.project = it.gproj || cat.project; cat.ph = it.gphase || (it.ref ? "" : cat.ph); cat.source = it.ref ? cat.source : "General"; }
       // a task with no date of its own is due on its phase's date
       out.push({ p, c, it, ref: p.id + "|" + c.id + "|" + it.id, ...cat, phase: tl || isProg(p) ? cat.ph : "", due: it.date || (tl ? cat.phDate : null), dueEnd: it.date ? itemEnd(it) : tl ? cat.phDate : null, duePhase: !it.date && tl && !!cat.phDate });
     })));
@@ -4440,6 +4577,103 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
     m.addEventListener("click", e => { if (e.target === m || e.target.closest(".ev-x")) closeModal(); else if (e.target.closest(".ga-go")) add(); });
     m.addEventListener("keydown", e => { if (e.key === "Enter" && e.target.tagName === "INPUT" && e.target.type !== "checkbox") { e.preventDefault(); add(); } });
   }
+  /* ----- My Stuff · Board: Quick Notes + campus cards in three columns you can rearrange ----- */
+  const FLAY_KEY = "pmbridge-focus-layout", BOARD_KEY = "pmbridge-board";
+  let focusLayout = (() => { try { return localStorage.getItem(FLAY_KEY) === "board" ? "board" : "list"; } catch (e) { return "list"; } })();
+  const boardCols = (() => { try { const o = JSON.parse(localStorage.getItem(BOARD_KEY) || "null"); return o && Array.isArray(o.cols) && o.cols.length === 3 ? o.cols : [["qn"], [], []]; } catch (e) { return [["qn"], [], []]; } })();
+  const saveBoard = () => { try { localStorage.setItem(BOARD_KEY, JSON.stringify({ cols: boardCols })); } catch (e) {} };
+  // Quick Notes live on the Program record's register: headings are its categories, bullets are General items
+  function qnHtml() {
+    const P = programCampus(), c = regCard(P), secs = [{ ph: null, rows: [] }];
+    c.items.forEach(it => { if (it.kind === "phase") secs.push({ ph: it, rows: [] }); else if (!it.done) secs[secs.length - 1].rows.push(it); });
+    const row = it => `<li class="qn-row" data-qi="${it.id}"><button class="check" role="checkbox" aria-checked="false" aria-label="Done" data-qn="done">${ICON.check}</button>
+        <input class="qn-in qn-t" data-f="text" value="${esc(it.text)}" placeholder="Item"${it.ref ? " readonly title=\"From a note. Edit it in the Notepad\"" : ""}><input class="qn-in qn-d" data-f="date" type="date" value="${it.date || ""}" aria-label="Date"><input class="qn-in qn-o" data-f="bic" value="${esc(it.bic)}" placeholder="Owner" autocapitalize="words" list="qn-owners"><button class="qn-x" data-qn="del" aria-label="Delete">×</button></li>`;
+    const add = id => `<li class="qn-row qn-add" data-sec="${id}"><span class="qn-plus">${ICON.plus}</span><input class="qn-in qn-t" data-a="text" placeholder="Add an item"><input class="qn-in qn-d" data-a="date" type="date" aria-label="Date"><input class="qn-in qn-o" data-a="bic" placeholder="Owner" autocapitalize="words" list="qn-owners"><span></span></li>`;
+    return `<article class="card fb-card qn-card" data-bid="qn" style="--list-color:#B8C1CC">
+      <header class="card-head" style="color:#B8C1CC"><span class="fb-grip" data-bdrag title="Drag to move">${ICON.grip}</span><div class="title">Quick Notes</div><button class="fo-qadd" data-qn="addh">${ICON.plus}Heading</button></header>
+      <div class="card-body"><datalist id="qn-owners">${focusOwners().map(o => `<option value="${esc(o.name)}">`).join("")}</datalist>
+        ${secs.map(sx => (sx.ph || sx.rows.length || secs.length === 1) ? `<section class="qn-sec">${sx.ph ? `<div class="qn-h"><input class="qn-hin" data-qh="${sx.ph.id}" value="${esc(sx.ph.text)}" placeholder="Heading" autocapitalize="words"><button class="qn-x" data-qn="delh" data-ph="${sx.ph.id}" aria-label="Remove heading" title="Remove heading (its bullets move up)">×</button></div>` : ""}
+          <ul class="qn-list">${sx.rows.map(row).join("")}${add(sx.ph ? sx.ph.id : "")}</ul></section>` : "").join("")}</div></article>`;
+  }
+  // a campus card on the board reads Project → Phase → items, in the order they appear
+  function byProject(rows) {
+    const out = [];
+    rows.forEach(x => {
+      const pn = niceCase(x.project) || (x.source && !/task list/i.test(x.source) ? niceCase(x.source) : "Other"), ph = x.phase ? niceCase(x.phase) : (x.c && x.c.sub === REG && !x.project ? "" : "");
+      let p = out.find(z => z.name === pn); if (!p) out.push(p = { name: pn, phases: [], n: 0 });
+      let h = p.phases.find(z => z.name === ph); if (!h) p.phases.push(h = { name: ph, rows: [] });
+      h.rows.push(x); p.n++;
+    });
+    return out;
+  }
+  function renderBoard(body, groups, V, flashRef) {
+    const t = V.t, ids = ["qn", ...groups.map(g => g.p.id)];
+    boardCols.forEach((col, i) => (boardCols[i] = col.filter((id, j) => ids.includes(id) && col.indexOf(id) === j && boardCols.findIndex(c => c.includes(id)) === i)));
+    ids.forEach(id => { if (!boardCols.some(c => c.includes(id))) { const sh = boardCols.reduce((m, c, i) => c.length < boardCols[m].length ? i : m, 0); boardCols[sh].push(id); } });
+    const campCard = g => `<article class="card task-card fo-mine fo-camp-card fb-card${foCollapsed.has(g.p.id) ? " fo-closed" : ""}" data-bid="${g.p.id}" style="--list-color:${g.p.color}">
+        <header class="card-head" style="color:${g.p.color}"><span class="fb-grip" data-bdrag title="Drag to move">${ICON.grip}</span><div class="title">${esc(g.p.title)}</div><span class="act-count">${g.rows.length}</span><button class="head-btn toggle fo-tog" data-foc="${g.p.id}" aria-label="Collapse or expand">${ICON.chev}</button></header>
+        <div class="card-body">${byProject(g.rows).map(pg => `<section class="fb-proj"><div class="fb-ph1">${esc(pg.name)}<b>${pg.n}</b></div>${pg.phases.map(ph => `${ph.name ? `<div class="fb-ph2">${esc(ph.name)}</div>` : ""}<ul class="fo-lines">${ph.rows.map((x, n) => foLineHtml(x, n, ph.rows.length, t, flashRef, false)).join("")}</ul>`).join("")}</section>`).join("")}</div></article>`;
+    const html = `<div class="fb-board">${boardCols.map((col, i) => `<div class="fb-col" data-col="${i}">${col.map(id => id === "qn" ? qnHtml() : campCard(groups.find(g => g.p.id === id))).join("")}</div>`).join("")}</div>`;
+    const h = body.querySelector(".fo-h"); if (h) h.insertAdjacentHTML("afterend", html);
+    body.querySelectorAll(":scope > .fo-camp-grid, :scope > .fo-mine").forEach(n => n.remove());
+    const board = body.querySelector(".fb-board"); if (!board) return;
+    // Quick Notes editing
+    const P = programCampus(), C = regCard(P), qi = el => { const r = el.closest("[data-qi]"); return r && C.items.find(x => x.id === r.dataset.qi); };
+    board.addEventListener("input", e => {
+      const el = e.target;
+      if (el.dataset.qh) { const ph = C.items.find(x => x.id === el.dataset.qh); if (ph) { ph.text = el.value; save(P); } return; }
+      const it = el.dataset.f && qi(el); if (!it) return;
+      if (el.dataset.f === "date") { it.date = isIso(el.value) ? el.value : null; it.end = it.date; } else it[el.dataset.f] = el.value;
+      save(P);
+    });
+    const addFrom = row => {
+      const v = k => row.querySelector(`[data-a="${k}"]`).value.trim(), text = v("text"); if (!text) return false;
+      const d = v("date"), it = cleanItem({ text, bic: v("bic"), date: isIso(d) ? d : null, end: isIso(d) ? d : null });
+      const sec = row.dataset.sec; let at = C.items.length;
+      if (sec) { const i = C.items.findIndex(x => x.id === sec); at = C.items.findIndex((x, j) => j > i && x.kind === "phase"); if (at < 0) at = C.items.length; }
+      else { const f = C.items.findIndex(x => x.kind === "phase"); at = f < 0 ? C.items.length : f; }
+      C.items.splice(at, 0, it); save(P); renderFocus();
+      const nr = view.querySelector(`.qn-add[data-sec="${sec}"] [data-a="text"]`); if (nr) nr.focus();
+      return true;
+    };
+    board.addEventListener("keydown", e => {
+      if (e.key !== "Enter") return;
+      const row = e.target.closest(".qn-add"); if (row) { e.preventDefault(); addFrom(row); return; }
+      if (e.target.classList.contains("qn-in") || e.target.classList.contains("qn-hin")) { e.preventDefault(); e.target.blur(); }
+    });
+    board.addEventListener("change", e => { const row = e.target.closest(".qn-add"); if (row && e.target.dataset.a === "date" && row.querySelector('[data-a="text"]').value.trim()) addFrom(row); });
+    board.addEventListener("click", e => {
+      const b = e.target.closest("[data-qn]"); if (!b) return;
+      e.stopPropagation();
+      const k = b.dataset.qn;
+      if (k === "addh") { const ph = cleanItem({ kind: "phase", text: "" }); C.items.push(ph); save(P); renderFocus(); const f = view.querySelector(`[data-qh="${ph.id}"]`); if (f) f.focus(); return; }
+      if (k === "delh") { C.items = C.items.filter(x => x.id !== b.dataset.ph); save(P); renderFocus(); return; }
+      const it = qi(b); if (!it) return;
+      if (k === "done") { const snap = snapshot(); toggleDone(it); save(P); renderFocus(); showUndo(`Done: ${it.text || "item"}`, () => restore(snap)); return; }
+      if (k === "del") { const snap = snapshot(); C.items = C.items.filter(x => x !== it); save(P); renderFocus(); showUndo("Deleted", () => restore(snap)); }
+    }, true);
+    // drag a card by its grip into any column; it drops where the gap opens
+    board.addEventListener("pointerdown", e => {
+      const grip = e.target.closest("[data-bdrag]"); if (!grip || e.button > 0) return;
+      const card = grip.closest(".fb-card"), r = card.getBoundingClientRect(), ox = e.clientX - r.left, oy = e.clientY - r.top;
+      e.preventDefault(); grip.setPointerCapture(e.pointerId);
+      const ph = document.createElement("div"); ph.className = "fb-ph"; ph.style.height = r.height + "px";
+      card.after(ph); card.classList.add("fb-drag"); Object.assign(card.style, { position: "fixed", left: r.left + "px", top: r.top + "px", width: r.width + "px", zIndex: 1000 });
+      const move = ev => {
+        card.style.left = ev.clientX - ox + "px"; card.style.top = ev.clientY - oy + "px";
+        const cols = [...board.querySelectorAll(".fb-col")], col = cols.find(c => { const b = c.getBoundingClientRect(); return ev.clientX >= b.left && ev.clientX <= b.right; }) || cols.reduce((m, c) => Math.abs(c.getBoundingClientRect().left - ev.clientX) < Math.abs(m.getBoundingClientRect().left - ev.clientX) ? c : m, cols[0]);
+        const next = [...col.querySelectorAll(".fb-card:not(.fb-drag)")].find(c => { const b = c.getBoundingClientRect(); return ev.clientY < b.top + b.height / 2; });
+        if (next) { if (next.previousElementSibling !== ph) col.insertBefore(ph, next); } else if (col.lastElementChild !== ph) col.appendChild(ph);
+      };
+      const up = () => {
+        grip.removeEventListener("pointermove", move); grip.removeEventListener("pointerup", up); grip.removeEventListener("pointercancel", up);
+        ph.replaceWith(card); card.classList.remove("fb-drag"); card.removeAttribute("style"); card.style.setProperty("--list-color", card.dataset.bid === "qn" ? "#B8C1CC" : (proj(card.dataset.bid) || {}).color || "");
+        board.querySelectorAll(".fb-col").forEach((c, i) => (boardCols[i] = [...c.querySelectorAll(".fb-card")].map(x => x.dataset.bid)));
+        saveBoard();
+      };
+      grip.addEventListener("pointermove", move); grip.addEventListener("pointerup", up); grip.addEventListener("pointercancel", up);
+    });
+  }
   const FOC_KEY = "pmbridge-focus-collapsed";
   const foCollapsed = new Set((() => { try { const a = JSON.parse(localStorage.getItem(FOC_KEY) || "[]"); return Array.isArray(a) ? a : []; } catch (e) { return []; } })());
   function renderFocus(flashRef) {
@@ -4465,6 +4699,8 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
         : `<article class="card task-card fo-wide fo-mine" style="--list-color:#F2F2F2"><div class="card-body">${`<p class="fo-empty">${!owners.length && focusFilter === "all" ? "No open items yet. Give a task or an Action Register item an owner and it shows up here." : focusFilter === "pri" ? "Nothing starred. Tap the star on an item to make it a priority." : focusFilter === "past" ? "Nothing past due." : focusFilter === "soon" ? "Nothing due in the next 7 days." : "Nothing open."}</p>`}</div></article>`}
     </div>`;
     const body = view.querySelector(".fo-page");
+    /* My Stuff is always the Board layout */
+    renderBoard(body, groups.filter(g => !isProg(g.p)), V, flashRef);
     body.addEventListener("click", e => {
       if (e.target.closest("[data-fqa]")) { openGeneralAdd(sel ? sel.name : ""); return; }
       const tg = e.target.closest("[data-foc]");
@@ -4656,7 +4892,9 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
       if (!d || priceT || (d.metadata && d.metadata.hasPendingWrites)) return;
       const dl = (d.data() || {}).labor; if (Number.isFinite(+dl) && dl !== undefined && +dl !== estLabor) { estLabor = +dl; try { localStorage.setItem(LAB_KEY, String(estLabor)); } catch (e) {} if (route_.name === "estimator" && typeof renderWhenFree === "function") renderWhenFree(); }
       const dd = d.data() || {};
-      if (Array.isArray(dd.tpls)) { const nt = cleanEst({ sites: dd.tpls }).sites; if (JSON.stringify(nt) !== JSON.stringify(estTpls)) { estTpls = nt; try { localStorage.setItem(EST_TPL_KEY, JSON.stringify(estTpls)); } catch (e) {} if (route_.name === "estimator" && typeof renderWhenFree === "function") renderWhenFree(); } }
+      if (Array.isArray(dd.tpls)) { const nt = cleanEst({ sites: dd.tpls }).sites;
+        if (window.__estTplSeeded) { window.__estTplSeeded = false; EST_TPL_SEEDS.forEach(t => { if (!nt.some(z => z.id === t.id)) nt.push(cleanEst({ sites: [t] }).sites[0]); }); setTimeout(pushPrices, 50); }   /* new built-in templates join the shared list */
+        if (JSON.stringify(nt) !== JSON.stringify(estTpls)) { estTpls = nt; try { localStorage.setItem(EST_TPL_KEY, JSON.stringify(estTpls)); } catch (e) {} if (route_.name === "estimator" && typeof renderWhenFree === "function") renderWhenFree(); } }
       if (Array.isArray(dd.custom) && JSON.stringify(cleanCustom(dd.custom)) !== JSON.stringify(estCustom) || (dd.order && JSON.stringify(dd.order) !== JSON.stringify(estOrder))) {
         if (Array.isArray(dd.custom)) estCustom = cleanCustom(dd.custom); if (dd.order) estOrder = dd.order;
         try { localStorage.setItem(EST_CUSTOM_KEY, JSON.stringify(estCustom)); localStorage.setItem(EST_ORDER_KEY, JSON.stringify(estOrder)); } catch (e) {}
@@ -4674,6 +4912,13 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
   // estimate templates: a trailer / building's quantities saved under a name, reusable on any campus
   const EST_TPL_KEY = "pmbridge-est-templates";
   let estTpls = (() => { try { const a = JSON.parse(localStorage.getItem(EST_TPL_KEY) || "[]"); return Array.isArray(a) ? cleanEst({ sites: a }).sites : []; } catch (e) { return []; } })();
+  // starting templates from the Abernathy LBB trailer plan (added once to each copy; yours to edit or delete after that)
+  const EST_TPL_SEEDS = [{"id": "builtin-14plex", "name": "14-PLEX", "kind": "trailer", "lines": {"rtr|C8121-G2-MX": {"g": "rtr", "opt": "C8121-G2-MX", "qty": 1}, "cell|MG52E-HW": {"g": "cell", "opt": "MG52E-HW", "qty": 1}, "nav|CS-T10-WM-L-K9=": {"g": "nav", "opt": "CS-T10-WM-L-K9=", "qty": 3}, "ap|CW9164I-MR": {"g": "ap", "opt": "CW9164I-MR", "qty": 7}, "sw|MS130-48P": {"g": "sw", "opt": "MS130-48P", "qty": 1}, "pwr|MA-PWR-CORD-US-FR": {"g": "pwr", "opt": "MA-PWR-CORD-US-FR", "qty": 1}, "sfp|MA-SFP-1GB-TX": {"g": "sfp", "opt": "MA-SFP-1GB-TX", "qty": 1}, "rack|RK919WALLO": {"g": "rack", "opt": "RK919WALLO", "qty": 1}, "shelf|CABSHELFV1U": {"g": "shelf", "opt": "CABSHELFV1U", "qty": 1}, "cm|AR8600A": {"g": "cm", "opt": "AR8600A", "qty": 1}, "ups|SMART750RM1U": {"g": "ups", "opt": "SMART750RM1U", "qty": 1}, "mon|B0CG8UT#ABA": {"g": "mon", "opt": "B0CG8UT#ABA", "qty": 140}, "arm|ARMSLMBARDUO": {"g": "arm", "opt": "ARMSLMBARDUO", "qty": 70}, "dock|5TW10AA#ABA": {"g": "dock", "opt": "5TW10AA#ABA", "qty": 70}, "strip|VI-SZJ-1": {"g": "strip", "opt": "VI-SZJ-1", "qty": 70}, "wdp|E-DPM-HDM-06F": {"g": "wdp", "opt": "E-DPM-HDM-06F", "qty": 140}, "disp|86UR640S9UD": {"g": "disp", "opt": "86UR640S9UD", "qty": 3}, "disp|K-65S20M2": {"g": "disp", "opt": "K-65S20M2", "qty": 25}, "mnt|LTM1U": {"g": "mnt", "opt": "LTM1U", "qty": 28}, "hdmi|HDPMM06F": {"g": "hdmi", "opt": "HDPMM06F", "qty": 3}, "hdmi|HDPMM10F": {"g": "hdmi", "opt": "HDPMM10F", "qty": 3}, "mic|989-000430": {"g": "mic", "opt": "989-000430", "qty": 3}, "rkit|939-001644": {"g": "rkit", "opt": "939-001644", "qty": 3}, "cam|960-001225": {"g": "cam", "opt": "960-001225", "qty": 3}, "cam|960-001691": {"g": "cam", "opt": "960-001691", "qty": 25}, "lext|952-000198": {"g": "lext", "opt": "952-000198", "qty": 25}, "rdock|9X481UT#ABA": {"g": "rdock", "opt": "9X481UT#ABA", "qty": 3}, "rdp|E-DPM-HDM-06F": {"g": "rdp", "opt": "E-DPM-HDM-06F", "qty": 3}}, "freight": 0}, {"id": "builtin-aligned-owner", "name": "ALIGNED OWNER TRAILER", "kind": "trailer", "lines": {"rtr|C8121-G2-MX": {"g": "rtr", "opt": "C8121-G2-MX", "qty": 1}, "cell|MG52E-HW": {"g": "cell", "opt": "MG52E-HW", "qty": 1}, "nav|CS-T10-WM-L-K9=": {"g": "nav", "opt": "CS-T10-WM-L-K9=", "qty": 1}, "ap|CW9164I-MR": {"g": "ap", "opt": "CW9164I-MR", "qty": 2}, "sw|MS130-48P": {"g": "sw", "opt": "MS130-48P", "qty": 1}, "pwr|MA-PWR-CORD-US-FR": {"g": "pwr", "opt": "MA-PWR-CORD-US-FR", "qty": 1}, "sfp|MA-SFP-1GB-TX": {"g": "sfp", "opt": "MA-SFP-1GB-TX", "qty": 1}, "rack|RK919WALLO": {"g": "rack", "opt": "RK919WALLO", "qty": 1}, "shelf|CABSHELFV1U": {"g": "shelf", "opt": "CABSHELFV1U", "qty": 1}, "cm|AR8600A": {"g": "cm", "opt": "AR8600A", "qty": 1}, "ups|SMART750RM1U": {"g": "ups", "opt": "SMART750RM1U", "qty": 1}, "mon|B0CG8UT#ABA": {"g": "mon", "opt": "B0CG8UT#ABA", "qty": 28}, "arm|ARMSLMBARDUO": {"g": "arm", "opt": "ARMSLMBARDUO", "qty": 14}, "dock|5TW10AA#ABA": {"g": "dock", "opt": "5TW10AA#ABA", "qty": 14}, "strip|VI-SZJ-1": {"g": "strip", "opt": "VI-SZJ-1", "qty": 14}, "wdp|E-DPM-HDM-06F": {"g": "wdp", "opt": "E-DPM-HDM-06F", "qty": 28}, "disp|86UR640S9UD": {"g": "disp", "opt": "86UR640S9UD", "qty": 1}, "disp|K-65S20M2": {"g": "disp", "opt": "K-65S20M2", "qty": 4}, "mnt|LTM1U": {"g": "mnt", "opt": "LTM1U", "qty": 5}, "hdmi|HDPMM06F": {"g": "hdmi", "opt": "HDPMM06F", "qty": 1}, "hdmi|HDPMM10F": {"g": "hdmi", "opt": "HDPMM10F", "qty": 1}, "mic|989-000430": {"g": "mic", "opt": "989-000430", "qty": 1}, "rkit|939-001644": {"g": "rkit", "opt": "939-001644", "qty": 1}, "cam|960-001225": {"g": "cam", "opt": "960-001225", "qty": 1}, "cam|960-001691": {"g": "cam", "opt": "960-001691", "qty": 4}, "lext|952-000198": {"g": "lext", "opt": "952-000198", "qty": 4}, "rdock|9X481UT#ABA": {"g": "rdock", "opt": "9X481UT#ABA", "qty": 1}, "rdp|E-DPM-HDM-06F": {"g": "rdp", "opt": "E-DPM-HDM-06F", "qty": 1}}, "freight": 0}];
+  (() => { let seen = []; try { seen = JSON.parse(localStorage.getItem("pmbridge-est-tpl-seen") || "[]"); } catch (e) {}
+    const add = EST_TPL_SEEDS.filter(t => !seen.includes(t.id) && !estTpls.some(z => z.id === t.id)); if (!add.length && EST_TPL_SEEDS.every(t => seen.includes(t.id))) return;
+    estTpls.push(...cleanEst({ sites: add }).sites); EST_TPL_SEEDS.forEach(t => seen.includes(t.id) || seen.push(t.id));
+    try { localStorage.setItem("pmbridge-est-tpl-seen", JSON.stringify(seen)); localStorage.setItem("pmbridge-est-templates", JSON.stringify(estTpls)); } catch (e) {}
+    window.__estTplSeeded = add.length > 0; })();
   const TPLC = { id: "__esttpl", title: "Templates", color: "#5FD68A", __tpl: true, est: { sites: estTpls, tax: 0, freightPct: 0 } };
   const estTplCampus = () => { TPLC.est.sites = estTpls; return TPLC; };
   function saveEstTpls() { try { localStorage.setItem(EST_TPL_KEY, JSON.stringify(estTpls)); } catch (e) {} clearTimeout(priceT); priceT = setTimeout(() => { priceT = null; pushPrices(); }, 600); }
@@ -5204,7 +5449,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
     if (it.toff !== 0 && grp.some(g => g.y.date)) return;   // moving one phase by hand doesn't drag the others; the T-0 phase does
     const zero = addDays(it.date, -it.toff);
     let n = 0;
-    grp.forEach(({ q, y }) => { const d = y.toff === 0 ? zero : tplDate(zero, y.toff); if (y.date !== d) { y.date = d; y.end = d; n++; if (q !== p) save(q); } });
+    grp.forEach(({ q, y }) => { const d = y.toff === 0 ? zero : tplDate(zero, y.toff); if (y.date !== d) { const sp = y.date && y.end ? Math.max(0, dayDiff(y.date, y.end)) : 0; y.date = d; y.end = addDays(d, sp); n++; if (q !== p) save(q); } });
     if (n) setTimeout(() => showUndo(`${n} template date${n > 1 ? "s" : ""} set from ${shortDate(it.date)}`, null), 50);
   }
   function applyTemplate(p, x, t, target, replace) {
@@ -5857,6 +6102,10 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
           if (v && !had) showMsg(c.sub === REG ? `“${it.text || "Action item"}” is due ${shortDate(v)}` : `“${it.text || "Task"}” is on the Critical Path (Calendar page) for ${shortDate(v)}`);
         }, true);
         return;
+      case "ph-end":
+        if (popOpen(".cal-pop")) { closePops(); return; }
+        openDatePop(a, it.end > it.date ? it.end : it.date, itemColor(it, p), v => { it.end = v && it.date && v > it.date ? v : it.date; save(p); repaint(p, c); if (v && v > it.date) showMsg(`${it.text || "Phase"} runs ${shortDate(it.date)} – ${shortDate(it.end)}`); }, true);
+        return;
       case "star": { it.star = !it.star; it.stAt = Date.now(); save(p); repaint(p, c); showMsg(it.star ? `“${it.text || "Task"}” is a priority on the Focus List` : `“${it.text || "Task"}” removed from Priorities`); return; }
       case "block": { if (popOpen(".flag-pop")) { closePops(); return; } openFlagPop(a, p, c, it); return; }
       case "status": openStatusMenu(a, it.status, st => { setStatus(it, st); save(p); repaint(p, c); }); return;
@@ -6222,6 +6471,8 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
 
   /* ================= start ================= */
   load();
+  /* the app always opens on Campuses; the Program page is only reached from the logo */
+  if (/^#\/?program/.test(location.hash)) { try { history.replaceState(null, "", location.pathname + location.search + "#/"); } catch (e) { location.hash = "#/"; } }
   route();
   addEventListener("resize", (() => { let w = innerWidth, t; return () => { clearTimeout(t); t = setTimeout(() => { if (innerWidth !== w) { w = innerWidth; renderCal(); } }, 150); }; })());
   // ask the browser to keep this app's data even when storage runs low
