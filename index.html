@@ -1314,6 +1314,25 @@ table.st.st6 th:nth-child(1) { width: 14%; } table.st.st6 th:nth-child(2) { widt
 .qn-x { width: 20px; height: 20px; color: var(--faint); font-size: 16px; border-radius: 5px; opacity: 0; } .qn-row:hover .qn-x, .qn-h:hover .qn-x { opacity: 1; } .qn-x:hover { color: var(--danger); }
 @media (hover: none) { .qn-x { opacity: .6; } }
 @media (max-width: 1100px) { .qn-row { grid-template-columns: 22px minmax(0, 1fr) 20px; grid-template-areas: "c t x" ". d o"; } .qn-row .check, .qn-row .qn-plus { grid-area: c; } .qn-t { grid-area: t; } .qn-x { grid-area: x; } .qn-d { grid-area: d; } .qn-o { grid-area: o; } .qn-row { grid-template-columns: 22px minmax(0, 1fr) minmax(0, 1fr) 20px; grid-template-areas: "c t t x" ". d o ."; } }
+/* General Tasks: one line per task, drag dots, date pill */
+.qn-card .card-body { position: relative; }
+.qn-card .card-head .fo-qadd + .fo-qadd { margin-left: 6px; }
+.qn-card .card-head { gap: 6px; } .qn-card .card-head .title { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; flex: 0 1 auto; font-size: 15px; letter-spacing: .05em; }
+.qn-card .card-head .fo-qadd { flex: none; height: 24px; padding: 0 6px; gap: 3px; font-size: 11px; letter-spacing: .03em; } .qn-card .card-head .fo-qadd svg { width: 12px; height: 12px; } .qn-card .card-head .qn-addbtn { width: 26px; padding: 0; justify-content: center; } .qn-card .card-head .qn-addbtn svg { width: 15px; height: 15px; }
+.qn-card .qn-row { grid-template-columns: 14px 20px minmax(0, 1fr) auto 64px 18px; grid-template-areas: none; gap: 4px; }
+.qn-card .qn-row > * { grid-area: auto; }
+.qn-grip { display: grid; place-items: center; width: 14px; height: 22px; color: var(--faint); cursor: grab; touch-action: none; opacity: .45; } .qn-grip svg { width: 12px; height: 12px; }
+.qn-row:hover .qn-grip, .qn-h:hover .qn-grip { opacity: 1; } .qn-grip:active { cursor: grabbing; }
+.qn-h .qn-grip { margin-left: 0; }
+.qn-date { height: 22px; min-width: 22px; padding: 0 6px; border-radius: 6px; border: 1px solid rgba(255,255,255,.14); font-size: 11px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--dim); white-space: nowrap; display: grid; place-items: center; }
+.qn-date svg { width: 12px; height: 12px; } .qn-date.none { border-color: transparent; opacity: 0; } .qn-row:hover .qn-date.none, .qn-date.none:focus { opacity: .7; }
+.qn-date.late { color: var(--danger); border-color: var(--danger); }
+.qn-card .qn-o { font-size: 12px; } .qn-card .qn-o::placeholder { color: transparent; } .qn-row:hover .qn-o::placeholder, .qn-card .qn-o:focus::placeholder { color: var(--faint); }
+.qn-hadd { font-size: 17px; line-height: 1; }
+.qn-drop { position: absolute; left: 0; right: 0; height: 2px; border-radius: 2px; background: var(--accent); pointer-events: none; display: none; z-index: 3; }
+.qn-dragging { opacity: .35; }
+.qn-empty { margin: 4px 0 2px; color: var(--faint); font-size: 13px; }
+@media (hover: none) { .qn-grip { opacity: .7; } .qn-date.none { opacity: .5; } }
 @media (max-width: 899px) { .fb-board { grid-template-columns: minmax(0, 1fr); max-width: none; } .fo-layout { margin-left: 0; } }
 .fo-qadd { display: inline-flex; align-items: center; gap: 5px; height: 26px; padding: 0 10px; margin-left: 12px; border-radius: 7px; border: 1px solid var(--card-edge); color: var(--ink); font-size: 12px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
 .fo-qadd svg { width: 14px; height: 14px; color: var(--accent); } .fo-qadd:hover { border-color: var(--accent); }
@@ -2039,7 +2058,7 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
   const STATUSES = ["Not Started", "In Progress", "Blocked", "Done"];
   const STATUS_CLASS = { "Not Started": "s-ns", "In Progress": "s-ip", "Blocked": "s-blk", "Done": "s-done" };
   const LS_KEY = "pmbridge-v1";
-  const APP_VERSION = "148 (Nov 1)";
+  const APP_VERSION = "149 (Nov 2)";
   const $ = id => document.getElementById(id);
   const uid = () => Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4);
   const pad2 = n => String(n).padStart(2, "0");
@@ -4577,23 +4596,24 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
     m.addEventListener("click", e => { if (e.target === m || e.target.closest(".ev-x")) closeModal(); else if (e.target.closest(".ga-go")) add(); });
     m.addEventListener("keydown", e => { if (e.key === "Enter" && e.target.tagName === "INPUT" && e.target.type !== "checkbox") { e.preventDefault(); add(); } });
   }
-  /* ----- My Stuff · Board: Quick Notes + campus cards in three columns you can rearrange ----- */
+  /* ----- My Stuff · Board: General Tasks + campus cards in three columns you can rearrange ----- */
   const FLAY_KEY = "pmbridge-focus-layout", BOARD_KEY = "pmbridge-board";
   let focusLayout = (() => { try { return localStorage.getItem(FLAY_KEY) === "board" ? "board" : "list"; } catch (e) { return "list"; } })();
   const boardCols = (() => { try { const o = JSON.parse(localStorage.getItem(BOARD_KEY) || "null"); return o && Array.isArray(o.cols) && o.cols.length === 3 ? o.cols : [["qn"], [], []]; } catch (e) { return [["qn"], [], []]; } })();
   const saveBoard = () => { try { localStorage.setItem(BOARD_KEY, JSON.stringify({ cols: boardCols })); } catch (e) {} };
   // Quick Notes live on the Program record's register: headings are its categories, bullets are General items
   function qnHtml() {
-    const P = programCampus(), c = regCard(P), secs = [{ ph: null, rows: [] }];
+    const P = programCampus(), c = regCard(P), secs = [{ ph: null, rows: [] }], t = todayIso();
     c.items.forEach(it => { if (it.kind === "phase") secs.push({ ph: it, rows: [] }); else if (!it.done) secs[secs.length - 1].rows.push(it); });
-    const row = it => `<li class="qn-row" data-qi="${it.id}"><button class="check" role="checkbox" aria-checked="false" aria-label="Done" data-qn="done">${ICON.check}</button>
-        <input class="qn-in qn-t" data-f="text" value="${esc(it.text)}" placeholder="Item"${it.ref ? " readonly title=\"From a note. Edit it in the Notepad\"" : ""}><input class="qn-in qn-d" data-f="date" type="date" value="${it.date || ""}" aria-label="Date"><input class="qn-in qn-o" data-f="bic" value="${esc(it.bic)}" placeholder="Owner" autocapitalize="words" list="qn-owners"><button class="qn-x" data-qn="del" aria-label="Delete">×</button></li>`;
-    const add = id => `<li class="qn-row qn-add" data-sec="${id}"><span class="qn-plus">${ICON.plus}</span><input class="qn-in qn-t" data-a="text" placeholder="Add an item"><input class="qn-in qn-d" data-a="date" type="date" aria-label="Date"><input class="qn-in qn-o" data-a="bic" placeholder="Owner" autocapitalize="words" list="qn-owners"><span></span></li>`;
+    const grip = `<span class="qn-grip" data-qdrag title="Drag to move (or Alt + arrow keys)" aria-hidden="true">${ICON.grip}</span>`;
+    const row = it => `<li class="qn-row" data-qi="${it.id}">${grip}<button class="check" role="checkbox" aria-checked="false" aria-label="Done" data-qn="done">${ICON.check}</button>
+        <input class="qn-in qn-t" data-f="text" value="${esc(it.text)}" placeholder="New task"${it.ref ? " readonly title=\"From a note. Edit it in the Notepad\"" : ""}><button class="qn-date${it.date ? (it.date < t ? " late" : "") : " none"}" data-qn="date" title="${it.date ? "Due " + fullDate(it.date) : "Add a date"}">${it.date ? shortDate(it.date) : ICON.cal}</button><input class="qn-in qn-o" data-f="bic" value="${esc(it.bic)}" placeholder="Owner" autocapitalize="words" list="qn-owners"><button class="qn-x" data-qn="del" aria-label="Delete" title="Delete">×</button></li>`;
+    const any = secs.some(sx => sx.ph || sx.rows.length);
     return `<article class="card fb-card qn-card" data-bid="qn" style="--list-color:#B8C1CC">
-      <header class="card-head" style="color:#B8C1CC"><span class="fb-grip" data-bdrag title="Drag to move">${ICON.grip}</span><div class="title">Quick Notes</div><button class="fo-qadd" data-qn="addh">${ICON.plus}Heading</button></header>
+      <header class="card-head" style="color:#B8C1CC"><span class="fb-grip" data-bdrag title="Drag to move">${ICON.grip}</span><div class="title">General Tasks</div><button class="fo-qadd qn-addbtn" data-qn="add" title="Add a task" aria-label="Add a task">${ICON.plus}</button><button class="fo-qadd" data-qn="addh">${ICON.plus}Heading</button></header>
       <div class="card-body"><datalist id="qn-owners">${focusOwners().map(o => `<option value="${esc(o.name)}">`).join("")}</datalist>
-        ${secs.map(sx => (sx.ph || sx.rows.length || secs.length === 1) ? `<section class="qn-sec">${sx.ph ? `<div class="qn-h"><input class="qn-hin" data-qh="${sx.ph.id}" value="${esc(sx.ph.text)}" placeholder="Heading" autocapitalize="words"><button class="qn-x" data-qn="delh" data-ph="${sx.ph.id}" aria-label="Remove heading" title="Remove heading (its bullets move up)">×</button></div>` : ""}
-          <ul class="qn-list">${sx.rows.map(row).join("")}${add(sx.ph ? sx.ph.id : "")}</ul></section>` : "").join("")}</div></article>`;
+        ${any ? secs.map(sx => (sx.ph || sx.rows.length) ? `<section class="qn-sec">${sx.ph ? `<div class="qn-h" data-qhid="${sx.ph.id}">${grip}<input class="qn-hin" data-qh="${sx.ph.id}" value="${esc(sx.ph.text)}" placeholder="Heading" autocapitalize="words"><button class="qn-x qn-hadd" data-qn="addin" data-ph="${sx.ph.id}" aria-label="Add a task under this heading" title="Add a task under this heading">+</button><button class="qn-x" data-qn="delh" data-ph="${sx.ph.id}" aria-label="Remove heading" title="Remove heading (its tasks move up)">×</button></div>` : ""}
+          <ul class="qn-list">${sx.rows.map(row).join("")}</ul></section>` : "").join("") : `<p class="qn-empty">No general tasks yet. Tap + Task to add one, then press Enter for the next.</p>`}</div></article>`;
   }
   // a campus card on the board reads Project → Phase → items, in the order they appear
   function byProject(rows) {
@@ -4617,41 +4637,91 @@ textarea.field { resize: none; min-height: 74px; line-height: 1.45; overflow: hi
     const h = body.querySelector(".fo-h"); if (h) h.insertAdjacentHTML("afterend", html);
     body.querySelectorAll(":scope > .fo-camp-grid, :scope > .fo-mine").forEach(n => n.remove());
     const board = body.querySelector(".fb-board"); if (!board) return;
-    // Quick Notes editing
+    // General Tasks editing: one line per task, Enter makes the next line, empty lines disappear
     const P = programCampus(), C = regCard(P), qi = el => { const r = el.closest("[data-qi]"); return r && C.items.find(x => x.id === r.dataset.qi); };
+    const focusRow = id => { const f = view.querySelector(`.qn-row[data-qi="${id}"] .qn-t`); if (f) { f.focus(); const n = f.value.length; try { f.setSelectionRange(n, n); } catch (err) {} } };
+    const newAt = at => { const it = cleanItem({ text: "" }); C.items.splice(Math.max(0, Math.min(at, C.items.length)), 0, it); renderFocus(); focusRow(it.id); };
+    const secEnd = phId => { const i = C.items.findIndex(x => x.id === phId); const n = C.items.findIndex((x, j) => j > i && x.kind === "phase"); return n < 0 ? C.items.length : n; };
+    const dropEmpty = it => { if (!it || it.text.trim() || it.ref || it.date || it.bic) return false; const i = C.items.indexOf(it); if (i < 0) return false; C.items.splice(i, 1); return true; };
     board.addEventListener("input", e => {
       const el = e.target;
       if (el.dataset.qh) { const ph = C.items.find(x => x.id === el.dataset.qh); if (ph) { ph.text = el.value; save(P); } return; }
       const it = el.dataset.f && qi(el); if (!it) return;
-      if (el.dataset.f === "date") { it.date = isIso(el.value) ? el.value : null; it.end = it.date; } else it[el.dataset.f] = el.value;
-      save(P);
+      it[el.dataset.f] = el.value; save(P);
     });
-    const addFrom = row => {
-      const v = k => row.querySelector(`[data-a="${k}"]`).value.trim(), text = v("text"); if (!text) return false;
-      const d = v("date"), it = cleanItem({ text, bic: v("bic"), date: isIso(d) ? d : null, end: isIso(d) ? d : null });
-      const sec = row.dataset.sec; let at = C.items.length;
-      if (sec) { const i = C.items.findIndex(x => x.id === sec); at = C.items.findIndex((x, j) => j > i && x.kind === "phase"); if (at < 0) at = C.items.length; }
-      else { const f = C.items.findIndex(x => x.kind === "phase"); at = f < 0 ? C.items.length : f; }
-      C.items.splice(at, 0, it); save(P); renderFocus();
-      const nr = view.querySelector(`.qn-add[data-sec="${sec}"] [data-a="text"]`); if (nr) nr.focus();
-      return true;
+    board.addEventListener("focusout", e => {
+      const el = e.target; if (!el.classList || !el.classList.contains("qn-t")) return;
+      const li = el.closest(".qn-row"), it = qi(el); if (!li || !it) return;
+      if (e.relatedTarget && li.contains(e.relatedTarget)) return;
+      if (dropEmpty(it)) { const sec = li.closest(".qn-sec"); li.remove(); if (sec && !sec.querySelector(".qn-row, .qn-h")) sec.remove(); save(P); }
+    });
+    const moveBy = (it, dir) => {
+      const i = C.items.indexOf(it); let j = i + dir;
+      while (j >= 0 && j < C.items.length && C.items[j].done && C.items[j].kind !== "phase") j += dir;
+      if (j < 0 || j >= C.items.length) return;
+      C.items.splice(i, 1); C.items.splice(j, 0, it); save(P); renderFocus(); focusRow(it.id);
     };
     board.addEventListener("keydown", e => {
+      const el = e.target;
+      if (el.classList && el.classList.contains("qn-t") && e.altKey && (e.key === "ArrowUp" || e.key === "ArrowDown")) { e.preventDefault(); const it = qi(el); if (it) moveBy(it, e.key === "ArrowUp" ? -1 : 1); return; }
+      if (e.key === "Escape" && el.classList && el.classList.contains("qn-t")) { el.blur(); return; }
       if (e.key !== "Enter") return;
-      const row = e.target.closest(".qn-add"); if (row) { e.preventDefault(); addFrom(row); return; }
-      if (e.target.classList.contains("qn-in") || e.target.classList.contains("qn-hin")) { e.preventDefault(); e.target.blur(); }
+      if (el.classList && el.classList.contains("qn-t")) {
+        e.preventDefault(); const it = qi(el); if (!it) return;
+        if (!it.text.trim()) { el.blur(); return; }
+        save(P); newAt(C.items.indexOf(it) + 1); return;
+      }
+      if (el.classList && el.classList.contains("qn-hin")) { e.preventDefault(); const i = C.items.findIndex(x => x.id === el.dataset.qh); if (i >= 0) { save(P); newAt(i + 1); } return; }
+      if (el.classList && el.classList.contains("qn-in")) { e.preventDefault(); el.blur(); }
     });
-    board.addEventListener("change", e => { const row = e.target.closest(".qn-add"); if (row && e.target.dataset.a === "date" && row.querySelector('[data-a="text"]').value.trim()) addFrom(row); });
     board.addEventListener("click", e => {
       const b = e.target.closest("[data-qn]"); if (!b) return;
       e.stopPropagation();
       const k = b.dataset.qn;
+      if (k === "add") { newAt(C.items.length); return; }
+      if (k === "addin") { newAt(secEnd(b.dataset.ph)); return; }
       if (k === "addh") { const ph = cleanItem({ kind: "phase", text: "" }); C.items.push(ph); save(P); renderFocus(); const f = view.querySelector(`[data-qh="${ph.id}"]`); if (f) f.focus(); return; }
       if (k === "delh") { C.items = C.items.filter(x => x.id !== b.dataset.ph); save(P); renderFocus(); return; }
       const it = qi(b); if (!it) return;
-      if (k === "done") { const snap = snapshot(); toggleDone(it); save(P); renderFocus(); showUndo(`Done: ${it.text || "item"}`, () => restore(snap)); return; }
-      if (k === "del") { const snap = snapshot(); C.items = C.items.filter(x => x !== it); save(P); renderFocus(); showUndo("Deleted", () => restore(snap)); }
+      if (k === "date") {
+        if (popOpen(".cal-pop")) { closePops(); return; }
+        openDatePop(b, it.date, "#B8C1CC", v => { it.date = v || null; it.end = it.date; save(P); renderFocus(); }, true); return;
+      }
+      if (k === "done") { if (!it.text.trim()) return; const snap = snapshot(); toggleDone(it); save(P); renderFocus(); showUndo(`Done: ${it.text || "task"}`, () => restore(snap)); return; }
+      if (k === "del") { const snap = snapshot(); C.items = C.items.filter(x => x !== it); save(P); renderFocus(); if (it.text.trim()) showUndo("Deleted", () => restore(snap)); }
     }, true);
+    // drag a task or a heading (with its tasks) by its dots; a line shows where it will land
+    board.addEventListener("pointerdown", e => {
+      const g = e.target.closest("[data-qdrag]"); if (!g || e.button > 0) return;
+      e.preventDefault(); e.stopPropagation();
+      const card = g.closest(".qn-card"), body = card.querySelector(".card-body"), src = g.parentElement, isH = src.classList.contains("qn-h");
+      const id = isH ? src.dataset.qhid : src.dataset.qi;
+      try { g.setPointerCapture(e.pointerId); } catch (err) {}
+      const line = document.createElement("div"); line.className = "qn-drop"; body.appendChild(line);
+      const block = isH ? src.closest(".qn-sec") : src; block.classList.add("qn-dragging");
+      let drop = null;
+      const move = ev => {
+        const br = body.getBoundingClientRect(); let best = null;
+        for (const t of body.querySelectorAll(isH ? ".qn-h" : ".qn-row, .qn-h")) {
+          if (t === src || block.contains(t)) continue;
+          const r = t.getBoundingClientRect();
+          if (ev.clientY < r.top + r.height / 2) { best = { el: t, before: true, y: r.top }; break; }
+          best = { el: t, before: false, y: isH ? t.closest(".qn-sec").getBoundingClientRect().bottom : r.bottom };
+        }
+        drop = best; line.style.display = best ? "block" : "none"; if (best) line.style.top = (best.y - br.top - 1) + "px";
+      };
+      const up = () => {
+        g.removeEventListener("pointermove", move); g.removeEventListener("pointerup", up); g.removeEventListener("pointercancel", up);
+        line.remove(); block.classList.remove("qn-dragging"); if (!drop) return;
+        const items = C.items, i = items.findIndex(x => x.id === id); if (i < 0) return;
+        let n = 1; if (isH) { const j = items.findIndex((x, k) => k > i && x.kind === "phase"); n = (j < 0 ? items.length : j) - i; }
+        const moved = items.splice(i, n), tEl = drop.el, tId = tEl.classList.contains("qn-h") ? tEl.dataset.qhid : tEl.dataset.qi;
+        let at = items.findIndex(x => x.id === tId); if (at < 0) { items.splice(i, 0, ...moved); return; }
+        if (!drop.before) { if (isH) { const j = items.findIndex((x, k) => k > at && x.kind === "phase"); at = j < 0 ? items.length : j; } else at += 1; }
+        items.splice(at, 0, ...moved); save(P); renderFocus();
+      };
+      g.addEventListener("pointermove", move); g.addEventListener("pointerup", up); g.addEventListener("pointercancel", up);
+    });
     // drag a card by its grip into any column; it drops where the gap opens
     board.addEventListener("pointerdown", e => {
       const grip = e.target.closest("[data-bdrag]"); if (!grip || e.button > 0) return;
